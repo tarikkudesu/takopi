@@ -1,7 +1,8 @@
 #ifndef __CONNECTION_HPP__
 # define __CONNECTION_HPP__
 
-# include "../Response/Response.hpp"
+# include "../ServerManager/Server.hpp"
+# include "Client.hpp"
 
 typedef std::map< int, Server* >			t_Server;
 typedef std::vector< Server * >				t_serVect;
@@ -10,31 +11,26 @@ class Connection
 {
 	private :
 		int								__sd;
-		BasicString						__data;
-		t_connection_phase				__phase;
-		Request							__request;
-		Response						__response;
-		t_Server						*__serversP;
-
-		Server							*identifyServer();
-		void							identifyWorkers();
+		Client							__client;
+		BasicString						__buffer;
+		std::queue< BasicString >		__responseQueue;
+		Server							*__server;
 
 		Connection();
 		Connection( const Connection &copy );
 		Connection	&operator=( const Connection &assign );
 
 	public:
-		std::queue< BasicString >		__responseQueue;
-
 		void							addData(const BasicString &input);
-		void							setServers( t_Server &servers );
-		int								getConnectionSocket();
 		void							setSocket( int sd );
+		void							setServer(Server *server);
+		int								getConnectionSocket();
 		void							processData();
-		bool							close();
+		bool							hasPendingOutput() const;
+		const BasicString				&frontOutput() const;
+		void							popOutput();
 
-
-		Connection( int sd );
+		Connection( Server *server );
 		~Connection();
 };
 

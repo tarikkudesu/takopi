@@ -1,12 +1,8 @@
 #include "Core.hpp"
 
 bool Core::up = false;
-int Core::__allocN = 0;
-int Core::__sockNum = 0;
 t_Server Core::__servers;
-t_events Core::__sockets;
 t_Connections Core::__connections;
-struct pollfd *Core::__events = NULL;
 
 Core::Core()
 {
@@ -29,6 +25,11 @@ Core::~Core()
  *								 MINI METHODS								*
  ****************************************************************************/
 
+int Core::currentLoad()
+{
+	return Core::__servers.size() + Core::__connections.size();
+}
+
 void Core::clear()
 {
 	wsu::debug("clearing data");
@@ -43,12 +44,10 @@ void Core::clear()
 		Core::removeConnection(*it);
 	tmpMapV.clear();
 	tmpMapC.clear();
-	Core::__sockNum = 0;
 	Core::__servers.clear();
-	Core::__sockets.clear();
 	Core::__connections.clear();
-    for (int i = 3; i < 1024; i++)
-        close(i);
+	for (int i = 3; i < 1024; i++)
+		close(i);
 }
 void Core::removeConnection(int sd)
 {
@@ -59,16 +58,21 @@ void Core::removeConnection(int sd)
 		Connection *instance = it->second;
 		Core::__connections.erase(it);
 		delete instance;
-		removeSocket(sd);
+		close(sd);
 	}
 }
 void Core::addConnection(Connection *connection)
 {
-	wsu::info("creating connection " + wsu::intToString(connection->getConnectionSocket()));
-	if (Core::__sockNum >= MAX_EVENTS)
+	int sd = connection->getConnectionSocket();
+
+	wsu::info("creating connection " + wsu::intToString(sd));
+	if (Core::currentLoad() >= MAX_EVENTS)
 		throw std::runtime_error("critical server overload, could not accept new client connection");
-	Core::__connections[connection->getConnectionSocket()] = connection;
-	addSocket(connection->getConnectionSocket(), CONNECTION);
+	if (sd >= FD_SETSIZE)
+		throw std::runtime_error("file descriptor out of select range, could not accept new client connection");
+	if (fcntl(sd, F_SETFL, O_NONBLOCK) < 0)
+		throw std::runtime_error("fcntl syscall, failed to make a non blocking socket");
+	Core::__connections[sd] = connection;
 }
 void Core::removeServer(int sd)
 {
@@ -79,42 +83,20 @@ void Core::removeServer(int sd)
 		Server *instance = it->second;
 		Core::__servers.erase(it);
 		delete instance;
-		removeSocket(sd);
 	}
 }
 void Core::addServer(Server *server)
 {
-	wsu::info("creating server " + wsu::intToString(server->getServerSocket()));
-	if (Core::__sockNum >= MAX_EVENTS)
+	int sd = server->getServerSocket();
+
+	wsu::info("creating server " + wsu::intToString(sd));
+	if (Core::currentLoad() >= MAX_EVENTS)
 		throw std::runtime_error("critical server overload, " + server->getServerHost() + ":" + wsu::intToString(server->getServerPort()) + " non functional");
-	Core::__servers[server->getServerSocket()] = server;
-	addSocket(server->getServerSocket(), SERVER);
-}
-void Core::removeSocket(int sd)
-{
-	for (t_events::iterator it = __sockets.begin(); it != __sockets.end(); it++)
-	{
-		if (sd == it->fd)
-		{
-			Core::__sockets.erase(it);
-			Core::__sockNum--;
-			close(sd);
-			return;
-		}
-	}
-}
-void Core::addSocket(int sd, t_endian endian)
-{
-	struct pollfd sockStruct;
-	sockStruct.fd = sd;
-	if (endian == SERVER)
-		sockStruct.events = POLLIN;
-	else if (endian == CONNECTION)
-		sockStruct.events = POLLIN | POLLOUT | POLLHUP;
+	if (sd >= FD_SETSIZE)
+		throw std::runtime_error("file descriptor out of select range, " + server->getServerHost() + ":" + wsu::intToString(server->getServerPort()) + " non functional");
 	if (fcntl(sd, F_SETFL, O_NONBLOCK) < 0)
 		throw std::runtime_error("fcntl syscall, failed to make a non blocking socket");
-	Core::__sockets.push_back(sockStruct);
-	Core::__sockNum++;
+	Core::__servers[sd] = server;
 }
 bool Core::isServerSocket(int sd)
 {
@@ -135,52 +117,55 @@ void Core::logServers()
 		wsu::running((*it).second->getServerHost() + ":" + wsu::intToString((*it).second->getServerPort()));
 	}
 }
-void Core::checkConflicts()
-{
-	for (t_Server::iterator it = Core::__servers.begin(); it != Core::__servers.end(); it++)
-	{
-		for (t_Server::iterator iter = Core::__servers.begin(); iter != it && iter != Core::__servers.end(); iter++)
-		{
-			if (it->second->getServerPort() == iter->second->getServerPort())
-			{
-				const t_svec &serverNames = it->second->__serverNames;
-				for (t_svec::const_iterator name = serverNames.begin(); name != serverNames.end(); name++)
-				{
-					if (iter->second->amITheServerYouAreLookingFor(*name))
-						wsu::warn("conflicting server name \"" + *name + "\" on " + it->second->serverIdentity() + ", ignored");
-				}
-			}
-		}
-	}
-}
 
 /************************************************************************
  *							  SERVER CONTROL							*
  ************************************************************************/
+
+int Core::buildSets(fd_set &readSet, fd_set &writeSet)
+{
+	int maxFd = -1;
+
+	FD_ZERO(&readSet);
+	FD_ZERO(&writeSet);
+	for (t_Server::iterator it = Core::__servers.begin(); it != Core::__servers.end(); it++)
+	{
+		int sd = it->second->getServerSocket();
+		FD_SET(sd, &readSet);
+		if (sd > maxFd)
+			maxFd = sd;
+	}
+	for (t_Connections::iterator it = Core::__connections.begin(); it != Core::__connections.end(); it++)
+	{
+		int sd = it->second->getConnectionSocket();
+		FD_SET(sd, &readSet);
+		FD_SET(sd, &writeSet);
+		if (sd > maxFd)
+			maxFd = sd;
+	}
+	return maxFd;
+}
 
 void Core::writeDataToSocket(int sd)
 {
 	t_Connections::iterator iter = Core::__connections.find(sd);
 	if (iter == Core::__connections.end())
 		return;
-	if (wsu::__criticalOverLoad == true && iter->second->__responseQueue.empty())
+	if (wsu::__criticalOverLoad == true && !iter->second->hasPendingOutput())
 		return Core::removeConnection(sd);
-	if (iter->second->__responseQueue.empty())
+	if (!iter->second->hasPendingOutput())
 		return;
 
-	ssize_t bytesWritten = send(sd,
-								iter->second->__responseQueue.front().getBuff(),
-								iter->second->__responseQueue.front().length(), 0);
-	iter->second->__responseQueue.pop();
+	const BasicString &out = iter->second->frontOutput();
+	ssize_t bytesWritten = send(sd, out.getBuff(), out.length(), 0);
 	if (bytesWritten > 0)
 	{
 		wsu::info("response sent");
-		if (iter->second->close())
-			removeConnection(sd);
+		iter->second->popOutput();
 	}
 	else
 	{
-        removeConnection(sd);
+		removeConnection(sd);
 	}
 }
 void Core::readDataFromSocket(int sd)
@@ -200,7 +185,7 @@ void Core::readDataFromSocket(int sd)
 	}
 	else
 	{
-        removeConnection(sd);
+		removeConnection(sd);
 	}
 }
 
@@ -208,72 +193,71 @@ void Core::acceptNewConnection(int sd)
 {
 	int newSock;
 
-	if (Core::__sockNum >= MAX_EVENTS)
+	if (Core::currentLoad() >= MAX_EVENTS)
 		wsu::__criticalOverLoad = true;
 	if (wsu::__criticalOverLoad == true)
 		return;
 	newSock = accept(sd, NULL, NULL);
 	if (newSock >= 0)
 	{
-		Connection *newConnection = new Connection(sd);
+		if (newSock >= FD_SETSIZE)
+		{
+			close(newSock);
+			wsu::error("rejected incoming client: file descriptor out of select range");
+			return;
+		}
+		Connection *newConnection = new Connection(Core::__servers[sd]);
 		try
 		{
 			newConnection->setSocket(newSock);
-			newConnection->setServers(Core::__servers);
 			Core::addConnection(newConnection);
 		}
 		catch (std::exception &e)
 		{
 			delete newConnection;
+			close(newSock);
 			wsu::error(e.what());
 		}
 	}
-	else
+	else if (errno != EAGAIN && errno != EWOULDBLOCK && errno != ECONNABORTED)
 	{
 		removeServer(sd);
 	}
 }
-void Core::proccessPollEvent(int sd, int &retV)
+void Core::proccessSelectEvent(int sd, fd_set &readSet, fd_set &writeSet, int &retV)
 {
-	struct pollfd &sockStruct = Core::__events[sd];
-
-	if (sockStruct.revents & POLLIN)
+	if (FD_ISSET(sd, &readSet))
 	{
-		if (isServerSocket(sockStruct.fd))
+		if (isServerSocket(sd))
 		{
-			if (Core::__sockets.size() >= MAX_EVENTS)
+			if (Core::currentLoad() >= MAX_EVENTS)
 				wsu::__criticalOverLoad = true;
 			else
 			{
-				acceptNewConnection(sockStruct.fd);
+				acceptNewConnection(sd);
 				retV--;
 			}
 		}
 		else
 		{
-			readDataFromSocket(sockStruct.fd);
+			readDataFromSocket(sd);
 			retV--;
 		}
 	}
-	else if (sockStruct.revents & POLLOUT)
+	else if (FD_ISSET(sd, &writeSet))
 	{
-		writeDataToSocket(sockStruct.fd);
-		retV--;
-	}
-	else if (sockStruct.revents & POLLHUP)
-	{
-		removeConnection(sockStruct.fd);
+		writeDataToSocket(sd);
 		retV--;
 	}
 	else if (wsu::__criticalOverLoad == true)
 	{
 		wsu::fatal("critcal server overload");
-		if (!Core::isServerSocket(sockStruct.fd))
+		if (!Core::isServerSocket(sd))
 		{
-			removeConnection(sockStruct.fd);
+			removeConnection(sd);
 		}
 	}
-	if (Core::__servers.size() == Core::__sockets.size())
+	if (Core::__servers.size() == Core::__connections.size())
 		wsu::__criticalOverLoad = false;
 }
 
@@ -292,6 +276,7 @@ void Core::mainProcess()
 		}
 		catch (std::exception &e)
 		{
+			wsu::warn("connection " + wsu::intToString(it->second->getConnectionSocket()) + ": " + e.what());
 			closeConnection.push_back(it->second->getConnectionSocket());
 		}
 	}
@@ -303,36 +288,40 @@ void Core::mainProcess()
 void Core::mainLoop()
 {
 	int retV = 0;
+	fd_set readSet, writeSet;
 
-	if (Core::__sockNum < MAX_EVENTS)
-		Core::up = true;
-	if (Core::__sockNum == 0)
-		throw std::runtime_error("config file does not identify any functional server");
+	if (Core::__servers.empty())
+		throw std::runtime_error("configuration does not identify any functional server");
+	Core::up = true;
 	try
 	{
 		while (Core::up)
 		{
-			Core::__allocN = Core::__sockNum;
-			Core::__events = wsu::data(Core::__sockets);
-			retV = poll(Core::__events, Core::__allocN, POLL_TIMEOUT);
-			if (retV != 0 && retV != -1)
+			int maxFd = Core::buildSets(readSet, writeSet);
+			struct timeval tv;
+			tv.tv_sec = SELECT_TIMEOUT / 1000;
+			tv.tv_usec = (SELECT_TIMEOUT % 1000) * 1000;
+			retV = select(maxFd + 1, &readSet, &writeSet, NULL, &tv);
+			if (retV < 0)
 			{
-				try {
-					for (int sd = 0; sd < Core::__allocN && retV; sd++)
-					{
-						if (wsu::__criticalOverLoad == true)
-							retV = Core::__allocN;
-						Core::proccessPollEvent(sd, retV);
-					}
-					Core::mainProcess();
-
-				} catch(wsu::Exit &e)
-				{
-					Core::up = false;
-				}
+				throw std::runtime_error("select syscall failed");
 			}
-			delete[] Core::__events;
-			Core::__events = NULL;
+			if (retV == 0)
+				continue;
+			try
+			{
+				for (int sd = 0; sd <= maxFd && retV > 0; sd++)
+				{
+					if (wsu::__criticalOverLoad == true)
+						retV = maxFd + 1;
+					Core::proccessSelectEvent(sd, readSet, writeSet, retV);
+				}
+				Core::mainProcess();
+			}
+			catch (wsu::Exit &e)
+			{
+				Core::up = false;
+			}
 		}
 	}
 	catch (std::exception &e)

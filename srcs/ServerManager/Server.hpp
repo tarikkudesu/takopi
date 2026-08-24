@@ -1,7 +1,7 @@
 #ifndef __SERVER_HPP__
 # define __SERVER_HPP__
 
-# include "Location.hpp"
+# include "../utilities/BasicString.hpp"
 
 class Server
 {
@@ -9,44 +9,21 @@ class Server
 		int								__sd;
 		int								__port;
 		String							__host;
-		String							__root;
-		std::vector< Location >			__locations;
-		t_svec							__directives; // temporary usage
 
-		void							proccessServerDirectives();
-		void							proccessToken(t_svec &tokens);
-		void							proccessRootToken( t_svec &tokens );
-		void							proccessHostToken( t_svec &tokens );
-		void							parseServerDirectives( String line );
-		void							proccessListenToken( t_svec &tokens );
-		void							proccessServerNameToken( t_svec &tokens );
-		void							parseLocations( String line, String parent );
-		void							skipLocationBlock( String &line, size_t pos );
-		void							addServerDirective( String &line, size_t end );
-		void							addLocationBlock( String &line, size_t pos, String parent );
-		void							proccessLocationBlock(String &location, size_t pos, String &parent );
 		Server();
+		Server( const Server &copy );
+		Server	&operator=( const Server &assign );
 
 	public:
-		bool							__valid; // temporary usage
-		std::vector< int >				__ports; // temporary usage
-		t_svec							__serverNames;
+		void							setup();
 
-		bool							amITheServerYouAreLookingFor( const String &sN );
-		Location						&identifyLocation( const String &URI );
-		String							addUserInDb(const String &userInfo);
-		String							userInDb(String& user, int i) const;
 		int								getServerSocket() const;
 		String							serverIdentity() const;
 		const String					&getServerHost() const;
 		int								getServerPort() const;
 		void							setPort(int port);
-		void							setup();
 
-
-		Server( String line );
-		Server( const Server &copy );
-		Server	&operator=( const Server &assign );
+		Server(int port, const String &host);
 		~Server();
 };
 

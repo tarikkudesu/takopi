@@ -1,7 +1,7 @@
+#include "Game/Game.hpp"
+#include "ServerManager/Core.hpp"
 
-#include "ServerManager/ServerManager.hpp"
-
-void signalHandler(int signal)
+static void signalHandler(int signal)
 {
 	if (signal == SIGPIPE)
 		wsu::warn("SIGPIPE");
@@ -13,13 +13,16 @@ int main(int ac, char **av)
 {
 	signal(SIGPIPE, signalHandler);
 	signal(SIGINT, signalHandler);
-	std::vector<String> args;
-	for (int i = 1; i < ac; ++i)
-		args.push_back(String(av[i]));
+	try
 	{
-		wsu::logs(args);
-		ServerManager webserv(*(args.end() - 1));
-		webserv.setUpWebserv();
+		GameConfig config = Game::parseArgs(ac, av);
+		Game game(config);
+		game.start();
 	}
-	exit(EXIT_FAILURE);
+	catch (const std::exception &e)
+	{
+		wsu::terr(e.what());
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
 }

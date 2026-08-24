@@ -9,9 +9,6 @@ wsu &wsu::operator=(const wsu &assign)
 }
 wsu::~wsu() {}
 
-std::map<int16_t, String> wsu::__defaultErrorPages;
-std::map<int16_t, String> wsu::__errCode;
-Map wsu::__mimeTypes;
 bool wsu::__criticalOverLoad = false;
 bool wsu::__debug = false;
 bool wsu::__info = false;
@@ -29,58 +26,21 @@ const char *wsu::Exit::what(void) const throw() { return "Exit"; }
  *											   LOGS 											*
  ************************************************************************************************/
 
-void wsu::logs(std::vector<String> &args)
+void wsu::logs(const std::vector<String> &args)
 {
 	std::cout << std::unitbuf;
 	std::cerr << std::unitbuf;
-	if (args.size() > 6)
-	{
-		std::cerr << USAGE << std::endl;
-		exit(EXIT_FAILURE);
-	}
-	else if (args.size() == 0)
-		args.push_back(DEFAULT_CONFIG_FILE_PATH);
-	else if (args.size() == 1)
-		;
-	else if (args.size() == 2)
-	{
-		if ((args.at(0) != "-l" &&
-			 args.at(0) != "--logs") ||
-			(args.at(1) != "debug" &&
-			 args.at(1) != "info" &&
-			 args.at(1) != "warn" &&
-			 args.at(1) != "error" &&
-			 args.at(1) != "fatal" &&
-			 args.at(1) != "all"))
-		{
-			std::cerr << USAGE << std::endl;
-			exit(EXIT_FAILURE);
-		}
-		args.push_back(DEFAULT_CONFIG_FILE_PATH);
-	}
-	else
-	{
-		if (*(args.end() - 1) == "debug" ||
-			*(args.end() - 1) == "info" ||
-			*(args.end() - 1) == "warn" ||
-			*(args.end() - 1) == "error" ||
-			*(args.end() - 1) == "fatal" ||
-			*(args.end() - 1) == "all")
-		{
-			args.push_back(DEFAULT_CONFIG_FILE_PATH);
-		}
-	}
 	for (std::vector<String>::const_iterator it = args.begin(); it != args.end(); it++)
 	{
-		if (*it == "debug" && !wsu::__debug)
+		if (*it == "debug")
 			wsu::__debug = true;
-		else if (*it == "info" && !wsu::__info)
+		else if (*it == "info")
 			wsu::__info = true;
-		else if (*it == "warn" && !wsu::__warn)
+		else if (*it == "warn")
 			wsu::__warn = true;
-		else if (*it == "error" && !wsu::__error)
+		else if (*it == "error")
 			wsu::__error = true;
-		else if (*it == "fatal" && !wsu::__fatal)
+		else if (*it == "fatal")
 			wsu::__fatal = true;
 		else if (*it == "all")
 		{
@@ -90,27 +50,10 @@ void wsu::logs(std::vector<String> &args)
 			wsu::__fatal = true;
 			wsu::__debug = true;
 		}
-		else if (it == args.end() - 1)
-			;
-		else if (it == args.begin() && (args.at(0) == "-l" || args.at(0) == "--logs"))
-			;
-		else
-		{
-			std::cerr << USAGE << std::endl;
-			exit(EXIT_FAILURE);
-		}
 	}
-	try
+	if (READ_SIZE < 1024)
 	{
-		if (READ_SIZE < 1024)
-			throw std::runtime_error("read size less then 1024 is not recommended");
-		wsu::loadErrPages();
-		wsu::loadMimeTypes();
-		wsu::loadErrorCodes();
-	}
-	catch (std::exception &e)
-	{
-		wsu::terr(e.what());
+		wsu::terr("read size less then 1024 is not recommended");
 		exit(EXIT_FAILURE);
 	}
 }
@@ -143,11 +86,7 @@ void wsu::running(String __log_message)
 {
 	std::cout << BLUE << wsu::logDate() << GREEN << " [RUNNING] " << RESET << __log_message << std::endl;
 }
-void wsu::terr(char *__error_message)
-{
-	std::cerr << RED << "error: " << RESET << __error_message << std::endl;
-}
-void wsu::terr(String __error_message)
+void wsu::terr(const String &__error_message)
 {
 	std::cerr << RED << "error: " << RESET << __error_message << std::endl;
 }
@@ -187,24 +126,6 @@ String wsu::generateTimeBasedFileName()
 	static unsigned long cpt;
 	return wsu::intToString(std::time(NULL) + cpt++) + ".html";
 }
-String wsu::decode(String &encoded)
-{
-	String decoded;
-	for (String::iterator it = encoded.begin(); it != encoded.end(); it++)
-	{
-		if (*it == '%' && it + 1 != encoded.end() && it + 2 != encoded.end())
-		{
-			String number = String(it + 1, it + 3);
-			decoded += static_cast<char>(wsu::hexToInt("0x" + number));
-			it += 2;
-		}
-		else if (*it == '+')
-			decoded += ' ';
-		else
-			decoded += *it;
-	}
-	return decoded;
-}
 void wsu::bzero(void *s, size_t n)
 {
 	char *bytePtr = static_cast<char *>(s);
@@ -220,64 +141,6 @@ String wsu::readFielContent(String fileName)
 		userInfo.append(buffer);
 	file.close();
 	return userInfo;
-}
-String wsu::methodToString(t_method t)
-{
-	if (t == GET)
-		return "GET";
-	else if (t == OPTIONS)
-		return "OPTIONS";
-	else if (t == HEAD)
-		return "HEAD";
-	else if (t == POST)
-		return "POST";
-	else if (t == PUT)
-		return "PUT";
-	else if (t == DELETE)
-		return "DELETE";
-	else if (t == TRACE)
-		return "TRACE";
-	else if (t == CONNECT)
-		return "CONNECT";
-	return "NONE";
-}
-ssize_t wsu::getFileSize(const String &filename)
-{
-	struct stat st;
-	if (stat(filename.c_str(), &st) == 0)
-		return st.st_size;
-	return -1;
-}
-ssize_t wsu::getFileLastModifiedTime(const String &filename)
-{
-	struct stat st;
-	if (stat(filename.c_str(), &st) == 0)
-		return st.st_mtime;
-	return -1;
-}
-bool wsu::endWith(const std::string &file, const char *extension)
-{
-	int fileLen = file.length();
-	int exLen = wsu::strlen(extension);
-	if (fileLen < exLen)
-		return false;
-	return file.compare(fileLen - exLen, exLen, extension) == 0;
-}
-String wsu::generateTokenId()
-{
-	String tokenId;
-	std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-	std::string specialChars = "123456789";
-	static int sed = 0;
-	for (int i = 0; i < 10; i++)
-	{
-		std::srand(static_cast<unsigned int>(std::time(0) + sed++));
-		int randomAlphabetIndex = std::rand() % alphabet.size();
-		int randomSpecialIndex = std::rand() % specialChars.size();
-		tokenId += alphabet[randomAlphabetIndex];
-		tokenId += specialChars[randomSpecialIndex];
-	}
-	return tokenId;
 }
 String wsu::logDate()
 {
@@ -438,121 +301,6 @@ String wsu::joinPaths(const String &path1, const String &path2)
 	if (*(path1.end() - 1) == '/' && *(path2.begin()) == '/')
 		return path1 + path2.substr(1, path2.length());
 	return path1 + path2;
-}
-struct pollfd *wsu::data(t_events &events)
-{
-	struct pollfd *arr = new struct pollfd[events.size()];
-	for (size_t i = 0; i < events.size(); ++i)
-		arr[i] = events[i];
-	return arr;
-}
-String wsu::getContentType(const String &uri)
-{
-	t_svec tmp = wsu::splitByChar(uri, '/');
-	if (tmp.empty())
-		return "text/html";
-	String file = *(tmp.end() - 1);
-	size_t dot_pos = file.rfind('.');
-	if (dot_pos == String::npos)
-		return "text/html";
-	String ext = file.substr(dot_pos + 1);
-	Map::iterator it = wsu::__mimeTypes.find(ext);
-	if (it != __mimeTypes.end())
-		return it->second;
-	return "text/html";
-}
-void wsu::loadErrorCodes()
-{
-	wsu::debug("loading error codes");
-	if (!wsu::__errCode.empty())
-		return;
-	std::fstream fs;
-	String line;
-	fs.open(ERROR_CODES_DB_PATH);
-	if (!fs.is_open())
-		throw std::runtime_error("could not open: " ERROR_CODES_DB_PATH);
-	std::stringstream stream;
-	do
-	{
-		std::getline(fs, line, '\n');
-		if (fs.eof())
-			break;
-		if (fs.fail())
-		{
-			fs.close();
-			throw std::runtime_error("could not read from " ERROR_CODES_DB_PATH);
-		}
-		t_svec vect = wsu::splitByChar(line, ',');
-		if (vect.size() == 2)
-		{
-			wsu::trimSpaces(vect[0]), wsu::trimSpaces(vect[1]);
-			wsu::__errCode.insert(std::make_pair(wsu::stringToInt(vect[0]), vect[1]));
-		}
-		line.clear();
-	} while (true);
-	fs.close();
-}
-void wsu::loadErrPages()
-{
-	wsu::debug("loading default error pages");
-	if (!wsu::__defaultErrorPages.empty())
-		return;
-	std::fstream fs;
-	String line;
-	fs.open(ERROR_PAGES_DB_PATH);
-	if (!fs.is_open())
-		throw std::runtime_error("could not open: " ERROR_PAGES_DB_PATH);
-	std::stringstream stream;
-	do
-	{
-		std::getline(fs, line, '\n');
-		if (fs.eof())
-			break;
-		if (fs.fail())
-		{
-			fs.close();
-			throw std::runtime_error("could not read from " ERROR_PAGES_DB_PATH);
-		}
-		t_svec vect = wsu::splitByChar(line, ',');
-		if (vect.size() == 2)
-		{
-			wsu::trimSpaces(vect[0]), wsu::trimSpaces(vect[1]);
-			wsu::__defaultErrorPages.insert(std::make_pair(wsu::stringToInt(vect[0]), vect[1]));
-		}
-		line.clear();
-	} while (true);
-	fs.close();
-}
-void wsu::loadMimeTypes(void)
-{
-	wsu::debug("loading mime types");
-	if (!wsu::__mimeTypes.empty())
-		return;
-	std::ifstream fs;
-	String line;
-	fs.open(MIME_TYPES_DB_PATH);
-	if (!fs.is_open())
-		throw std::runtime_error("could not open: " MIME_TYPES_DB_PATH);
-	std::stringstream stream;
-	do
-	{
-		std::getline(fs, line, '\n');
-		if (fs.eof())
-			break;
-		if (fs.fail())
-		{
-			fs.close();
-			throw std::runtime_error("could not read from " MIME_TYPES_DB_PATH);
-		}
-		t_svec vect = wsu::splitByChar(line, ',');
-		if (vect.size() == 2)
-		{
-			wsu::trimSpaces(vect[0]), wsu::trimSpaces(vect[1]);
-			wsu::__mimeTypes.insert(std::make_pair(vect[0], vect[1]));
-		}
-		line.clear();
-	} while (true);
-	fs.close();
 }
 String wsu::buildListingBody(String path, const t_svec &list)
 {
