@@ -1,92 +1,92 @@
-#include "WSU.hpp"
+#include "MZU.hpp"
 
-wsu::wsu() {}
-wsu::wsu(const wsu &copy) { (void)copy; }
-wsu &wsu::operator=(const wsu &assign)
+mzu::mzu() {}
+mzu::mzu(const mzu &copy) { (void)copy; }
+mzu &mzu::operator=(const mzu &assign)
 {
 	(void)assign;
 	return *this;
 }
-wsu::~wsu() {}
+mzu::~mzu() {}
 
-bool wsu::__criticalOverLoad = false;
-bool wsu::__debug = false;
-bool wsu::__info = false;
-bool wsu::__warn = false;
-bool wsu::__error = false;
-bool wsu::__fatal = false;
-wsu::persist::persist(void) {}
-const char *wsu::persist::what(void) const throw() { return "persist"; }
-wsu::Close::Close(void) {}
-const char *wsu::Close::what(void) const throw() { return "Close"; }
-wsu::Exit::Exit(void) {}
-const char *wsu::Exit::what(void) const throw() { return "Exit"; }
+bool mzu::__criticalOverLoad = false;
+bool mzu::__debug = false;
+bool mzu::__info = false;
+bool mzu::__warn = false;
+bool mzu::__error = false;
+bool mzu::__fatal = false;
+mzu::persist::persist(void) {}
+const char *mzu::persist::what(void) const throw() { return "persist"; }
+mzu::Close::Close(void) {}
+const char *mzu::Close::what(void) const throw() { return "Close"; }
+mzu::Exit::Exit(void) {}
+const char *mzu::Exit::what(void) const throw() { return "Exit"; }
 
 /************************************************************************************************
  *											   LOGS 											*
  ************************************************************************************************/
 
-void wsu::logs(const std::vector<String> &args)
+void mzu::logs(const std::vector<String> &args)
 {
 	std::cout << std::unitbuf;
 	std::cerr << std::unitbuf;
 	for (std::vector<String>::const_iterator it = args.begin(); it != args.end(); it++)
 	{
 		if (*it == "debug")
-			wsu::__debug = true;
+			mzu::__debug = true;
 		else if (*it == "info")
-			wsu::__info = true;
+			mzu::__info = true;
 		else if (*it == "warn")
-			wsu::__warn = true;
+			mzu::__warn = true;
 		else if (*it == "error")
-			wsu::__error = true;
+			mzu::__error = true;
 		else if (*it == "fatal")
-			wsu::__fatal = true;
+			mzu::__fatal = true;
 		else if (*it == "all")
 		{
-			wsu::__info = true;
-			wsu::__warn = true;
-			wsu::__error = true;
-			wsu::__fatal = true;
-			wsu::__debug = true;
+			mzu::__info = true;
+			mzu::__warn = true;
+			mzu::__error = true;
+			mzu::__fatal = true;
+			mzu::__debug = true;
 		}
 	}
 	if (READ_SIZE < 1024)
 	{
-		wsu::terr("read size less then 1024 is not recommended");
+		mzu::terr("read size less then 1024 is not recommended");
 		exit(EXIT_FAILURE);
 	}
 }
-void wsu::debug(String __log_message)
+void mzu::debug(String __log_message)
 {
-	if (wsu::__debug)
-		std::cout << BLUE << wsu::logDate() << MAGENTA << " [DEBUG] " << RESET << __log_message << std::endl;
+	if (mzu::__debug)
+		std::cout << BLUE << mzu::logDate() << MAGENTA << " [DEBUG] " << RESET << __log_message << std::endl;
 }
-void wsu::info(String __log_message)
+void mzu::info(String __log_message)
 {
-	if (wsu::__info)
-		std::cout << BLUE << wsu::logDate() << GREEN << " [INFO] " << RESET << __log_message << std::endl;
+	if (mzu::__info)
+		std::cout << BLUE << mzu::logDate() << GREEN << " [INFO] " << RESET << __log_message << std::endl;
 }
-void wsu::warn(String __log_message)
+void mzu::warn(String __log_message)
 {
-	if (wsu::__warn)
-		std::cout << BLUE << wsu::logDate() << YELLOW << " [WARN] " << RESET << __log_message << std::endl;
+	if (mzu::__warn)
+		std::cout << BLUE << mzu::logDate() << YELLOW << " [WARN] " << RESET << __log_message << std::endl;
 }
-void wsu::error(String __log_message)
+void mzu::error(String __log_message)
 {
-	if (wsu::__error)
-		std::cerr << BLUE << wsu::logDate() << RED << " [ERROR] " << RESET << __log_message << std::endl;
+	if (mzu::__error)
+		std::cerr << BLUE << mzu::logDate() << RED << " [ERROR] " << RESET << __log_message << std::endl;
 }
-void wsu::fatal(String __log_message)
+void mzu::fatal(String __log_message)
 {
-	if (wsu::__fatal)
-		std::cerr << BLUE << wsu::logDate() << RED << " [FATAL] " << RESET << __log_message << std::endl;
+	if (mzu::__fatal)
+		std::cerr << BLUE << mzu::logDate() << RED << " [FATAL] " << RESET << __log_message << std::endl;
 }
-void wsu::running(String __log_message)
+void mzu::running(String __log_message)
 {
-	std::cout << BLUE << wsu::logDate() << GREEN << " [RUNNING] " << RESET << __log_message << std::endl;
+	std::cout << BLUE << mzu::logDate() << GREEN << " [RUNNING] " << RESET << __log_message << std::endl;
 }
-void wsu::terr(const String &__error_message)
+void mzu::terr(const String &__error_message)
 {
 	std::cerr << RED << "error: " << RESET << __error_message << std::endl;
 }
@@ -94,7 +94,7 @@ void wsu::terr(const String &__error_message)
  *											 UTILITIES											 *
  *************************************************************************************************/
 
-size_t	wsu::strlen(const char *str)
+size_t	mzu::strlen(const char *str)
 {
 	int	i;
 
@@ -103,7 +103,7 @@ size_t	wsu::strlen(const char *str)
 		i++;
 	return (i);
 }
-char *wsu::strdup(String const &s1)
+char *mzu::strdup(String const &s1)
 {
 	size_t	i;
 	char	*res;
@@ -121,18 +121,18 @@ char *wsu::strdup(String const &s1)
 	*(res + i) = '\0';
 	return (res);
 }
-String wsu::generateTimeBasedFileName()
+String mzu::generateTimeBasedFileName()
 {
 	static unsigned long cpt;
-	return wsu::intToString(std::time(NULL) + cpt++) + ".html";
+	return mzu::intToString(std::time(NULL) + cpt++) + ".html";
 }
-void wsu::bzero(void *s, size_t n)
+void mzu::bzero(void *s, size_t n)
 {
 	char *bytePtr = static_cast<char *>(s);
 	for (size_t i = 0; i < n; ++i)
 		bytePtr[i] = 0;
 }
-String wsu::readFielContent(String fileName)
+String mzu::readFielContent(String fileName)
 {
 	String buffer;
 	String userInfo;
@@ -142,7 +142,7 @@ String wsu::readFielContent(String fileName)
 	file.close();
 	return userInfo;
 }
-String wsu::logDate()
+String mzu::logDate()
 {
 	char buffer[30];
 	std::time_t t = std::time(NULL);
@@ -150,7 +150,7 @@ String wsu::logDate()
 	std::strftime(buffer, sizeof(buffer), "[%d/%b/%Y:%H:%M:%S]", tm);
 	return String(buffer);
 }
-String wsu::buildIMFDate(size_t elapsed)
+String mzu::buildIMFDate(size_t elapsed)
 {
 	char buffer[30];
 	std::time_t t = std::time(NULL) + elapsed;
@@ -158,7 +158,7 @@ String wsu::buildIMFDate(size_t elapsed)
 	std::strftime(buffer, sizeof(buffer), "%a, %d %b %Y %H:%M:%S GMT", tm);
 	return String(buffer);
 }
-void wsu::trimSpaces(String &str)
+void mzu::trimSpaces(String &str)
 {
 	if (str.empty())
 		return;
@@ -173,7 +173,7 @@ void wsu::trimSpaces(String &str)
 	else
 		str = str.substr(start, end - start + 1);
 }
-std::vector<String> wsu::splitBySpaces(const String &input)
+std::vector<String> mzu::splitBySpaces(const String &input)
 {
 	String word;
 	std::istringstream iss(input);
@@ -182,7 +182,7 @@ std::vector<String> wsu::splitBySpaces(const String &input)
 		result.push_back(word);
 	return result;
 }
-std::vector<String> wsu::splitByChar(const String &input, char del)
+std::vector<String> mzu::splitByChar(const String &input, char del)
 {
 	std::vector<String> result;
 	String temp;
@@ -201,13 +201,13 @@ std::vector<String> wsu::splitByChar(const String &input, char del)
 		result.push_back(temp);
 	return result;
 }
-String wsu::intToString(int number)
+String mzu::intToString(int number)
 {
 	std::ostringstream oss;
 	oss << number;
 	return oss.str();
 }
-long wsu::stringToInt(const String &str)
+long mzu::stringToInt(const String &str)
 {
 	std::istringstream iss(str);
 	long number = 0;
@@ -215,7 +215,7 @@ long wsu::stringToInt(const String &str)
 	return number;
 }
 
-int wsu::hexToInt(const String &str)
+int mzu::hexToInt(const String &str)
 {
 	int number = 0;
 	std::stringstream ss;
@@ -223,7 +223,7 @@ int wsu::hexToInt(const String &str)
 	ss >> number;
 	return number;
 }
-void wsu::replaceString(String &original, const String toReplace, const String replacement)
+void mzu::replaceString(String &original, const String toReplace, const String replacement)
 {
 	size_t pos = 0;
 	while ((pos = original.find(toReplace, pos)) != String::npos)
@@ -232,21 +232,21 @@ void wsu::replaceString(String &original, const String toReplace, const String r
 		pos += replacement.length();
 	}
 }
-void wsu::toUpperString(String &input)
+void mzu::toUpperString(String &input)
 {
 	for (size_t i = 0; i < input.length(); ++i)
 	{
 		input[i] = static_cast<char>(std::toupper(static_cast<unsigned char>(input[i])));
 	}
 }
-void wsu::toLowerString(String &input)
+void mzu::toLowerString(String &input)
 {
 	for (size_t i = 0; i < input.length(); ++i)
 	{
 		input[i] = static_cast<char>(std::tolower(static_cast<unsigned char>(input[i])));
 	}
 }
-String wsu::mergeByChar(const std::vector<String> &input, char del)
+String mzu::mergeByChar(const std::vector<String> &input, char del)
 {
 	String result;
 	for (std::vector<String>::const_iterator it = input.begin(); it != input.end(); it++)
@@ -257,10 +257,10 @@ String wsu::mergeByChar(const std::vector<String> &input, char del)
 	}
 	return result;
 }
-bool wsu::samePath(const String &path1, const String &path2)
+bool mzu::samePath(const String &path1, const String &path2)
 {
-	t_svec vPath1 = wsu::splitByChar(path1, '/');
-	t_svec vPath2 = wsu::splitByChar(path2, '/');
+	t_svec vPath1 = mzu::splitByChar(path1, '/');
+	t_svec vPath2 = mzu::splitByChar(path2, '/');
 	size_t pos = 0;
 	if (vPath1.size() != vPath2.size())
 		return false;
@@ -271,10 +271,10 @@ bool wsu::samePath(const String &path1, const String &path2)
 		return true;
 	return false;
 }
-bool wsu::containsPath(const String &path, const String &subPath)
+bool mzu::containsPath(const String &path, const String &subPath)
 {
-	t_svec vPath = wsu::splitByChar(path, '/');
-	t_svec vSubPath = wsu::splitByChar(subPath, '/');
+	t_svec vPath = mzu::splitByChar(path, '/');
+	t_svec vSubPath = mzu::splitByChar(subPath, '/');
 	size_t pos = 0;
 	if (vPath.empty())
 		return true;
@@ -288,7 +288,7 @@ bool wsu::containsPath(const String &path, const String &subPath)
 	}
 	return true;
 }
-String wsu::joinPaths(const String &path1, const String &path2)
+String mzu::joinPaths(const String &path1, const String &path2)
 {
 	if (path1.empty() && path2.empty())
 		return "./";
@@ -302,7 +302,7 @@ String wsu::joinPaths(const String &path1, const String &path2)
 		return path1 + path2.substr(1, path2.length());
 	return path1 + path2;
 }
-String wsu::buildListingBody(String path, const t_svec &list)
+String mzu::buildListingBody(String path, const t_svec &list)
 {
 	String body = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\">"
 				  "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Document</title>"
@@ -320,12 +320,12 @@ String wsu::buildListingBody(String path, const t_svec &list)
 		if (it->empty() || String::npos == it->find_first_not_of(" \t\n\r\v\f") || *it == "." || *it == "..")
 			continue;
 		String listing = anchor;
-		String link = wsu::joinPaths(path, *it);
-		wsu::replaceString(listing, "LINK", link);
-		wsu::replaceString(listing, "NAME", *it);
+		String link = mzu::joinPaths(path, *it);
+		mzu::replaceString(listing, "LINK", link);
+		mzu::replaceString(listing, "NAME", *it);
 		ss << listing;
 	}
-	wsu::replaceString(body, "PATH", path);
-	wsu::replaceString(body, "LISTING", ss.str());
+	mzu::replaceString(body, "PATH", path);
+	mzu::replaceString(body, "LISTING", ss.str());
 	return body;
 }

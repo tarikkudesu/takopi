@@ -1,22 +1,32 @@
 #include "Connection.hpp"
 
-Connection::Connection(Server *server) : __sd(-1),
-										 __server(server)
+Connection::Connection(Server *server) : __sd(-1)
 {
-	wsu::debug("Connection constructor");
+	mzu::debug("Connection constructor");
+}
+Connection::Connection(const Connection &copy)
+{
+	mzu::debug("Connection copy constructor");
+	*this = copy;
+}
+Connection &Connection::operator=(const Connection &assign)
+{
+	mzu::debug("Connection copy assignement operator");
+	if (this != &assign)
+	{
+		__sd = assign.__sd;
+		__responseQueue = assign.__responseQueue;
+	}
+	return *this;
 }
 Connection::~Connection()
 {
-	wsu::debug("Connection destructor");
+	mzu::debug("Connection destructor");
 }
 
 void Connection::setSocket(int sd)
 {
 	this->__sd = sd;
-}
-void Connection::setServer(Server *server)
-{
-	this->__server = server;
 }
 int Connection::getConnectionSocket()
 {
@@ -36,22 +46,16 @@ void Connection::processData()
 {
 	static const String delimiter(NEWLINE);
 
-	while (!this->__buffer.empty())
-	{
-		size_t pos = this->__buffer.find(delimiter);
-		if (pos == String::npos)
-			break;
-		if (pos > MAX_MESSAGE_SIZE)
-			throw std::runtime_error("message exceeds maximum allowed size");
-		String message = this->__buffer.substr(0, pos).to_string();
-		this->__buffer.erase(0, pos + delimiter.length());
-		if (!message.empty() && *(message.end() - 1) == '\r')
-			message.erase(message.size() - 1);
-		if (this->__server != NULL && !message.empty())
-			this->__client.handleMessage(message);
-	}
-	if (this->__buffer.length() > MAX_MESSAGE_SIZE)
+	if (this->__buffer.empty())
+		return;
+	size_t pos = this->__buffer.find(delimiter);
+	if (pos == String::npos)
+		return;
+	if (pos > MAX_MESSAGE_SIZE)
 		throw std::runtime_error("message exceeds maximum allowed size");
+	String message = this->__buffer.substr(0, pos).to_string();
+	this->__buffer.erase(0, pos + delimiter.length());
+	mzu::info("received: \"" + message + "\"");
 }
 
 /*****************************************************************************

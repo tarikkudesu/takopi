@@ -1,95 +1,231 @@
+#include "AdminServer.hpp"
+#include "GameServer.hpp"
+#include "GuiServer.hpp"
 #include "ServerManager.hpp"
 
-ServerManager::ServerManager(const GameConfig &config) : __config(config)
+ServerManager::ServerManager(const String &configutation_file) : __config(configutation_file)
 {
-	wsu::debug("ServerManager constructor");
+	mzu::debug("ServerManager para constructor");
+	mzu::info("configuration file: " + configutation_file);
 }
 
+ServerManager::ServerManager(const ServerManager &copy)
+{
+	mzu::debug("ServerManager copy constructor");
+	*this = copy;
+}
+
+ServerManager &ServerManager::operator=(const ServerManager &assign)
+{
+	mzu::debug("ServerManager copy assignement operator");
+	if (this != &assign)
+	{
+		this->__lines = assign.__lines;
+		this->__config = assign.__config;
+		this->__serverTemplates = assign.__serverTemplates;
+	}
+	return *this;
+}
 ServerManager::~ServerManager()
 {
+	for (t_serVect::iterator it = __serverTemplates.begin(); it != __serverTemplates.end(); it++)
+		delete *it;
+	this->__serverTemplates.clear();
 	Core::clear();
-	wsu::debug("ServerManager destructor");
+	mzu::debug("ServerManager destructor");
 }
 
 /*************************************************************************
- *						   CONFIG FILE FALLBACK						     *
+ *							   SERVER PARSER							 *
  *************************************************************************/
 
-void ServerManager::parseConfigFile(const String &path)
+void ServerManager::readFile()
 {
-	std::fstream fs;
+	std::fstream fS;
 	String line;
 
-	fs.open(path.c_str());
-	if (!fs.is_open())
-		throw std::runtime_error("couldn't open configuration file: " + path);
-	while (std::getline(fs, line, '\n'))
+	fS.open(__config.c_str());
+	if (!fS.is_open())
+		throw std::runtime_error("coudln't open configuration file: " + __config);
+	do
 	{
-		t_svec tokens = wsu::splitBySpaces(line);
-		if (tokens.empty())
+		std::getline(fS, line, '\n');
+		if (fS.fail())
+			break;
+		size_t pos = line.find("# ");
+		if (pos != std::string::npos)
+			line = line.substr(0, pos);
+		if (line.empty() || String::npos == line.find_first_not_of(" \t\n\r\v\f"))
 			continue;
-		if (tokens.at(0) == "port" && tokens.size() == 2 && !__config.portSet)
-			__config.port = wsu::stringToInt(tokens.at(1)), __config.portSet = true;
-		else if (tokens.at(0) == "width" && tokens.size() == 2 && !__config.width)
-			__config.width = wsu::stringToInt(tokens.at(1));
-		else if (tokens.at(0) == "height" && tokens.size() == 2 && !__config.height)
-			__config.height = wsu::stringToInt(tokens.at(1));
-		else if (tokens.at(0) == "team" && tokens.size() == 2)
-			__config.teams.push_back(tokens.at(1));
+		this->__lines.append(line);
+		this->__lines.append(" ");
+		line.clear();
+		if (fS.eof())
+			break;
+	} while (true);
+	fS.close();
+}
+void ServerManager::firstCheck()
+{
+	if (__lines.empty() || String::npos == __lines.find_first_not_of(" \t\n\r\v\f"))
+		throw std::runtime_error("empty configuration file");
+	if (String::npos == __lines.find_first_of("{}"))
+		throw std::runtime_error("invalid configuration file");
+	if (String::npos != __lines.find_first_not_of(PRINTABLE))
+		throw std::runtime_error("unknown characters");
+}
+void ServerManager::checkBraces()
+{
+	size_t end = 0;
+	size_t tracker = 0;
+	do
+	{
+		if (end >= this->__lines.length())
+			break;
+		if (this->__lines.at(end) == '}')
+			tracker--;
+		if (this->__lines.at(end) == '{')
+			tracker++;
+		end++;
+	} while (true);
+	if (tracker != 0)
+		throw std::runtime_error("unclosed curly braces");
+}
+void ServerManager::reduceSpaces()
+{
+	std::string result;
+	bool inSpace = false;
+
+	for (size_t i = 0; i < __lines.length(); i++)
+	{
+		if (std::isspace(__lines.at(i)))
+		{
+			if (!inSpace)
+			{
+				result += ' ';
+				inSpace = true;
+			}
+		}
 		else
-			wsu::warn("ignoring invalid configuration line: \"" + line + "\"");
+		{
+			result += __lines.at(i);
+			inSpace = false;
+		}
 	}
-	fs.close();
+	this->__lines.clear();
+	this->__lines.append(result);
+}
+String ServerManager::checkOuterscope(String outerScope)
+{
+	mzu::trimSpaces(outerScope);
+	if (outerScope != "game" && outerScope != "admin" && outerScope != "gui")
+		throw std::runtime_error("invalid configuration file: unknown server type \"" + outerScope + "\"");
+	if (__lines.find_first_of("{}") == String::npos)
+		throw std::runtime_error("invalid configuration file ");
+	return outerScope;
+}
+void ServerManager::setUpServer(size_t start)
+{
+	size_t end = start + 1;
+	size_t tracker = 1;
+
+	String type = checkOuterscope(String(this->__lines.begin(), this->__lines.begin() + start));
+	do
+	{
+		if (end >= this->__lines.length())
+			break;
+		if (this->__lines.at(end) == '}')
+			tracker--;
+		if (this->__lines.at(end) == '{')
+			tracker++;
+		end++;
+		if (tracker == 0)
+			break;
+	} while (true);
+	if (tracker != 0)
+		throw std::runtime_error("unclosed curly braces");
+	String serverConfig(this->__lines.begin() + start, this->__lines.begin() + end);
+	this->__lines.erase(0, end);
+	Server *server = NULL;
+	try
+	{
+		if (type == "game")
+			server = new GameServer(serverConfig);
+		else if (type == "admin")
+			server = new AdminServer(serverConfig);
+		else
+			server = new GuiServer(serverConfig);
+	}
+	catch (std::exception &e)
+	{
+		(void)e;
+		delete server;
+		throw;
+	}
+	mzu::debug(type + " block parsed");
+	__serverTemplates.push_back(server);
+}
+void ServerManager::setUpServers()
+{
+	do
+	{
+		size_t pos = this->__lines.find("{");
+		if (pos == String::npos && __lines.find_first_not_of(" \t\n\r\v\f") != String::npos)
+			throw std::runtime_error("invalid configuration file");
+		else if (pos == String::npos)
+			break;
+		setUpServer(pos);
+	} while (!this->__lines.empty());
+	mzu::info("syntax check: OK");
 }
 
-void ServerManager::applyFileFallback()
+void ServerManager::initServers()
 {
-	std::fstream probe;
-
-	if (__config.portSet && !__config.teams.empty())
-		return;
-	probe.open(__config.configPath.c_str());
-	if (!probe.is_open())
+	std::vector<int> portsTaken;
+	for (t_serVect::iterator it = __serverTemplates.begin(); it != __serverTemplates.end(); it++)
 	{
-		if (!__config.portSet)
-			throw std::runtime_error("no port provided (use -p) and no configuration file found: " + __config.configPath);
-		return;
+		Server *tmp = *it;
+		for (std::vector<int>::iterator pt = portsTaken.begin(); pt != portsTaken.end(); pt++)
+		{
+			if (*pt == tmp->getServerPort())
+				throw std::runtime_error(tmp->serverIdentity() + ": port conflict, " + mzu::intToString(*pt) + " is already in use");
+		}
+		portsTaken.push_back(tmp->getServerPort());
+		try
+		{
+			tmp->setup();
+			Core::addServer(tmp);
+		}
+		catch (std::exception &e)
+		{
+			delete tmp;
+			mzu::error(e.what());
+		}
 	}
-	probe.close();
-	wsu::info("applying configuration file fallback: " + __config.configPath);
-	parseConfigFile(__config.configPath);
+	// functional servers are now owned by Core, the rest were already destroyed
+	__serverTemplates.clear();
 }
 
 /*************************************************************************
- *								SERVER CONTROL							 *
+ *                             SERVER LAUNCHER                           *
  *************************************************************************/
-
-void ServerManager::launch()
-{
-	Server *server = new Server(__config.port, DEFAULT_HOST);
-	try
-	{
-		server->setup();
-		Core::addServer(server);
-	}
-	catch (const std::exception &e)
-	{
-		delete server;
-		throw e;
-	}
-	Core::logServers();
-	Core::mainLoop();
-}
 
 void ServerManager::setUpZappy()
 {
 	try
 	{
-		applyFileFallback();
-		launch();
+		readFile();
+		firstCheck();
+		reduceSpaces();
+		checkBraces();
+		setUpServers();
+		initServers();
+		// the three servers are defined so no conflict will exist, the ports should be checked either way
+		Core::logServers();
+		Core::mainLoop();
 	}
-	catch (const std::exception &e)
+	catch (std::exception &e)
 	{
-		wsu::terr(e.what());
+		mzu::terr(e.what());
 	}
 }

@@ -17,8 +17,3 @@ Client &Client::operator=(const Client &assign)
 Client::~Client()
 {
 }
-
-void Client::handleMessage(const String &message)
-{
-	wsu::info("received: \"" + message + "\"");
-}

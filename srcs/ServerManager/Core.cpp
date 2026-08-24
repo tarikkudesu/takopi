@@ -32,7 +32,7 @@ int Core::currentLoad()
 
 void Core::clear()
 {
-	wsu::debug("clearing data");
+	mzu::debug("clearing data");
 	std::vector<int> tmpMapV, tmpMapC;
 	for (t_Server::iterator it = Core::__servers.begin(); it != Core::__servers.end(); it++)
 		tmpMapV.push_back(it->second->getServerSocket());
@@ -51,7 +51,7 @@ void Core::clear()
 }
 void Core::removeConnection(int sd)
 {
-	wsu::info("removing connection " + wsu::intToString(sd));
+	mzu::info("removing connection " + mzu::intToString(sd));
 	t_Connections::iterator it = Core::__connections.find(sd);
 	if (it != Core::__connections.end())
 	{
@@ -65,7 +65,7 @@ void Core::addConnection(Connection *connection)
 {
 	int sd = connection->getConnectionSocket();
 
-	wsu::info("creating connection " + wsu::intToString(sd));
+	mzu::info("creating connection " + mzu::intToString(sd));
 	if (Core::currentLoad() >= MAX_EVENTS)
 		throw std::runtime_error("critical server overload, could not accept new client connection");
 	if (sd >= FD_SETSIZE)
@@ -76,7 +76,7 @@ void Core::addConnection(Connection *connection)
 }
 void Core::removeServer(int sd)
 {
-	wsu::info("removing server " + wsu::intToString(sd));
+	mzu::info("removing server " + mzu::intToString(sd));
 	t_Server::iterator it = Core::__servers.find(sd);
 	if (it != Core::__servers.end())
 	{
@@ -89,11 +89,11 @@ void Core::addServer(Server *server)
 {
 	int sd = server->getServerSocket();
 
-	wsu::info("creating server " + wsu::intToString(sd));
+	mzu::info("creating server " + mzu::intToString(sd));
 	if (Core::currentLoad() >= MAX_EVENTS)
-		throw std::runtime_error("critical server overload, " + server->getServerHost() + ":" + wsu::intToString(server->getServerPort()) + " non functional");
+		throw std::runtime_error("critical server overload, " + server->getServerHost() + ":" + mzu::intToString(server->getServerPort()) + " non functional");
 	if (sd >= FD_SETSIZE)
-		throw std::runtime_error("file descriptor out of select range, " + server->getServerHost() + ":" + wsu::intToString(server->getServerPort()) + " non functional");
+		throw std::runtime_error("file descriptor out of select range, " + server->getServerHost() + ":" + mzu::intToString(server->getServerPort()) + " non functional");
 	if (fcntl(sd, F_SETFL, O_NONBLOCK) < 0)
 		throw std::runtime_error("fcntl syscall, failed to make a non blocking socket");
 	Core::__servers[sd] = server;
@@ -114,7 +114,7 @@ void Core::logServers()
 	t_Server::iterator it = Core::__servers.begin();
 	for (; it != Core::__servers.end(); it++)
 	{
-		wsu::running((*it).second->getServerHost() + ":" + wsu::intToString((*it).second->getServerPort()));
+		mzu::running("[" + (*it).second->getServerType() + "] " + (*it).second->getServerHost() + ":" + mzu::intToString((*it).second->getServerPort()));
 	}
 }
 
@@ -151,7 +151,7 @@ void Core::writeDataToSocket(int sd)
 	t_Connections::iterator iter = Core::__connections.find(sd);
 	if (iter == Core::__connections.end())
 		return;
-	if (wsu::__criticalOverLoad == true && !iter->second->hasPendingOutput())
+	if (mzu::__criticalOverLoad == true && !iter->second->hasPendingOutput())
 		return Core::removeConnection(sd);
 	if (!iter->second->hasPendingOutput())
 		return;
@@ -160,7 +160,7 @@ void Core::writeDataToSocket(int sd)
 	ssize_t bytesWritten = send(sd, out.getBuff(), out.length(), 0);
 	if (bytesWritten > 0)
 	{
-		wsu::info("response sent");
+		mzu::info("response sent");
 		iter->second->popOutput();
 	}
 	else
@@ -194,8 +194,8 @@ void Core::acceptNewConnection(int sd)
 	int newSock;
 
 	if (Core::currentLoad() >= MAX_EVENTS)
-		wsu::__criticalOverLoad = true;
-	if (wsu::__criticalOverLoad == true)
+		mzu::__criticalOverLoad = true;
+	if (mzu::__criticalOverLoad == true)
 		return;
 	newSock = accept(sd, NULL, NULL);
 	if (newSock >= 0)
@@ -203,7 +203,7 @@ void Core::acceptNewConnection(int sd)
 		if (newSock >= FD_SETSIZE)
 		{
 			close(newSock);
-			wsu::error("rejected incoming client: file descriptor out of select range");
+			mzu::error("rejected incoming client: file descriptor out of select range");
 			return;
 		}
 		Connection *newConnection = new Connection(Core::__servers[sd]);
@@ -216,7 +216,7 @@ void Core::acceptNewConnection(int sd)
 		{
 			delete newConnection;
 			close(newSock);
-			wsu::error(e.what());
+			mzu::error(e.what());
 		}
 	}
 	else if (errno != EAGAIN && errno != EWOULDBLOCK && errno != ECONNABORTED)
@@ -231,7 +231,7 @@ void Core::proccessSelectEvent(int sd, fd_set &readSet, fd_set &writeSet, int &r
 		if (isServerSocket(sd))
 		{
 			if (Core::currentLoad() >= MAX_EVENTS)
-				wsu::__criticalOverLoad = true;
+				mzu::__criticalOverLoad = true;
 			else
 			{
 				acceptNewConnection(sd);
@@ -249,16 +249,16 @@ void Core::proccessSelectEvent(int sd, fd_set &readSet, fd_set &writeSet, int &r
 		writeDataToSocket(sd);
 		retV--;
 	}
-	else if (wsu::__criticalOverLoad == true)
+	else if (mzu::__criticalOverLoad == true)
 	{
-		wsu::fatal("critcal server overload");
+		mzu::fatal("critcal server overload");
 		if (!Core::isServerSocket(sd))
 		{
 			removeConnection(sd);
 		}
 	}
 	if (Core::__servers.size() == Core::__connections.size())
-		wsu::__criticalOverLoad = false;
+		mzu::__criticalOverLoad = false;
 }
 
 /***************************************************************************************
@@ -276,7 +276,7 @@ void Core::mainProcess()
 		}
 		catch (std::exception &e)
 		{
-			wsu::warn("connection " + wsu::intToString(it->second->getConnectionSocket()) + ": " + e.what());
+			mzu::warn("connection " + mzu::intToString(it->second->getConnectionSocket()) + ": " + e.what());
 			closeConnection.push_back(it->second->getConnectionSocket());
 		}
 	}
@@ -304,6 +304,8 @@ void Core::mainLoop()
 			retV = select(maxFd + 1, &readSet, &writeSet, NULL, &tv);
 			if (retV < 0)
 			{
+				if (errno == EINTR)
+					continue;
 				throw std::runtime_error("select syscall failed");
 			}
 			if (retV == 0)
@@ -312,13 +314,13 @@ void Core::mainLoop()
 			{
 				for (int sd = 0; sd <= maxFd && retV > 0; sd++)
 				{
-					if (wsu::__criticalOverLoad == true)
+					if (mzu::__criticalOverLoad == true)
 						retV = maxFd + 1;
 					Core::proccessSelectEvent(sd, readSet, writeSet, retV);
 				}
 				Core::mainProcess();
 			}
-			catch (wsu::Exit &e)
+			catch (mzu::Exit &e)
 			{
 				Core::up = false;
 			}
@@ -326,6 +328,6 @@ void Core::mainLoop()
 	}
 	catch (std::exception &e)
 	{
-		wsu::terr(e.what());
+		mzu::terr(e.what());
 	}
 }

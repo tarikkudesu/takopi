@@ -1,30 +1,35 @@
 #ifndef __SERVERMANAGER_HPP__
 # define __SERVERMANAGER_HPP__
 
-# include "../Game/Game.hpp"
 # include "Core.hpp"
 
 /*************************************************************************
- *                             SERVER LAUNCHER                           *
+ *                             SERVER PARSER                             *
  *************************************************************************/
 
 class ServerManager
 {
 	private :
-		GameConfig						__config;
+		String						__lines;
+		String						__config;
+		t_serVect					__serverTemplates;
 
-		void							applyFileFallback();
-		void							launch();
-		void							parseConfigFile(const String &path);
-
+		void						readFile();
+		void						firstCheck();
+		void						checkBraces();
+		void						initServers();
+		void						reduceSpaces();
+		void						setUpServers();
+		void						setUpServer(size_t start);
+		String						checkOuterscope(String outerScope);
 		ServerManager();
-		ServerManager( const ServerManager &copy );
-		ServerManager	&operator=( const ServerManager &assign );
 
 	public:
-		void							setUpZappy();
+		void						setUpZappy();
 
-		ServerManager( const GameConfig &config );
+		ServerManager( const ServerManager &copy );
+		ServerManager( const String &configutation_file );
+		ServerManager	&operator=( const ServerManager &assign );
 		~ServerManager();
 };
 

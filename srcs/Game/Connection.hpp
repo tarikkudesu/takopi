@@ -4,9 +4,6 @@
 # include "../ServerManager/Server.hpp"
 # include "Client.hpp"
 
-typedef std::map< int, Server* >			t_Server;
-typedef std::vector< Server * >				t_serVect;
-
 class Connection
 {
 	private :
@@ -14,7 +11,6 @@ class Connection
 		Client							__client;
 		BasicString						__buffer;
 		std::queue< BasicString >		__responseQueue;
-		Server							*__server;
 
 		Connection();
 		Connection( const Connection &copy );
@@ -22,10 +18,10 @@ class Connection
 
 	public:
 		void							addData(const BasicString &input);
-		void							setSocket( int sd );
-		void							setServer(Server *server);
 		int								getConnectionSocket();
+		void							setSocket( int sd );
 		void							processData();
+
 		bool							hasPendingOutput() const;
 		const BasicString				&frontOutput() const;
 		void							popOutput();
