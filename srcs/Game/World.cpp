@@ -1,4 +1,5 @@
 #include "World.hpp"
+#include "WorldDisplay.hpp"
 #include <cstdlib>
 #include <cmath>
 
@@ -28,6 +29,7 @@ World &World::operator=(const World &assign)
 
 World::~World()
 {
+	closeDisplay();
 }
 
 /*************************************************************************
@@ -79,6 +81,7 @@ void World::init(int width, int height)
 		for (int x = 0; x < width; x++)
 			__map[y][x] = Tile(x, y);
 	}
+	initDisplay(width, height);
 }
 
 void World::populateResources()
@@ -189,4 +192,13 @@ int World::broadcastDirection(int fromX, int fromY, int toX, int toY, e_directio
 	if (square > 8)
 		square = 1;
 	return square;
+}
+
+/*************************************************************************
+ *                    TEMPORARY RAYLIB DISPLAY                           *
+ *************************************************************************/
+
+void World::display() const
+{
+	updateDisplay(*this);
 }

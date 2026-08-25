@@ -9,6 +9,7 @@ SRC		=	srcs/main.cpp \
 			srcs/Game/Player.cpp \
 			srcs/Game/Tile.cpp \
 			srcs/Game/World.cpp \
+			srcs/Game/WorldDisplay.cpp \
 			srcs/ServerManager/AdminServer.cpp \
 			srcs/ServerManager/Core.cpp \
 			srcs/ServerManager/GameServer.cpp \
@@ -31,6 +32,7 @@ HEADERS	=	srcs/zappy.hpp \
 			srcs/Game/CommandParser.hpp \
 			srcs/Game/Elevation.hpp \
 			srcs/Game/World.hpp \
+			srcs/Game/WorldDisplay.hpp \
 			srcs/Game/Game.hpp \
 			srcs/Game/Client.hpp \
 			srcs/Game/Connection.hpp \
@@ -42,12 +44,13 @@ HEADERS	=	srcs/zappy.hpp \
 			srcs/ServerManager/ServerManager.hpp
 
 CXX		=	g++
-CXXFLAGS=	-Wall -Wextra -Werror -std=c++11 -g -O0 -fsanitize=address
+CXXFLAGS=	-Wall -Wextra -Werror -std=c++11 -g -O0 -fsanitize=address -Iraylib
+LDFLAGS	=	-lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	@$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME)
+	@$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME) $(LDFLAGS)
 
 %.o: %.cpp $(HEADERS)
 	@$(CXX) $(CXXFLAGS) -c $< -o $@

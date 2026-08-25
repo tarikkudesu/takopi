@@ -68,6 +68,7 @@ void Game::tick()
 	processFood(currentTick);
 	processEggs(currentTick);
 	processCommands(currentTick);
+	__world.display();
 }
 
 void Game::processFood(long currentTick)

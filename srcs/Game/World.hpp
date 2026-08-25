@@ -27,6 +27,7 @@ class World
 
 		int										broadcastDirection(int fromX, int fromY, int toX, int toY, e_direction facing) const;
 		String									buildVisionString(const Player &player) const;
+		void									display() const;
 };
 
 #endif
