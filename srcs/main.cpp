@@ -11,8 +11,10 @@ void signalHandler(int signal)
 
 int main(int ac, char **av)
 {
-	signal(SIGPIPE, signalHandler);
+	if (ac == 1)
+		exit(EXIT_FAILURE);
 	signal(SIGINT, signalHandler);
+	signal(SIGPIPE, signalHandler);
 	std::vector<String> args;
 	for (int i = 1; i < ac; ++i)
 		args.push_back(String(av[i]));

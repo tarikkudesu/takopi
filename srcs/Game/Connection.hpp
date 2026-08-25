@@ -8,6 +8,7 @@ class Connection
 {
 	private :
 		int								__sd;
+		Server							*__server;
 		Client							__client;
 		BasicString						__buffer;
 		std::queue< BasicString >		__responseQueue;
@@ -25,6 +26,10 @@ class Connection
 		bool							hasPendingOutput() const;
 		const BasicString				&frontOutput() const;
 		void							popOutput();
+		void							pushOutput(const String &msg);
+
+		Client							&getClient();
+		const Client					&getClient() const;
 
 		Connection( Server *server );
 		~Connection();

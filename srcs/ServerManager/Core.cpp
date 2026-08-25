@@ -1,4 +1,6 @@
 #include "Core.hpp"
+#include "GameServer.hpp"
+#include "../Game/Game.hpp"
 
 bool Core::up = false;
 t_Server Core::__servers;
@@ -119,7 +121,7 @@ void Core::logServers()
 }
 
 /************************************************************************
- *							  SERVER CONTROL							*
+ *						  SERVER CONTROL								*
  ************************************************************************/
 
 int Core::buildSets(fd_set &readSet, fd_set &writeSet)
@@ -162,6 +164,11 @@ void Core::writeDataToSocket(int sd)
 	{
 		mzu::info("response sent");
 		iter->second->popOutput();
+		if (iter->second->getClient().getState() == PLAYER_DEAD && !iter->second->hasPendingOutput())
+		{
+			removeConnection(sd);
+			return;
+		}
 	}
 	else
 	{
@@ -262,12 +269,13 @@ void Core::proccessSelectEvent(int sd, fd_set &readSet, fd_set &writeSet, int &r
 }
 
 /***************************************************************************************
- *										MAIN LOOP									   *
+ *									MAIN LOOP									   *
  ***************************************************************************************/
 
 void Core::mainProcess()
 {
 	std::vector<int> closeConnection;
+
 	for (t_Connections::iterator it = __connections.begin(); it != __connections.end(); it++)
 	{
 		try
@@ -280,6 +288,37 @@ void Core::mainProcess()
 			closeConnection.push_back(it->second->getConnectionSocket());
 		}
 	}
+
+	for (t_Server::iterator it = __servers.begin(); it != __servers.end(); it++)
+	{
+		if (it->second->getServerType() != "game")
+			continue;
+		GameServer *gs = static_cast<GameServer *>(it->second);
+		Game *game = gs->getGame();
+		if (!game)
+			continue;
+
+		game->tick();
+
+		const std::vector<s_notification> &notifications = game->getNotifications();
+		for (size_t n = 0; n < notifications.size(); n++)
+		{
+			int pid = notifications[n].playerId;
+			const String &msg = notifications[n].message;
+			for (t_Connections::iterator ci = __connections.begin(); ci != __connections.end(); ci++)
+			{
+				if (ci->second->getClient().getPlayerId() == pid)
+				{
+					ci->second->pushOutput(msg);
+					if (msg == "mort\n")
+						ci->second->getClient().setState(PLAYER_DEAD);
+					break;
+				}
+			}
+		}
+		game->clearNotifications();
+	}
+
 	for (std::vector<int>::iterator it = closeConnection.begin(); it != closeConnection.end(); it++)
 	{
 		Core::removeConnection(*it);
@@ -292,6 +331,16 @@ void Core::mainLoop()
 
 	if (Core::__servers.empty())
 		throw std::runtime_error("configuration does not identify any functional server");
+
+	for (t_Server::iterator it = __servers.begin(); it != __servers.end(); it++)
+	{
+		if (it->second->getServerType() == "game")
+		{
+			GameServer *gs = static_cast<GameServer *>(it->second);
+			gs->initGame();
+		}
+	}
+
 	Core::up = true;
 	try
 	{
@@ -309,7 +358,10 @@ void Core::mainLoop()
 				throw std::runtime_error("select syscall failed");
 			}
 			if (retV == 0)
+			{
+				Core::mainProcess();
 				continue;
+			}
 			try
 			{
 				for (int sd = 0; sd <= maxFd && retV > 0; sd++)

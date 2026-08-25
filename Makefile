@@ -1,7 +1,14 @@
 SRC		=	srcs/main.cpp \
 			srcs/Game/Client.cpp \
+			srcs/Game/Command.cpp \
+			srcs/Game/CommandParser.cpp \
 			srcs/Game/Connection.cpp \
+			srcs/Game/Egg.cpp \
+			srcs/Game/Elevation.cpp \
 			srcs/Game/Game.cpp \
+			srcs/Game/Player.cpp \
+			srcs/Game/Tile.cpp \
+			srcs/Game/World.cpp \
 			srcs/ServerManager/AdminServer.cpp \
 			srcs/ServerManager/Core.cpp \
 			srcs/ServerManager/GameServer.cpp \
@@ -13,35 +20,37 @@ SRC		=	srcs/main.cpp \
 OBJ		=	$(SRC:.cpp=.o)
 NAME	=	zappy
 
+HEADERS	=	srcs/zappy.hpp \
+			srcs/utilities/MZU.hpp \
+			srcs/utilities/BasicString.hpp \
+			srcs/Game/Enums.hpp \
+			srcs/Game/Tile.hpp \
+			srcs/Game/Player.hpp \
+			srcs/Game/Egg.hpp \
+			srcs/Game/Command.hpp \
+			srcs/Game/CommandParser.hpp \
+			srcs/Game/Elevation.hpp \
+			srcs/Game/World.hpp \
+			srcs/Game/Game.hpp \
+			srcs/Game/Client.hpp \
+			srcs/Game/Connection.hpp \
+			srcs/ServerManager/Server.hpp \
+			srcs/ServerManager/GameServer.hpp \
+			srcs/ServerManager/AdminServer.hpp \
+			srcs/ServerManager/GuiServer.hpp \
+			srcs/ServerManager/Core.hpp \
+			srcs/ServerManager/ServerManager.hpp
+
+CXX		=	g++
+CXXFLAGS=	-Wall -Wextra -Werror -std=c++11 -g -O0 -fsanitize=address
+
 all: $(NAME)
 
-$(NAME): $(OBJ)	srcs/zappy.hpp \
-			srcs/Game/Client.hpp \
-			srcs/Game/Connection.hpp \
-			srcs/Game/Game.hpp \
-			srcs/ServerManager/AdminServer.hpp \
-			srcs/ServerManager/Core.hpp \
-			srcs/ServerManager/GameServer.hpp \
-			srcs/ServerManager/GuiServer.hpp \
-			srcs/ServerManager/Server.hpp \
-			srcs/ServerManager/ServerManager.hpp \
-			srcs/utilities/BasicString.hpp \
-			srcs/utilities/MZU.hpp
-	@g++ -Wall -Wextra -Werror -std=c++98 $(OBJ) -o $(NAME)
+$(NAME): $(OBJ)
+	@$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME)
 
-%.o: %.cpp	srcs/zappy.hpp \
-			srcs/Game/Client.hpp \
-			srcs/Game/Connection.hpp \
-			srcs/Game/Game.hpp \
-			srcs/ServerManager/AdminServer.hpp \
-			srcs/ServerManager/Core.hpp \
-			srcs/ServerManager/GameServer.hpp \
-			srcs/ServerManager/GuiServer.hpp \
-			srcs/ServerManager/Server.hpp \
-			srcs/ServerManager/ServerManager.hpp \
-			srcs/utilities/BasicString.hpp \
-			srcs/utilities/MZU.hpp
-	@g++ -Wall -Wextra -Werror -std=c++98 -c $< -o $@
+%.o: %.cpp $(HEADERS)
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
 	@rm -f $(OBJ)

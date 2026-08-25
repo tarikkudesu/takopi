@@ -16,6 +16,8 @@
 #include <signal.h>
 #include <netdb.h>
 #include <ctime>
+#include <cstdlib>
+#include <cmath>
 #include <limits.h>
 #include <errno.h>
 

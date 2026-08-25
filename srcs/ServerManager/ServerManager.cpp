@@ -153,8 +153,10 @@ void ServerManager::setUpServer(size_t start)
 			server = new GameServer(serverConfig);
 		else if (type == "admin")
 			server = new AdminServer(serverConfig);
-		else
+		else if (type == "gui")
 			server = new GuiServer(serverConfig);
+		else
+			throw std::runtime_error("invalid server type");
 	}
 	catch (std::exception &e)
 	{
@@ -202,7 +204,6 @@ void ServerManager::initServers()
 			mzu::error(e.what());
 		}
 	}
-	// functional servers are now owned by Core, the rest were already destroyed
 	__serverTemplates.clear();
 }
 
@@ -220,7 +221,6 @@ void ServerManager::setUpZappy()
 		checkBraces();
 		setUpServers();
 		initServers();
-		// the three servers are defined so no conflict will exist, the ports should be checked either way
 		Core::logServers();
 		Core::mainLoop();
 	}
