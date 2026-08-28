@@ -1,5 +1,4 @@
 SRC		=	srcs/main.cpp \
-			srcs/Game/Client.cpp \
 			srcs/Game/Command.cpp \
 			srcs/Game/CommandParser.cpp \
 			srcs/Game/Connection.cpp \
@@ -34,7 +33,6 @@ HEADERS	=	srcs/zappy.hpp \
 			srcs/Game/World.hpp \
 			srcs/Game/WorldDisplay.hpp \
 			srcs/Game/Game.hpp \
-			srcs/Game/Client.hpp \
 			srcs/Game/Connection.hpp \
 			srcs/ServerManager/Server.hpp \
 			srcs/ServerManager/GameServer.hpp \
@@ -45,7 +43,7 @@ HEADERS	=	srcs/zappy.hpp \
 
 CXX		=	g++
 CXXFLAGS=	-Wall -Wextra -Werror -std=c++11 -g -O0 -fsanitize=address -Iraylib
-LDFLAGS	=	-lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+LDFLAGS	=	-lssl -lcrypto -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 
 all: $(NAME)
 

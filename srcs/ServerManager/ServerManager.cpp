@@ -196,6 +196,9 @@ void ServerManager::initServers()
 		try
 		{
 			tmp->setup();
+			AdminServer *admintmp = dynamic_cast<AdminServer *>(tmp);
+			if (admintmp)
+				admintmp->setupSSL();
 			Core::addServer(tmp);
 		}
 		catch (std::exception &e)

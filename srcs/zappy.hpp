@@ -41,6 +41,8 @@ typedef std::map<String, String> Map;
 #define MAX_MESSAGE_SIZE 1024
 
 #define DEFAULT_HOST "0.0.0.0"
+#define DEFAULT_CERTIFICATE "certs/server.crt"
+#define DEFAULT_PRIVATE_KEY "certs/server.key"
 
 #define NEWLINE "\n"
 

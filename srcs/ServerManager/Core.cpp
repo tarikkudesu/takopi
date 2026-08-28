@@ -1,4 +1,5 @@
 #include "Core.hpp"
+#include "AdminServer.hpp"
 #include "GameServer.hpp"
 #include "../Game/Game.hpp"
 
@@ -140,8 +141,10 @@ int Core::buildSets(fd_set &readSet, fd_set &writeSet)
 	for (t_Connections::iterator it = Core::__connections.begin(); it != Core::__connections.end(); it++)
 	{
 		int sd = it->second->getConnectionSocket();
-		FD_SET(sd, &readSet);
-		FD_SET(sd, &writeSet);
+		if (it->second->tlsNeedsRead())
+			FD_SET(sd, &readSet);
+		if (it->second->tlsNeedsWrite())
+			FD_SET(sd, &writeSet);
 		if (sd > maxFd)
 			maxFd = sd;
 	}
@@ -153,23 +156,36 @@ void Core::writeDataToSocket(int sd)
 	t_Connections::iterator iter = Core::__connections.find(sd);
 	if (iter == Core::__connections.end())
 		return;
+	if (iter->second->tlsHandshakePending())
+	{
+		iter->second->processTLSHandshake();
+		if (iter->second->tlsHandshakePending())
+			return;
+		if (iter->second->tlsHandshakeFailed())
+			return Core::removeConnection(sd);
+	}
 	if (mzu::__criticalOverLoad == true && !iter->second->hasPendingOutput())
 		return Core::removeConnection(sd);
 	if (!iter->second->hasPendingOutput())
 		return;
 
 	const BasicString &out = iter->second->frontOutput();
-	ssize_t bytesWritten = send(sd, out.getBuff(), out.length(), 0);
+	ssize_t bytesWritten = iter->second->writeSocket(out.getBuff() + iter->second->responseOffset(), out.length() - iter->second->responseOffset());
 	if (bytesWritten > 0)
 	{
 		mzu::info("response sent");
-		iter->second->popOutput();
-		if (iter->second->getClient().getState() == PLAYER_DEAD && !iter->second->hasPendingOutput())
+		if (static_cast<size_t>(bytesWritten) + iter->second->responseOffset() == out.length())
+			iter->second->popOutput();
+		else
+			iter->second->setResponseOffset(iter->second->responseOffset() + bytesWritten);
+		if (iter->second->getState() == PLAYER_DEAD && !iter->second->hasPendingOutput())
 		{
 			removeConnection(sd);
 			return;
 		}
 	}
+	else if (bytesWritten == -2)
+		return;
 	else
 	{
 		removeConnection(sd);
@@ -181,14 +197,28 @@ void Core::readDataFromSocket(int sd)
 	t_Connections::iterator iter = Core::__connections.find(sd);
 	if (iter == Core::__connections.end())
 		return;
+	if (iter->second->tlsHandshakePending())
+	{
+		iter->second->processTLSHandshake();
+		if (iter->second->tlsHandshakePending())
+			return;
+		if (iter->second->tlsHandshakeFailed())
+			return Core::removeConnection(sd);
+	}
 
-	ssize_t bytesRead = recv(sd, buff, READ_SIZE, 0);
+	ssize_t bytesRead = iter->second->readSocket(buff, READ_SIZE);
 	if (bytesRead == 0)
+	{
 		removeConnection(sd);
+	}
 	else if (bytesRead > 0)
 	{
 		buff[bytesRead] = '\0';
 		iter->second->addData(BasicString(buff, bytesRead));
+	}
+	else if (bytesRead == -2)
+	{
+		return;
 	}
 	else
 	{
@@ -200,8 +230,6 @@ void Core::acceptNewConnection(int sd)
 {
 	int newSock;
 
-	if (Core::currentLoad() >= MAX_EVENTS)
-		mzu::__criticalOverLoad = true;
 	if (mzu::__criticalOverLoad == true)
 		return;
 	newSock = accept(sd, NULL, NULL);
@@ -217,6 +245,9 @@ void Core::acceptNewConnection(int sd)
 		try
 		{
 			newConnection->setSocket(newSock);
+			AdminServer *admin = dynamic_cast<AdminServer *>(Core::__servers[sd]);
+			if (admin)
+				newConnection->setupTLS(admin->getTLSContext());
 			Core::addConnection(newConnection);
 		}
 		catch (std::exception &e)
@@ -247,13 +278,33 @@ void Core::proccessSelectEvent(int sd, fd_set &readSet, fd_set &writeSet, int &r
 		}
 		else
 		{
-			readDataFromSocket(sd);
+			t_Connections::iterator connection = Core::__connections.find(sd);
+			if (connection != Core::__connections.end() && connection->second->tlsHandshakePending())
+			{
+				if (!connection->second->processTLSHandshake() && connection->second->tlsHandshakeFailed())
+					removeConnection(sd);
+			}
+			else if (connection != Core::__connections.end() && connection->second->tlsReadPending())
+				readDataFromSocket(sd);
+			else if (connection != Core::__connections.end() && connection->second->tlsWritePending())
+				writeDataToSocket(sd);
+			else
+				readDataFromSocket(sd);
 			retV--;
 		}
 	}
 	else if (FD_ISSET(sd, &writeSet))
 	{
-		writeDataToSocket(sd);
+		t_Connections::iterator connection = Core::__connections.find(sd);
+		if (connection != Core::__connections.end() && connection->second->tlsHandshakePending())
+		{
+			if (!connection->second->processTLSHandshake() && connection->second->tlsHandshakeFailed())
+				removeConnection(sd);
+		}
+		else if (connection != Core::__connections.end() && connection->second->tlsReadPending())
+			readDataFromSocket(sd);
+		else
+			writeDataToSocket(sd);
 		retV--;
 	}
 	else if (mzu::__criticalOverLoad == true)
@@ -307,11 +358,11 @@ void Core::mainProcess()
 			const String &msg = notifications[n].message;
 			for (t_Connections::iterator ci = __connections.begin(); ci != __connections.end(); ci++)
 			{
-				if (ci->second->getClient().getPlayerId() == pid)
+				if (ci->second->getPlayerId() == pid)
 				{
 					ci->second->pushOutput(msg);
 					if (msg == "mort\n")
-						ci->second->getClient().setState(PLAYER_DEAD);
+						ci->second->setState(PLAYER_DEAD);
 					break;
 				}
 			}
