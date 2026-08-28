@@ -231,6 +231,7 @@ void Connection::addData(const BasicString &input)
 
 void Connection::processMessage(const String &message)
 {
+	mzu::info("received: \"" + message + "\"");
 	if (__connectionType == CONNECTION_GAME && __server)
 		processGameMessage(message);
 }

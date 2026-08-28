@@ -53,6 +53,12 @@ $(NAME): $(OBJ)
 %.o: %.cpp $(HEADERS)
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
+connect:
+	@ncat --ssl --ssl-verify --ssl-trustfile certs/server.crt localhost 4243
+
+certs:
+	@openssl req -x509 -newkey rsa:2048 -keyout certs/server.key -out certs/server.crt -days 365 -nodes -subj "/CN=127.0.0.1" -addext "subjectAltName=IP:127.0.0.1,DNS:localhost"
+
 clean:
 	@rm -f $(OBJ)
 
