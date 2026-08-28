@@ -14,7 +14,7 @@ class Egg
 		int								__x;
 		int								__y;
 		int								__teamIndex;
-		int								__layerId;
+		int								__PlayerId;
 		long							__hatchTime;
 		bool							__hatched;
 
@@ -29,7 +29,7 @@ class Egg
 		int								getX() const;
 		int								getY() const;
 		int								getTeamIndex() const;
-		int								getLayerId() const;
+		int								getPlayerId() const;
 		long							getHatchTime() const;
 		bool							isHatched() const;
 		bool							tryHatch(long currentTick);

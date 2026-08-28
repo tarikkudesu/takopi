@@ -1,13 +1,13 @@
 #include "Egg.hpp"
 
 Egg::Egg() : __id(-1), __x(0), __y(0), __teamIndex(-1),
-			 __layerId(-1), __hatchTime(0), __hatched(false)
+			 __PlayerId(-1), __hatchTime(0), __hatched(false)
 {
 }
 
-Egg::Egg(int id, int x, int y, int teamIndex, int layerId, long hatchTime)
+Egg::Egg(int id, int x, int y, int teamIndex, int playerId, long hatchTime)
 	: __id(id), __x(x), __y(y), __teamIndex(teamIndex),
-	  __layerId(layerId), __hatchTime(hatchTime), __hatched(false)
+	  __PlayerId(playerId), __hatchTime(hatchTime), __hatched(false)
 {
 }
 
@@ -24,7 +24,7 @@ Egg &Egg::operator=(const Egg &assign)
 		__x = assign.__x;
 		__y = assign.__y;
 		__teamIndex = assign.__teamIndex;
-		__layerId = assign.__layerId;
+		__PlayerId = assign.__PlayerId;
 		__hatchTime = assign.__hatchTime;
 		__hatched = assign.__hatched;
 	}
@@ -59,9 +59,9 @@ int Egg::getTeamIndex() const
 	return __teamIndex;
 }
 
-int Egg::getLayerId() const
+int Egg::getPlayerId() const
 {
-	return __layerId;
+	return __PlayerId;
 }
 
 long Egg::getHatchTime() const
