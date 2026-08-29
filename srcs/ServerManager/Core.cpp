@@ -160,6 +160,11 @@ int Core::buildSets(fd_set &readSet, fd_set &writeSet)
 			if (connection->tlsNeedsWrite())
 				FD_SET(sd, &writeSet);
 		}
+		else
+		{
+			FD_SET(sd, &readSet);
+			FD_SET(sd, &writeSet);
+		}
 		if (sd > maxFd)
 			maxFd = sd;
 	}

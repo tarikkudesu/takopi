@@ -6,6 +6,7 @@ ConnectionGame::ConnectionGame(Server *server) : 	Connection(server),
 													__playerId(-1),
                                                     __state(PLAYER_HANDSHAKE)
 {
+	__responseQueue.push(BasicString("BIENVENUE\n"));
 	mzu::debug("ConnectionGame constructor");
 }
 ConnectionGame::ConnectionGame(const ConnectionGame &copy) : Connection(copy)
