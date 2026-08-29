@@ -1,14 +1,13 @@
-#include "GameServer.hpp"
+#include "ServerGame.hpp"
 #include "../Game/Game.hpp"
 
-GameServer::GameServer(String line) : __width(-1),
-									   __height(-1),
-									   __timeUnit(-1),
-									   __clientsPerTeam(-1),
-									   __game(NULL)
+ServerGame::ServerGame(String line) : 	Server(GAME),
+										__width(-1),
+									   	__height(-1),
+									   	__timeUnit(-1),
+									   	__clientsPerTeam(-1)
 {
-	mzu::debug("GameServer constructor");
-	this->__type = "game";
+	mzu::debug("ServerGame constructor");
 	parseBlock(line);
 	if (!this->__portSet)
 		throw std::runtime_error("game server: missing \"port\" directive");
@@ -21,62 +20,61 @@ GameServer::GameServer(String line) : __width(-1),
 	if (this->__timeUnit < 1)
 		this->__timeUnit = 100;
 }
-GameServer::GameServer(const GameServer &copy) : Server(copy),
+ServerGame::ServerGame(const ServerGame &copy) : Server(copy),
+												__teams(copy.__teams),
 												 __width(copy.__width),
 												 __height(copy.__height),
 												 __timeUnit(copy.__timeUnit),
-												 __clientsPerTeam(copy.__clientsPerTeam),
-												 __teams(copy.__teams),
-												 __game(NULL)
+												 __clientsPerTeam(copy.__clientsPerTeam)
 {
-	mzu::debug("GameServer copy constructor");
+	mzu::debug("ServerGame copy constructor");
 }
-GameServer &GameServer::operator=(const GameServer &assign)
+ServerGame &ServerGame::operator=(const ServerGame &assign)
 {
-	mzu::debug("GameServer copy assignement operator");
+	mzu::debug("ServerGame copy assignement operator");
 	if (this != &assign)
 	{
 		Server::operator=(assign);
+		this->__teams = assign.__teams;
 		this->__width = assign.__width;
 		this->__height = assign.__height;
 		this->__timeUnit = assign.__timeUnit;
 		this->__clientsPerTeam = assign.__clientsPerTeam;
-		this->__teams = assign.__teams;
 	}
 	return *this;
 }
-GameServer::~GameServer()
+ServerGame::~ServerGame()
 {
 	delete __game;
 	this->__teams.clear();
-	mzu::debug("GameServer destructor");
+	mzu::debug("ServerGame destructor");
 }
 
 /****************************************************************************
  *								 MINI METHODS								*
  ****************************************************************************/
 
-int GameServer::getMapWidth() const
+int ServerGame::getMapWidth() const
 {
 	return this->__width;
 }
-int GameServer::getMapHeight() const
+int ServerGame::getMapHeight() const
 {
 	return this->__height;
 }
-int GameServer::getTimeUnit() const
+int ServerGame::getTimeUnit() const
 {
 	return this->__timeUnit;
 }
-int GameServer::getClientsPerTeam() const
+int ServerGame::getClientsPerTeam() const
 {
 	return this->__clientsPerTeam;
 }
-const t_svec &GameServer::getTeams() const
+const t_svec &ServerGame::getTeams() const
 {
 	return this->__teams;
 }
-Game *GameServer::getGame()
+Game *ServerGame::getGame()
 {
 	return this->__game;
 }
@@ -85,7 +83,7 @@ Game *GameServer::getGame()
  *						  PROCCESING DIRECTIVES								  *
  ****************************************************************************/
 
-void GameServer::proccessWidthToken(t_svec &tokens)
+void ServerGame::proccessWidthToken(t_svec &tokens)
 {
 	if (this->__width != -1)
 		throw std::runtime_error(tokens.at(0) + " directive is duplicate");
@@ -101,7 +99,7 @@ void GameServer::proccessWidthToken(t_svec &tokens)
 	this->__width = static_cast<int>(width);
 }
 
-void GameServer::proccessHeightToken(t_svec &tokens)
+void ServerGame::proccessHeightToken(t_svec &tokens)
 {
 	if (this->__height != -1)
 		throw std::runtime_error(tokens.at(0) + " directive is duplicate");
@@ -117,7 +115,7 @@ void GameServer::proccessHeightToken(t_svec &tokens)
 	this->__height = static_cast<int>(height);
 }
 
-void GameServer::proccessTeamsToken(t_svec &tokens)
+void ServerGame::proccessTeamsToken(t_svec &tokens)
 {
 	for (t_svec::iterator it = tokens.begin() + 1; it != tokens.end(); it++)
 	{
@@ -129,7 +127,7 @@ void GameServer::proccessTeamsToken(t_svec &tokens)
 		throw std::runtime_error(tokens.at(0) + ": no teams values");
 }
 
-void GameServer::proccessTimeToken(t_svec &tokens)
+void ServerGame::proccessTimeToken(t_svec &tokens)
 {
 	if (this->__timeUnit != -1)
 		throw std::runtime_error(tokens.at(0) + " directive is duplicate");
@@ -145,7 +143,7 @@ void GameServer::proccessTimeToken(t_svec &tokens)
 	this->__timeUnit = static_cast<int>(t);
 }
 
-void GameServer::proccessClientsToken(t_svec &tokens)
+void ServerGame::proccessClientsToken(t_svec &tokens)
 {
 	if (this->__clientsPerTeam != -1)
 		throw std::runtime_error(tokens.at(0) + " directive is duplicate");
@@ -161,7 +159,7 @@ void GameServer::proccessClientsToken(t_svec &tokens)
 	this->__clientsPerTeam = static_cast<int>(c);
 }
 
-void GameServer::proccessToken(t_svec &tokens)
+void ServerGame::proccessToken(t_svec &tokens)
 {
 	String key = tokens.at(0);
 	if (key != "port" &&
@@ -192,7 +190,7 @@ void GameServer::proccessToken(t_svec &tokens)
  *							GAME INITIALIZATION								*
  ****************************************************************************/
 
-void GameServer::initGame()
+void ServerGame::initGame()
 {
 	if (__game)
 		return;

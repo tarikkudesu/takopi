@@ -2,6 +2,8 @@
 # define __SERVER_HPP__
 
 # include "../utilities/BasicString.hpp"
+# include "../Game/Game.hpp"
+# include "../Game/Enums.hpp"
 
 class Server;
 
@@ -14,21 +16,22 @@ class Server
 		int								__sd;
 		int								__port;
 		String							__host;
-
+		
 	protected:
-		String							__type;
+		e_type							__type;
+		Game							*__game;
 		bool							__portSet;
 		t_svec							__directives;
 
 		void							parseBlock( String line );
+		void							proccessServerDirectives();
 		void							parseServerDirectives( String line );
 		void							addServerDirective( String &line, size_t end );
-		void							proccessServerDirectives();
 		void							proccessPortToken( t_svec &tokens );
 		void							proccessHostToken( t_svec &tokens );
 		virtual void					proccessToken( t_svec &tokens ) = 0;
 
-		Server();
+		Server(e_type type);
 		Server( const Server &copy );
 		Server	&operator=( const Server &assign );
 
@@ -36,11 +39,11 @@ class Server
 		void							setup();
 
 		int								getServerSocket() const;
-		int								getServerPort() const;
 		const String					&getServerHost() const;
-		const String					&getServerType() const;
 		String							serverIdentity() const;
+		int								getServerPort() const;
 		void							setPort(int port);
+		const e_type					&getType() const;
 
 		virtual ~Server();
 };

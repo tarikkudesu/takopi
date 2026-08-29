@@ -1,6 +1,6 @@
-#include "AdminServer.hpp"
-#include "GameServer.hpp"
-#include "GuiServer.hpp"
+#include "ServerAdmin.hpp"
+#include "ServerGame.hpp"
+#include "ServerGui.hpp"
 #include "ServerManager.hpp"
 
 ServerManager::ServerManager(const String &configutation_file) : __config(configutation_file)
@@ -150,11 +150,11 @@ void ServerManager::setUpServer(size_t start)
 	try
 	{
 		if (type == "game")
-			server = new GameServer(serverConfig);
+			server = new ServerGame(serverConfig);
 		else if (type == "admin")
-			server = new AdminServer(serverConfig);
+			server = new ServerAdmin(serverConfig);
 		else if (type == "gui")
-			server = new GuiServer(serverConfig);
+			server = new ServerGui(serverConfig);
 		else
 			throw std::runtime_error("invalid server type");
 	}
@@ -196,7 +196,7 @@ void ServerManager::initServers()
 		try
 		{
 			tmp->setup();
-			AdminServer *admintmp = dynamic_cast<AdminServer *>(tmp);
+			ServerAdmin *admintmp = dynamic_cast<ServerAdmin *>(tmp);
 			if (admintmp)
 				admintmp->setupSSL();
 			Core::addServer(tmp);

@@ -1,21 +1,23 @@
-#include "AdminServer.hpp"
+#include "ServerAdmin.hpp"
 
-AdminServer::AdminServer(String line) : __ctx(NULL), __certificate(DEFAULT_CERTIFICATE), __privateKey(DEFAULT_PRIVATE_KEY)
+ServerAdmin::ServerAdmin(String line) : Server(ADMIN),
+										__ctx(NULL),
+										__certificate(DEFAULT_CERTIFICATE),
+										__privateKey(DEFAULT_PRIVATE_KEY)
 {
-	mzu::debug("AdminServer constructor");
-	this->__type = "admin";
+	mzu::debug("ServerAdmin constructor");
 	parseBlock(line);
 	if (!this->__portSet)
 		throw std::runtime_error("admin server: missing \"port\" directive");
 }
-AdminServer::AdminServer(const AdminServer &copy) : Server(copy), __ctx(NULL), __certificate(copy.__certificate), __privateKey(copy.__privateKey)
+ServerAdmin::ServerAdmin(const ServerAdmin &copy) : Server(copy), __ctx(NULL), __certificate(copy.__certificate), __privateKey(copy.__privateKey)
 {
-	mzu::debug("AdminServer copy constructor");
+	mzu::debug("ServerAdmin copy constructor");
 	Server::operator=(copy);
 }
-AdminServer &AdminServer::operator=(const AdminServer &assign)
+ServerAdmin &ServerAdmin::operator=(const ServerAdmin &assign)
 {
-	mzu::debug("AdminServer copy assignement operator");
+	mzu::debug("ServerAdmin copy assignement operator");
 	if (this != &assign)
 	{
 		Server::operator=(assign);
@@ -24,13 +26,13 @@ AdminServer &AdminServer::operator=(const AdminServer &assign)
 	}
 	return *this;
 }
-AdminServer::~AdminServer()
+ServerAdmin::~ServerAdmin()
 {
 	SSL_CTX_free(__ctx);
-	mzu::debug("AdminServer destructor");
+	mzu::debug("ServerAdmin destructor");
 }
 
-void	AdminServer::proccessCertificateToken( t_svec &tokens )
+void	ServerAdmin::proccessCertificateToken( t_svec &tokens )
 {
 	if (this->__certificate != DEFAULT_CERTIFICATE)
 		throw std::runtime_error(tokens.at(0) + " directive is duplicate");
@@ -41,7 +43,7 @@ void	AdminServer::proccessCertificateToken( t_svec &tokens )
 	this->__certificate = tokens.at(1);
 }
 
-void	AdminServer::proccessPrivateKeyToken( t_svec &tokens )
+void	ServerAdmin::proccessPrivateKeyToken( t_svec &tokens )
 {
 	if (this->__privateKey != DEFAULT_PRIVATE_KEY)
 		throw std::runtime_error(tokens.at(0) + " directive is duplicate");
@@ -52,7 +54,7 @@ void	AdminServer::proccessPrivateKeyToken( t_svec &tokens )
 	this->__privateKey = tokens.at(1);
 }
 
-void AdminServer::proccessToken(t_svec &tokens)
+void ServerAdmin::proccessToken(t_svec &tokens)
 {
 	String key = tokens.at(0);
 	if (key != "port" && key != "host" && key != "certificate" && key != "private_key")
@@ -67,7 +69,7 @@ void AdminServer::proccessToken(t_svec &tokens)
 		proccessPrivateKeyToken(tokens);
 }
 
-void AdminServer::setupSSL()
+void ServerAdmin::setupSSL()
 {
 	if (this->__ctx)
 	{
@@ -103,7 +105,7 @@ void AdminServer::setupSSL()
 	this->__ctx = ctx;
 }
 
-SSL_CTX	*AdminServer::getTLSContext()
+SSL_CTX	*ServerAdmin::getTLSContext()
 {
 	return this->__ctx;
 }

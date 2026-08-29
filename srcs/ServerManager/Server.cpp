@@ -1,10 +1,11 @@
 #include "Server.hpp"
 
-Server::Server() : __sd(-1),
-				   __port(-1),
-				   __host(DEFAULT_HOST),
-				   __type("server"),
-				   __portSet(false)
+Server::Server(e_type type) : 	__sd(-1),
+				   				__port(-1),
+				   				__host(DEFAULT_HOST),
+				   				__type(type),
+								__game(nullptr),
+				   				__portSet(false)
 {
 	mzu::debug("Server default constructor");
 }
@@ -53,7 +54,7 @@ const String &Server::getServerHost() const
 {
 	return this->__host;
 }
-const String &Server::getServerType() const
+const e_type &Server::getType() const
 {
 	return this->__type;
 }

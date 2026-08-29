@@ -1,7 +1,10 @@
 #include "Core.hpp"
-#include "AdminServer.hpp"
-#include "GameServer.hpp"
+#include "ServerAdmin.hpp"
+#include "ServerGame.hpp"
 #include "../Game/Game.hpp"
+#include "../Game/ConnectionAdmin.hpp"
+#include "../Game/ConnectionGame.hpp"
+#include "../Game/ConnectionGui.hpp"
 
 bool Core::up = false;
 t_Server Core::__servers;
@@ -117,7 +120,15 @@ void Core::logServers()
 	t_Server::iterator it = Core::__servers.begin();
 	for (; it != Core::__servers.end(); it++)
 	{
-		mzu::running("[" + (*it).second->getServerType() + "] " + (*it).second->getServerHost() + ":" + mzu::intToString((*it).second->getServerPort()));
+		String type("");
+		switch ((*it).second->getType())
+		{
+			case GUI: type = "GUI"; break;
+			case GAME: type = "GAME"; break;
+			case ADMIN: type = "ADMIN"; break;
+			default: break;
+		}
+		mzu::running("[" + type + "] " + (*it).second->getServerHost() + ":" + mzu::intToString((*it).second->getServerPort()));
 	}
 }
 
@@ -141,10 +152,14 @@ int Core::buildSets(fd_set &readSet, fd_set &writeSet)
 	for (t_Connections::iterator it = Core::__connections.begin(); it != Core::__connections.end(); it++)
 	{
 		int sd = it->second->getConnectionSocket();
-		if (it->second->tlsNeedsRead())
-			FD_SET(sd, &readSet);
-		if (it->second->tlsNeedsWrite())
-			FD_SET(sd, &writeSet);
+		if (it->second->getType() == ADMIN)
+		{
+			ConnectionAdmin *connection = dynamic_cast<ConnectionAdmin *>(it->second);
+			if (connection->tlsNeedsRead())
+				FD_SET(sd, &readSet);
+			if (connection->tlsNeedsWrite())
+				FD_SET(sd, &writeSet);
+		}
 		if (sd > maxFd)
 			maxFd = sd;
 	}
@@ -156,74 +171,21 @@ void Core::writeDataToSocket(int sd)
 	t_Connections::iterator iter = Core::__connections.find(sd);
 	if (iter == Core::__connections.end())
 		return;
-	if (iter->second->tlsHandshakePending())
-	{
-		iter->second->processTLSHandshake();
-		if (iter->second->tlsHandshakePending())
-			return;
-		if (iter->second->tlsHandshakeFailed())
-			return Core::removeConnection(sd);
-	}
+
 	if (mzu::__criticalOverLoad == true && !iter->second->hasPendingOutput())
 		return Core::removeConnection(sd);
-	if (!iter->second->hasPendingOutput())
-		return;
 
-	const BasicString &out = iter->second->frontOutput();
-	ssize_t bytesWritten = iter->second->writeSocket(out.getBuff() + iter->second->responseOffset(), out.length() - iter->second->responseOffset());
-	if (bytesWritten > 0)
-	{
-		mzu::info("response sent");
-		if (static_cast<size_t>(bytesWritten) + iter->second->responseOffset() == out.length())
-			iter->second->popOutput();
-		else
-			iter->second->setResponseOffset(iter->second->responseOffset() + bytesWritten);
-		if (iter->second->getState() == PLAYER_DEAD && !iter->second->hasPendingOutput())
-		{
-			removeConnection(sd);
-			return;
-		}
-	}
-	else if (bytesWritten == -2)
-		return;
-	else
-	{
+	if (!iter->second->writeSocket())
 		removeConnection(sd);
-	}
 }
 void Core::readDataFromSocket(int sd)
 {
-	char buff[READ_SIZE + 1];
 	t_Connections::iterator iter = Core::__connections.find(sd);
 	if (iter == Core::__connections.end())
 		return;
-	if (iter->second->tlsHandshakePending())
-	{
-		iter->second->processTLSHandshake();
-		if (iter->second->tlsHandshakePending())
-			return;
-		if (iter->second->tlsHandshakeFailed())
-			return Core::removeConnection(sd);
-	}
 
-	ssize_t bytesRead = iter->second->readSocket(buff, READ_SIZE);
-	if (bytesRead == 0)
-	{
+	if (!iter->second->readSocket())
 		removeConnection(sd);
-	}
-	else if (bytesRead > 0)
-	{
-		buff[bytesRead] = '\0';
-		iter->second->addData(BasicString(buff, bytesRead));
-	}
-	else if (bytesRead == -2)
-	{
-		return;
-	}
-	else
-	{
-		removeConnection(sd);
-	}
 }
 
 void Core::acceptNewConnection(int sd)
@@ -232,6 +194,7 @@ void Core::acceptNewConnection(int sd)
 
 	if (mzu::__criticalOverLoad == true)
 		return;
+
 	newSock = accept(sd, NULL, NULL);
 	if (newSock >= 0)
 	{
@@ -241,20 +204,68 @@ void Core::acceptNewConnection(int sd)
 			mzu::error("rejected incoming client: file descriptor out of select range");
 			return;
 		}
-		Connection *newConnection = new Connection(Core::__servers[sd]);
-		try
+		Server *server = Core::__servers[sd];
+		switch (server->getType())
 		{
-			newConnection->setSocket(newSock);
-			AdminServer *admin = dynamic_cast<AdminServer *>(Core::__servers[sd]);
-			if (admin)
-				newConnection->setupTLS(admin->getTLSContext());
-			Core::addConnection(newConnection);
-		}
-		catch (std::exception &e)
-		{
-			delete newConnection;
-			close(newSock);
-			mzu::error(e.what());
+			case ADMIN:
+			{
+				ServerAdmin *admin = dynamic_cast<ServerAdmin *>(Core::__servers[sd]);
+				if (!admin)
+				{
+					mzu::warn("ServerAdmin daynamic_cast went wrong, you shouldn't be seeing this warning, it's worth investigating");
+					break;
+				}
+				ConnectionAdmin *connectionAdmin = new ConnectionAdmin(server);
+				Connection *connection = connectionAdmin;
+				try
+				{
+					connection->setSocket(newSock);
+					connectionAdmin->setupTLS(admin->getTLSContext());
+					Core::addConnection(connection);
+				}
+				catch (std::exception &e)
+				{
+					mzu::error(e.what());
+					delete connectionAdmin;
+					close(newSock);
+				}
+				break;
+			}
+			case GAME:
+			{
+				ConnectionGame *connectionGame = new ConnectionGame(server);
+				Connection *connection = connectionGame;
+				try
+				{
+					connection->setSocket(newSock);
+					Core::addConnection(connection);
+				}
+				catch (std::exception &e)
+				{
+					mzu::error(e.what());
+					delete connectionGame;
+					close(newSock);
+				}
+				break;
+			}
+			case GUI:
+			{
+				ConnectionGui *connectionGui = new ConnectionGui(server);
+				Connection *connection = connectionGui;
+				try
+				{
+					connection->setSocket(newSock);
+					Core::addConnection(connection);
+				}
+				catch (std::exception &e)
+				{
+					mzu::error(e.what());
+					delete connectionGui;
+					close(newSock);
+				}
+				break;
+			}
+			default: break;
 		}
 	}
 	else if (errno != EAGAIN && errno != EWOULDBLOCK && errno != ECONNABORTED)
@@ -262,6 +273,7 @@ void Core::acceptNewConnection(int sd)
 		removeServer(sd);
 	}
 }
+
 void Core::proccessSelectEvent(int sd, fd_set &readSet, fd_set &writeSet, int &retV)
 {
 	if (FD_ISSET(sd, &readSet))
@@ -278,33 +290,13 @@ void Core::proccessSelectEvent(int sd, fd_set &readSet, fd_set &writeSet, int &r
 		}
 		else
 		{
-			t_Connections::iterator connection = Core::__connections.find(sd);
-			if (connection != Core::__connections.end() && connection->second->tlsHandshakePending())
-			{
-				if (!connection->second->processTLSHandshake() && connection->second->tlsHandshakeFailed())
-					removeConnection(sd);
-			}
-			else if (connection != Core::__connections.end() && connection->second->tlsReadPending())
-				readDataFromSocket(sd);
-			else if (connection != Core::__connections.end() && connection->second->tlsWritePending())
-				writeDataToSocket(sd);
-			else
-				readDataFromSocket(sd);
+			readDataFromSocket(sd);
 			retV--;
 		}
 	}
 	else if (FD_ISSET(sd, &writeSet))
 	{
-		t_Connections::iterator connection = Core::__connections.find(sd);
-		if (connection != Core::__connections.end() && connection->second->tlsHandshakePending())
-		{
-			if (!connection->second->processTLSHandshake() && connection->second->tlsHandshakeFailed())
-				removeConnection(sd);
-		}
-		else if (connection != Core::__connections.end() && connection->second->tlsReadPending())
-			readDataFromSocket(sd);
-		else
-			writeDataToSocket(sd);
+		writeDataToSocket(sd);
 		retV--;
 	}
 	else if (mzu::__criticalOverLoad == true)
@@ -342,9 +334,9 @@ void Core::mainProcess()
 
 	for (t_Server::iterator it = __servers.begin(); it != __servers.end(); it++)
 	{
-		if (it->second->getServerType() != "game")
+		if (it->second->getType() != GAME)
 			continue;
-		GameServer *gs = static_cast<GameServer *>(it->second);
+		ServerGame *gs = static_cast<ServerGame *>(it->second);
 		Game *game = gs->getGame();
 		if (!game)
 			continue;
@@ -358,11 +350,12 @@ void Core::mainProcess()
 			const String &msg = notifications[n].message;
 			for (t_Connections::iterator ci = __connections.begin(); ci != __connections.end(); ci++)
 			{
-				if (ci->second->getPlayerId() == pid)
+				ConnectionGame *connectionGame = dynamic_cast<ConnectionGame *>(ci->second);
+				if (connectionGame && connectionGame->getPlayerId() == pid)
 				{
-					ci->second->pushOutput(msg);
+					connectionGame->pushOutput(msg);
 					if (msg == "mort\n")
-						ci->second->setState(PLAYER_DEAD);
+						connectionGame->setState(PLAYER_DEAD);
 					break;
 				}
 			}
@@ -385,10 +378,10 @@ void Core::mainLoop()
 
 	for (t_Server::iterator it = __servers.begin(); it != __servers.end(); it++)
 	{
-		if (it->second->getServerType() == "game")
+		if (it->second->getType() == GAME)
 		{
-			GameServer *gs = static_cast<GameServer *>(it->second);
-			gs->initGame();
+			ServerGame *game = static_cast<ServerGame *>(it->second);
+			game->initGame();
 		}
 	}
 

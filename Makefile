@@ -2,6 +2,9 @@ SRC		=	srcs/main.cpp \
 			srcs/Game/Command.cpp \
 			srcs/Game/CommandParser.cpp \
 			srcs/Game/Connection.cpp \
+			srcs/Game/ConnectionAdmin.cpp \
+			srcs/Game/ConnectionGame.cpp \
+			srcs/Game/ConnectionGui.cpp \
 			srcs/Game/Egg.cpp \
 			srcs/Game/Elevation.cpp \
 			srcs/Game/Game.cpp \
@@ -9,10 +12,10 @@ SRC		=	srcs/main.cpp \
 			srcs/Game/Tile.cpp \
 			srcs/Game/World.cpp \
 			srcs/Game/WorldDisplay.cpp \
-			srcs/ServerManager/AdminServer.cpp \
+			srcs/ServerManager/ServerAdmin.cpp \
 			srcs/ServerManager/Core.cpp \
-			srcs/ServerManager/GameServer.cpp \
-			srcs/ServerManager/GuiServer.cpp \
+			srcs/ServerManager/ServerGame.cpp \
+			srcs/ServerManager/ServerGui.cpp \
 			srcs/ServerManager/Server.cpp \
 			srcs/ServerManager/ServerManager.cpp \
 			srcs/utilities/BasicString.cpp \
@@ -34,10 +37,13 @@ HEADERS	=	srcs/zappy.hpp \
 			srcs/Game/WorldDisplay.hpp \
 			srcs/Game/Game.hpp \
 			srcs/Game/Connection.hpp \
+			srcs/Game/ConnectionAdmin.hpp \
+			srcs/Game/ConnectionGame.hpp \
+			srcs/Game/ConnectionGui.hpp \
 			srcs/ServerManager/Server.hpp \
-			srcs/ServerManager/GameServer.hpp \
-			srcs/ServerManager/AdminServer.hpp \
-			srcs/ServerManager/GuiServer.hpp \
+			srcs/ServerManager/ServerGame.hpp \
+			srcs/ServerManager/ServerAdmin.hpp \
+			srcs/ServerManager/ServerGui.hpp \
 			srcs/ServerManager/Core.hpp \
 			srcs/ServerManager/ServerManager.hpp
 
@@ -57,6 +63,7 @@ connect:
 	@ncat --ssl --ssl-verify --ssl-trustfile certs/server.crt localhost 4243
 
 certs:
+	@mkdir -p certs
 	@openssl req -x509 -newkey rsa:2048 -keyout certs/server.key -out certs/server.crt -days 365 -nodes -subj "/CN=127.0.0.1" -addext "subjectAltName=IP:127.0.0.1,DNS:localhost"
 
 clean:
@@ -67,4 +74,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: clean fclean re all
+.PHONY: clean fclean re all certs

@@ -43,16 +43,30 @@ typedef enum e_player_state
 } t_player_state;
 
 /*************************************************************************
- *                         CONNECTION TYPE                               *
+ *                            CONNECTION                                 *
  *************************************************************************/
 
-typedef enum e_connection_type
+typedef enum e_type
 {
-	CONNECTION_GAME = 0,
-	CONNECTION_ADMIN,
-	CONNECTION_GUI,
-	CONNECTION_UNKNOWN
-} t_connection_type;
+	GAME = 0,
+	ADMIN,
+	GUI,
+	UNKNOWN
+} t_type;
+
+enum e_tls_operation
+{
+	TLS_OPERATION_NONE,
+	TLS_OPERATION_READ,
+	TLS_OPERATION_WRITE,
+	TLS_OPERATION_HANDSHAKE
+};
+
+enum e_tls_wait
+{
+	TLS_WAIT_READ,
+	TLS_WAIT_WRITE
+};
 
 /*************************************************************************
  *                          COMMAND TYPES                                *

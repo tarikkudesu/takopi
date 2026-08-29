@@ -1,19 +1,18 @@
-#ifndef __GAMESERVER_HPP__
-# define __GAMESERVER_HPP__
+#ifndef __SERVERGAME_HPP__
+# define __SERVERGAME_HPP__
 
 # include "Server.hpp"
 
 class Game;
 
-class GameServer : public Server
+class ServerGame : public Server
 {
 	private:
+		t_svec								__teams;
 		int									__width;
 		int									__height;
 		int									__timeUnit;
 		int									__clientsPerTeam;
-		t_svec								__teams;
-		Game								*__game;
 
 		void								proccessWidthToken( t_svec &tokens );
 		void								proccessHeightToken( t_svec &tokens );
@@ -32,10 +31,10 @@ class GameServer : public Server
 		void								proccessToken( t_svec &tokens );
 		void								initGame();
 
-		GameServer( String line );
-		GameServer( const GameServer &copy );
-		GameServer	&operator=( const GameServer &assign );
-		~GameServer();
+		ServerGame( String line );
+		ServerGame( const ServerGame &copy );
+		ServerGame	&operator=( const ServerGame &assign );
+		~ServerGame();
 };
 
 #endif
