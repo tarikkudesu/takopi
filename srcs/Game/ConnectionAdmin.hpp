@@ -13,6 +13,9 @@ class ConnectionAdmin : public Connection
 		bool							__tlsFailed;
 		e_tls_wait						__tlsWait;
 		SSL								*__ssl;
+		bool							__authenticated;
+		unsigned int					__authenticationFailures;
+		bool							__closing;
 
 		void							processMessage(const String &message);
 

@@ -16,12 +16,17 @@ class Core
 	private:
 		static t_Server				__servers;
 		static t_Connections		__connections;
+		static bool					__consoleOpen;
+		static bool					__consoleDiscarding;
+		static String				__consoleBuffer;
 
 		static int					currentLoad();
+		static void					processConsoleInput();
 		static void					writeDataToSocket( int sd );
 		static void					readDataFromSocket( int sd );
 		static void					acceptNewConnection( int sd );
 		static int					buildSets(fd_set &readSet, fd_set &writeSet);
+		static void					processConsoleCommand( const String &command );
 		static void					proccessSelectEvent( int sd, fd_set &readSet, fd_set &writeSet, int &retV );
 		static void					mainProcess();
 
