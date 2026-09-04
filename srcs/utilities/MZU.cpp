@@ -15,6 +15,8 @@ bool mzu::__info = false;
 bool mzu::__warn = false;
 bool mzu::__error = false;
 bool mzu::__fatal = false;
+std::ofstream mzu::__logFile;
+
 mzu::persist::persist(void) {}
 const char *mzu::persist::what(void) const throw() { return "persist"; }
 mzu::Close::Close(void) {}
@@ -28,8 +30,13 @@ const char *mzu::Exit::what(void) const throw() { return "Exit"; }
 
 void mzu::logs(const std::vector<String> &args)
 {
-	std::cout << std::unitbuf;
-	std::cerr << std::unitbuf;
+	mzu::__logFile.open("zappy.log", std::ios::out | std::ios::trunc);
+	if (!mzu::__logFile.is_open())
+	{
+		std::cerr << "error: couldn't open zappy.log" << std::endl;
+		exit(EXIT_FAILURE);
+	}
+	mzu::__logFile << std::unitbuf;
 	for (std::vector<String>::const_iterator it = args.begin(); it != args.end(); it++)
 	{
 		if (*it == "debug")
@@ -57,38 +64,43 @@ void mzu::logs(const std::vector<String> &args)
 		exit(EXIT_FAILURE);
 	}
 }
+void mzu::writeLog(const String &level, const String &message)
+{
+	if (mzu::__logFile.is_open())
+		mzu::__logFile << mzu::logDate() << " [" << level << "] " << message << std::endl;
+}
 void mzu::debug(String __log_message)
 {
 	if (mzu::__debug)
-		std::cout << BLUE << mzu::logDate() << MAGENTA << " [DEBUG] " << RESET << __log_message << std::endl;
+		mzu::writeLog("DEBUG", __log_message);
 }
 void mzu::info(String __log_message)
 {
 	if (mzu::__info)
-		std::cout << BLUE << mzu::logDate() << GREEN << " [INFO] " << RESET << __log_message << std::endl;
+		mzu::writeLog("INFO", __log_message);
 }
 void mzu::warn(String __log_message)
 {
 	if (mzu::__warn)
-		std::cout << BLUE << mzu::logDate() << YELLOW << " [WARN] " << RESET << __log_message << std::endl;
+		mzu::writeLog("WARN", __log_message);
 }
 void mzu::error(String __log_message)
 {
 	if (mzu::__error)
-		std::cerr << BLUE << mzu::logDate() << RED << " [ERROR] " << RESET << __log_message << std::endl;
+		mzu::writeLog("ERROR", __log_message);
 }
 void mzu::fatal(String __log_message)
 {
 	if (mzu::__fatal)
-		std::cerr << BLUE << mzu::logDate() << RED << " [FATAL] " << RESET << __log_message << std::endl;
+		mzu::writeLog("FATAL", __log_message);
 }
 void mzu::running(String __log_message)
 {
-	std::cout << BLUE << mzu::logDate() << GREEN << " [RUNNING] " << RESET << __log_message << std::endl;
+	mzu::writeLog("RUNNING", __log_message);
 }
 void mzu::terr(const String &__error_message)
 {
-	std::cerr << RED << "error: " << RESET << __error_message << std::endl;
+	mzu::writeLog("ERROR", __error_message);
 }
 /*************************************************************************************************
  *											 UTILITIES											 *

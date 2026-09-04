@@ -1,13 +1,18 @@
 #include "ConnectionAdmin.hpp"
+#include "../ServerManager/ServerAdmin.hpp"
 
 ConnectionAdmin::ConnectionAdmin(Server *server) :    Connection(server),
                                             __responseOffset(0),
                                             __tlsHandshake(false),
                                             __tlsOperation(TLS_OPERATION_NONE),
-                                            __tlsFailed(false),
-                                            __tlsWait(TLS_WAIT_READ),
-                                            __ssl(NULL)
+											__tlsFailed(false),
+											__tlsWait(TLS_WAIT_READ),
+											__ssl(NULL),
+											__authenticated(false),
+											__authenticationFailures(0),
+											__closing(false)
 {
+	this->__responseQueue.push(BasicString("AUTH required\n"));
 	mzu::debug("ConnectionAdmin constructor");
 }
 ConnectionAdmin::ConnectionAdmin(const ConnectionAdmin &copy) : Connection(copy)
@@ -26,6 +31,9 @@ ConnectionAdmin &ConnectionAdmin::operator=(const ConnectionAdmin &assign)
 		__tlsWait = TLS_WAIT_READ;
 		__tlsOperation = TLS_OPERATION_NONE;
 		__responseOffset = assign.__responseOffset;
+		__authenticated = assign.__authenticated;
+		__authenticationFailures = assign.__authenticationFailures;
+		__closing = assign.__closing;
 	}
 	return *this;
 }
@@ -169,6 +177,8 @@ bool ConnectionAdmin::writeSocket()
 			return false;
 	}
 
+	if (__closing && !this->hasPendingOutput())
+		return false;
     if (!this->hasPendingOutput())
         return true;
     
@@ -202,7 +212,47 @@ bool ConnectionAdmin::writeSocket()
 
 void ConnectionAdmin::processMessage(const String &message)
 {
-	mzu::info("received: \"" + message + "\"");
+	ServerAdmin *server = static_cast<ServerAdmin *>(this->__server);
+	String command = message;
+
+	if (!command.empty() && command.at(command.length() - 1) == '\r')
+		command.erase(command.length() - 1);
+	if (this->__closing)
+		return;
+	if (!this->__authenticated)
+	{
+		if (command.length() > 5 && command.substr(0, 5) == "AUTH " && server->checkPassword(command.substr(5)))
+		{
+			this->__authenticated = true;
+			this->__authenticationFailures = 0;
+			mzu::info("remote administrator authenticated");
+			this->pushOutput("OK authenticated\n" ADMIN_PROMPT);
+			return;
+		}
+		this->__authenticationFailures++;
+		mzu::warn("remote administrator authentication failed");
+		if (this->__authenticationFailures >= MAX_ADMIN_AUTH_FAILURES)
+		{
+			this->pushOutput("ERR too many authentication failures\n");
+			this->__closing = true;
+		}
+		else
+			this->pushOutput("ERR authentication required\n");
+		return;
+	}
+	if (command.empty())
+	{
+		this->pushOutput(ADMIN_PROMPT);
+		return;
+	}
+	if (command.find("AUTH ") == 0)
+	{
+		mzu::warn("authentication command ignored for authenticated administrator");
+		this->pushOutput("ERR already authenticated\n" ADMIN_PROMPT);
+		return;
+	}
+	mzu::running("[admin remote] command received: " + command);
+	this->pushOutput(ADMIN_DUMMY_RESPONSE ADMIN_PROMPT);
 }
 
 void ConnectionAdmin::popOutput()

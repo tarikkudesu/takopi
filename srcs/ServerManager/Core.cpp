@@ -9,6 +9,9 @@
 bool Core::up = false;
 t_Server Core::__servers;
 t_Connections Core::__connections;
+bool Core::__consoleOpen = true;
+bool Core::__consoleDiscarding = false;
+String Core::__consoleBuffer;
 
 Core::Core()
 {
@@ -142,6 +145,11 @@ int Core::buildSets(fd_set &readSet, fd_set &writeSet)
 
 	FD_ZERO(&readSet);
 	FD_ZERO(&writeSet);
+	if (Core::__consoleOpen)
+	{
+		FD_SET(STDIN_FILENO, &readSet);
+		maxFd = STDIN_FILENO;
+	}
 	for (t_Server::iterator it = Core::__servers.begin(); it != Core::__servers.end(); it++)
 	{
 		int sd = it->second->getServerSocket();
@@ -169,6 +177,66 @@ int Core::buildSets(fd_set &readSet, fd_set &writeSet)
 			maxFd = sd;
 	}
 	return maxFd;
+}
+
+void Core::processConsoleCommand(const String &command)
+{
+	String input = command;
+
+	if (!input.empty() && input.at(input.length() - 1) == '\r')
+		input.erase(input.length() - 1);
+	if (input.empty())
+	{
+		std::cout << ADMIN_PROMPT << std::flush;
+		return;
+	}
+	mzu::running("[admin local] command received: " + input);
+	std::cout << ADMIN_DUMMY_RESPONSE << ADMIN_PROMPT << std::flush;
+}
+
+void Core::processConsoleInput()
+{
+	char buff[READ_SIZE];
+	ssize_t bytesRead = read(STDIN_FILENO, buff, sizeof(buff));
+
+	if (bytesRead == 0)
+	{
+		Core::__consoleOpen = false;
+		mzu::warn("local administration console closed");
+		return;
+	}
+	if (bytesRead < 0)
+	{
+		if (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR)
+			return;
+		Core::__consoleOpen = false;
+		mzu::error("local administration console failed");
+		return;
+	}
+	for (ssize_t i = 0; i < bytesRead; i++)
+	{
+		if (buff[i] == '\n')
+		{
+			if (Core::__consoleDiscarding)
+			{
+				mzu::warn("local administration command rejected: command exceeds maximum allowed size");
+				std::cout << "ERR command exceeds maximum allowed size\n" << ADMIN_PROMPT << std::flush;
+			}
+			else
+				Core::processConsoleCommand(Core::__consoleBuffer);
+			Core::__consoleBuffer.clear();
+			Core::__consoleDiscarding = false;
+		}
+		else if (!Core::__consoleDiscarding)
+		{
+			Core::__consoleBuffer += buff[i];
+			if (Core::__consoleBuffer.length() > MAX_MESSAGE_SIZE)
+			{
+				Core::__consoleBuffer.clear();
+				Core::__consoleDiscarding = true;
+			}
+		}
+	}
 }
 
 void Core::writeDataToSocket(int sd)
@@ -283,7 +351,12 @@ void Core::proccessSelectEvent(int sd, fd_set &readSet, fd_set &writeSet, int &r
 {
 	if (FD_ISSET(sd, &readSet))
 	{
-		if (isServerSocket(sd))
+		if (sd == STDIN_FILENO && Core::__consoleOpen)
+		{
+			Core::processConsoleInput();
+			retV--;
+		}
+		else if (isServerSocket(sd))
 		{
 			if (Core::currentLoad() >= MAX_EVENTS)
 				mzu::__criticalOverLoad = true;
@@ -389,6 +462,14 @@ void Core::mainLoop()
 			game->initGame();
 		}
 	}
+	int consoleFlags = fcntl(STDIN_FILENO, F_GETFL, 0);
+	if (consoleFlags < 0 || fcntl(STDIN_FILENO, F_SETFL, consoleFlags | O_NONBLOCK) < 0)
+	{
+		Core::__consoleOpen = false;
+		mzu::warn("local administration console unavailable");
+	}
+	else
+		std::cout << ADMIN_PROMPT << std::flush;
 
 	Core::up = true;
 	try
@@ -431,4 +512,6 @@ void Core::mainLoop()
 	{
 		mzu::terr(e.what());
 	}
+	if (consoleFlags >= 0)
+		fcntl(STDIN_FILENO, F_SETFL, consoleFlags);
 }

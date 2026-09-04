@@ -6,6 +6,9 @@
 class mzu
 {
 	private:
+		static std::ofstream __logFile;
+		static void writeLog(const String &level, const String &message);
+
 		mzu();
 		mzu(const mzu &copy);
 		mzu &operator=(const mzu &assign);

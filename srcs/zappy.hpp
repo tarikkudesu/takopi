@@ -39,6 +39,9 @@ typedef std::map<String, String> Map;
 
 #define READ_SIZE 1024
 #define MAX_MESSAGE_SIZE 1024
+#define MAX_ADMIN_AUTH_FAILURES 3
+#define ADMIN_PROMPT "zappyshell> "
+#define ADMIN_DUMMY_RESPONSE "OK command received\n"
 
 #define DEFAULT_HOST "0.0.0.0"
 #define DEFAULT_CERTIFICATE "certs/server.crt"
