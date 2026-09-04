@@ -1,77 +1,165 @@
-SRC		=	srcs/main.cpp \
-			srcs/Game/Command.cpp \
-			srcs/Game/CommandParser.cpp \
-			srcs/Game/Connection.cpp \
-			srcs/Game/ConnectionAdmin.cpp \
-			srcs/Game/ConnectionGame.cpp \
-			srcs/Game/ConnectionGui.cpp \
-			srcs/Game/Egg.cpp \
-			srcs/Game/Elevation.cpp \
-			srcs/Game/Game.cpp \
-			srcs/Game/Player.cpp \
-			srcs/Game/Tile.cpp \
-			srcs/Game/World.cpp \
-			srcs/Game/WorldDisplay.cpp \
-			srcs/ServerManager/ServerAdmin.cpp \
-			srcs/ServerManager/Core.cpp \
-			srcs/ServerManager/ServerGame.cpp \
-			srcs/ServerManager/ServerGui.cpp \
-			srcs/ServerManager/Server.cpp \
-			srcs/ServerManager/ServerManager.cpp \
-			srcs/utilities/BasicString.cpp \
-			srcs/utilities/MZU.cpp
-OBJ		=	$(SRC:.cpp=.o)
-NAME	=	zappy
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: tamehri <tamehri@student.42.fr>            +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2026/09/03 23:50:00 by ooulcaid          #+#    #+#              #
+#    Updated: 2026/09/04 21:40:09 by tamehri          ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-HEADERS	=	srcs/zappy.hpp \
-			srcs/utilities/MZU.hpp \
-			srcs/utilities/BasicString.hpp \
-			srcs/Game/Enums.hpp \
-			srcs/Game/Tile.hpp \
-			srcs/Game/Player.hpp \
-			srcs/Game/Egg.hpp \
-			srcs/Game/Command.hpp \
-			srcs/Game/CommandParser.hpp \
-			srcs/Game/Elevation.hpp \
-			srcs/Game/World.hpp \
-			srcs/Game/WorldDisplay.hpp \
-			srcs/Game/Game.hpp \
-			srcs/Game/Connection.hpp \
-			srcs/Game/ConnectionAdmin.hpp \
-			srcs/Game/ConnectionGame.hpp \
-			srcs/Game/ConnectionGui.hpp \
-			srcs/ServerManager/Server.hpp \
-			srcs/ServerManager/ServerGame.hpp \
-			srcs/ServerManager/ServerAdmin.hpp \
-			srcs/ServerManager/ServerGui.hpp \
-			srcs/ServerManager/Core.hpp \
-			srcs/ServerManager/ServerManager.hpp
+# ==============================================================================
+#                               COMPILER & FLAGS
+# ==============================================================================
+CXX				= g++
+CXXFLAGS		= -Wall -Wextra -Werror -std=c++11 -g -O0 -fsanitize=address
 
-CXX		=	g++
-CXXFLAGS=	-Wall -Wextra -Werror -std=c++11 -g -O0 -fsanitize=address -Iraylib
-LDFLAGS	=	-lssl -lcrypto -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+CLIENT_INCLUDES	= -Iclient/srcs -Iclient
+SERVER_INCLUDES	= -Iserver/srcs -Iserver/raylib -Iserver
 
-all: $(NAME)
+CLIENT_LDFLAGS	=
+SERVER_LDFLAGS	= -lssl -lcrypto -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 
-$(NAME): $(OBJ)
-	@$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME) $(LDFLAGS)
+# ==============================================================================
+#                               TARGET NAMES
+# ==============================================================================
+SERVER_NAME		= server/server
+CLIENT_NAME		= client/client
 
-%.o: %.cpp $(HEADERS)
-	@$(CXX) $(CXXFLAGS) -c $< -o $@
+OBJ_DIR			= objs
 
-connect:
-	@ncat --ssl --ssl-verify --ssl-trustfile certs/server.crt localhost 4243
+# ==============================================================================
+#                                CLIENT SOURCES
+# ==============================================================================
+CLIENT_SRCS		= client/main.cpp \
+				  client/srcs/utilities/MZU.cpp \
+				  client/srcs/utilities/BasicString.cpp \
+				  client/srcs/Network/Connection.cpp \
+				  client/srcs/Game/Elevation.cpp \
+				  client/srcs/Game/Protocol.cpp \
+				  client/srcs/Game/Strategy.cpp \
+				  client/srcs/Game/Client.cpp
+
+CLIENT_HEADERS	= client/srcs/zappy.hpp \
+				  client/srcs/Enums.hpp \
+				  client/srcs/utilities/MZU.hpp \
+				  client/srcs/utilities/BasicString.hpp \
+				  client/srcs/Network/Connection.hpp \
+				  client/srcs/Game/Elevation.hpp \
+				  client/srcs/Game/Protocol.hpp \
+				  client/srcs/Game/Strategy.hpp \
+				  client/srcs/Game/Client.hpp
+
+CLIENT_OBJS		= $(addprefix $(OBJ_DIR)/, $(CLIENT_SRCS:.cpp=.o))
+
+# ==============================================================================
+#                                SERVER SOURCES
+# ==============================================================================
+SERVER_SRCS		= server/srcs/main.cpp \
+				  server/srcs/Game/Command.cpp \
+				  server/srcs/Game/CommandParser.cpp \
+				  server/srcs/Game/Connection.cpp \
+				  server/srcs/Game/ConnectionAdmin.cpp \
+				  server/srcs/Game/ConnectionGame.cpp \
+				  server/srcs/Game/ConnectionGui.cpp \
+				  server/srcs/Game/Egg.cpp \
+				  server/srcs/Game/Elevation.cpp \
+				  server/srcs/Game/Game.cpp \
+				  server/srcs/Game/Player.cpp \
+				  server/srcs/Game/Tile.cpp \
+				  server/srcs/Game/World.cpp \
+				  server/srcs/Game/WorldDisplay.cpp \
+				  server/srcs/ServerManager/ServerAdmin.cpp \
+				  server/srcs/ServerManager/Core.cpp \
+				  server/srcs/ServerManager/ServerGame.cpp \
+				  server/srcs/ServerManager/ServerGui.cpp \
+				  server/srcs/ServerManager/Server.cpp \
+				  server/srcs/ServerManager/ServerManager.cpp \
+				  server/srcs/utilities/BasicString.cpp \
+				  server/srcs/utilities/MZU.cpp
+
+SERVER_HEADERS	= server/srcs/zappy.hpp \
+				  server/srcs/utilities/MZU.hpp \
+				  server/srcs/utilities/BasicString.hpp \
+				  server/srcs/Game/Enums.hpp \
+				  server/srcs/Game/Tile.hpp \
+				  server/srcs/Game/Player.hpp \
+				  server/srcs/Game/Egg.hpp \
+				  server/srcs/Game/Command.hpp \
+				  server/srcs/Game/CommandParser.hpp \
+				  server/srcs/Game/Elevation.hpp \
+				  server/srcs/Game/World.hpp \
+				  server/srcs/Game/WorldDisplay.hpp \
+				  server/srcs/Game/Game.hpp \
+				  server/srcs/Game/Connection.hpp \
+				  server/srcs/Game/ConnectionAdmin.hpp \
+				  server/srcs/Game/ConnectionGame.hpp \
+				  server/srcs/Game/ConnectionGui.hpp \
+				  server/srcs/ServerManager/Server.hpp \
+				  server/srcs/ServerManager/ServerGame.hpp \
+				  server/srcs/ServerManager/ServerAdmin.hpp \
+				  server/srcs/ServerManager/ServerGui.hpp \
+				  server/srcs/ServerManager/Core.hpp \
+				  server/srcs/ServerManager/ServerManager.hpp
+
+SERVER_OBJS		= $(addprefix $(OBJ_DIR)/, $(SERVER_SRCS:.cpp=.o))
+
+# ==============================================================================
+#                                   RULES
+# ==============================================================================
+all: $(SERVER_NAME) $(CLIENT_NAME)
+
+# Client compilation
+client: $(CLIENT_NAME)
+
+$(CLIENT_NAME): $(CLIENT_OBJS)
+	@mkdir -p $(dir $@)
+	@$(CXX) $(CXXFLAGS) $(CLIENT_OBJS) -o $(CLIENT_NAME) $(CLIENT_LDFLAGS)
+	@echo "Successfully compiled client: $(CLIENT_NAME)"
+
+$(OBJ_DIR)/client/%.o: client/%.cpp $(CLIENT_HEADERS)
+	@mkdir -p $(dir $@)
+	@$(CXX) $(CXXFLAGS) $(CLIENT_INCLUDES) -c $< -o $@
+	@echo "Compiled $<"
+
+# Server compilation
+server: $(SERVER_NAME)
+
+gfx: $(SERVER_NAME)
+
+$(SERVER_NAME): $(SERVER_OBJS)
+	@mkdir -p $(dir $@)
+	@$(CXX) $(CXXFLAGS) $(SERVER_OBJS) -o $(SERVER_NAME) $(SERVER_LDFLAGS)
+	@echo "Successfully compiled server: $(SERVER_NAME)"
+
+$(OBJ_DIR)/server/%.o: server/%.cpp $(SERVER_HEADERS)
+	@mkdir -p $(dir $@)
+	@$(CXX) $(CXXFLAGS) $(SERVER_INCLUDES) -c $< -o $@
+	@echo "Compiled $<"
+
+# Helper rules
+bonus: all
 
 certs:
-	@mkdir -p certs
-	@openssl req -x509 -newkey rsa:2048 -keyout certs/server.key -out certs/server.crt -days 365 -nodes -subj "/CN=127.0.0.1" -addext "subjectAltName=IP:127.0.0.1,DNS:localhost"
+	@mkdir -p server/certs
+	@openssl req -x509 -newkey rsa:2048 -keyout server/certs/server.key -out server/certs/server.crt -days 365 -nodes -subj "/CN=127.0.0.1" -addext "subjectAltName=IP:127.0.0.1,DNS:localhost"
+	@echo "Generated server certificates in server/certs/"
 
+connect:
+	@ncat --ssl --ssl-verify --ssl-trustfile server/certs/server.crt localhost 4243
+
+# Cleanup rules
 clean:
-	@rm -f $(OBJ)
+	@rm -rf $(OBJ_DIR)
+	@rm -f $(CLIENT_SRCS:.cpp=.o) $(SERVER_SRCS:.cpp=.o)
+	@echo "Cleaned all object files."
 
 fclean: clean
-	@rm -f $(NAME)
+	@rm -f $(SERVER_NAME) $(CLIENT_NAME) server/zappy
+	@echo "Cleaned all executables."
 
 re: fclean all
 
-.PHONY: clean fclean re all certs
+.PHONY: clean certs connect
