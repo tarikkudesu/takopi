@@ -9,13 +9,11 @@
 bool Core::up = false;
 t_Server Core::__servers;
 t_Connections Core::__connections;
-bool Core::__consoleOpen = true;
 bool Core::__consoleDiscarding = false;
+bool Core::__consoleOpen = true;
 String Core::__consoleBuffer;
 
-Core::Core()
-{
-}
+Core::Core() { }
 Core::Core(const Core &copy)
 {
 	(void)copy;
@@ -107,6 +105,15 @@ void Core::addServer(Server *server)
 		throw std::runtime_error("fcntl syscall, failed to make a non blocking socket");
 	Core::__servers[sd] = server;
 }
+bool Core::hasGameServer()
+{
+	for (t_Server::iterator it = Core::__servers.begin(); it != Core::__servers.end(); it++)
+	{
+		if (it->second->getType() == GAME)
+			return true;
+	}
+	return false;
+}
 bool Core::isServerSocket(int sd)
 {
 	if (Core::__servers.find(sd) != Core::__servers.end())
@@ -191,7 +198,7 @@ void Core::processConsoleCommand(const String &command)
 		return;
 	}
 	mzu::running("[admin local] command received: " + input);
-	std::cout << ADMIN_DUMMY_RESPONSE << ADMIN_PROMPT << std::flush;
+	std::cout << Core::executeAdminCommand(input) << ADMIN_PROMPT << std::flush;
 }
 
 void Core::processConsoleInput()
@@ -451,9 +458,6 @@ void Core::mainLoop()
 	int retV = 0;
 	fd_set readSet, writeSet;
 
-	if (Core::__servers.empty())
-		throw std::runtime_error("configuration does not identify any functional server");
-
 	for (t_Server::iterator it = __servers.begin(); it != __servers.end(); it++)
 	{
 		if (it->second->getType() == GAME)
@@ -514,4 +518,82 @@ void Core::mainLoop()
 	}
 	if (consoleFlags >= 0)
 		fcntl(STDIN_FILENO, F_SETFL, consoleFlags);
+}
+
+/*************************************************************************
+ *                             ADMINISTRATION                            *
+ *************************************************************************/
+
+String Core::handleGamesCommand()
+{
+    String result = "ID   HOST              PORT";
+    for (t_Server::iterator it = Core::__servers.begin(); it != Core::__servers.end(); it++)
+    {
+        if (it->second->getType() != GAME)
+            continue;
+        result += "\n" + mzu::intToString(it->first) + " " + it->second->getServerHost() + " " + mzu::intToString(it->second->getServerPort()) + "\n";
+    }
+    return result;
+}
+
+String Core::routeGameCommand(t_command type, const t_svec &args)
+{
+    int gameId;
+    if (args.at(1).empty() || args.at(1).find_first_not_of("0123456789") != String::npos)
+        return ADMIN_ERR "Invalid game ID.\n";
+    std::istringstream value(args.at(1));
+    if (!(value >> gameId))
+        return ADMIN_ERR "Invalid game ID.\n";
+    t_Server::iterator it = Core::__servers.find(gameId);
+    if (it == Core::__servers.end() || it->second->getType() != GAME)
+        return ADMIN_ERR "Unknown game ID: " + mzu::intToString(gameId) + ".\n";
+    Game *game = static_cast<ServerGame *>(it->second)->getGame();
+    if (!game)
+        return ADMIN_ERR "Game " + mzu::intToString(gameId) + " is not initialized.\n";
+    return game->executeAdminCommand(type, args);
+}
+
+String Core::executeAdminCommand(const String &command)
+{
+    std::istringstream input(command);
+    t_svec args;
+    String word;
+
+    while (input >> word)
+        args.push_back(word);
+    if (args.empty())
+        return "";
+
+    t_command type = CommandParser::parseCommandType(command);
+    switch (type)
+    {
+		case CMD_ADMIN_HELP:
+			if (args.size() != 1)
+				return ADMIN_ERR "Usage: help";
+			return "Available commands:\n"
+				"  games\n"
+				"      List all running game servers.\n"
+				"  resize <game-id> <width> <height>\n"
+				"      Resize the map of a running game.\n"
+				"  time <game-id> <value>\n"
+				"      Change the time unit of a running game.\n";
+
+        case CMD_ADMIN_GAMES:
+            if (args.size() != 1)
+                return ADMIN_ERR "Usage: games";
+            return Core::handleGamesCommand();
+
+        case CMD_ADMIN_RESIZE:
+            if (args.size() != 4)
+                return ADMIN_ERR "Usage: resize <game-id> <width> <height>\n";
+            return Core::routeGameCommand(type, args);
+
+        case CMD_ADMIN_RETIME:
+            if (args.size() != 3)
+                return ADMIN_ERR "Usage: time <game-id> <value>\n";
+            return Core::routeGameCommand(type, args);
+
+        default:
+            return ADMIN_ERR "Unknown command. Type 'help' for available commands.\n";
+    }
 }

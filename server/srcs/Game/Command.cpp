@@ -4,7 +4,7 @@ Command::Command() : __type(CMD_UNKNOWN), __executionTime(0), __playerId(-1)
 {
 }
 
-Command::Command(e_command type, const String &argument, long executionTime, int playerId)
+Command::Command(t_command type, const String &argument, long executionTime, int playerId)
 	: __type(type), __argument(argument), __executionTime(executionTime), __playerId(playerId)
 {
 }
@@ -30,7 +30,7 @@ Command::~Command()
 {
 }
 
-e_command Command::getType() const
+t_command Command::getType() const
 {
 	return __type;
 }
@@ -55,7 +55,7 @@ bool Command::isReady(long currentTick) const
 	return currentTick >= __executionTime;
 }
 
-int Command::durationForCommand(e_command type)
+int Command::durationForCommand(t_command type)
 {
 	switch (type)
 	{

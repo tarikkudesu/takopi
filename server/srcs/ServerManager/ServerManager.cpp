@@ -183,7 +183,18 @@ void ServerManager::setUpServers()
 
 void ServerManager::initServers()
 {
-	std::vector<int> portsTaken;
+	bool				doesithaveatleastonegameserver = false;
+	std::vector<int> 	portsTaken;
+
+	for (t_serVect::iterator it = __serverTemplates.begin(); it != __serverTemplates.end(); it++)
+	{
+		if ((*it)->getType() == GAME)
+			doesithaveatleastonegameserver = true;
+	}
+
+	if (doesithaveatleastonegameserver == false)
+		throw std::runtime_error("at least one functional game server is required");
+
 	for (t_serVect::iterator it = __serverTemplates.begin(); it != __serverTemplates.end(); it++)
 	{
 		Server *tmp = *it;

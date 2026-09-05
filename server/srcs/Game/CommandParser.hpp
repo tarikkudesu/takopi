@@ -12,7 +12,7 @@ class CommandParser
 		~CommandParser();
 
 	public:
-		static e_command				parseCommandType(const String &input);
+		static t_command				parseCommandType(const String &input);
 		static String					parseArgument(const String &input);
 		static String					resourceName(e_resource res);
 		static e_resource				resourceFromName(const String &name);

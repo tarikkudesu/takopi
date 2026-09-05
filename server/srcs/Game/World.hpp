@@ -24,6 +24,7 @@ class World
 		Tile									&tileAt(int x, int y);
 		const Tile								&tileAt(int x, int y) const;
 		void									init(int width, int height);
+		void									resize(int width, int height);
 
 		int										broadcastDirection(int fromX, int fromY, int toX, int toY, e_direction facing) const;
 		String									buildVisionString(const Player &player) const;

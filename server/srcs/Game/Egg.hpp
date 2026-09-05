@@ -25,13 +25,14 @@ class Egg
 		Egg								&operator=(const Egg &assign);
 		~Egg();
 
-		int								getId() const;
 		int								getX() const;
 		int								getY() const;
+		int								getId() const;
 		int								getTeamIndex() const;
-		int								getPlayerId() const;
 		long							getHatchTime() const;
+		int								getPlayerId() const;
 		bool							isHatched() const;
+		void							setPosition(int x, int y);
 		bool							tryHatch(long currentTick);
 };
 

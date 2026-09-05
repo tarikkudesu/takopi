@@ -84,6 +84,40 @@ void World::init(int width, int height)
 	initDisplay(width, height);
 }
 
+void World::resize(int width, int height)
+{
+	if (width < 1 || width > MAP_MAX_SIZE || height < 1 || height > MAP_MAX_SIZE)
+		throw std::runtime_error("map dimensions must be between 1 and " + MAP_MAX_SIZE);
+
+	std::vector< std::vector<Tile> > map(height);
+	for (int y = 0; y < height; y++)
+	{
+		for (int x = 0; x < width; x++)
+		{
+			Tile tile(x, y);
+			if (y < __height && x < __width)
+			{
+				for (int r = 0; r < RESOURCE_COUNT; r++)
+					tile.addResource(static_cast<e_resource>(r), __map[y][x].getResource(static_cast<e_resource>(r)));
+			}
+			map[y].push_back(tile);
+		}
+	}
+	for (int y = 0; y < __height; y++)
+	{
+		for (int x = 0; x < __width; x++)
+		{
+			const std::vector<int> &ids = __map[y][x].getPlayerIds();
+			for (size_t i = 0; i < ids.size(); i++)
+				map[y % height][x % width].addPlayer(ids[i]);
+		}
+	}
+	__map.swap(map);
+	__width = width;
+	__height = height;
+	populateResources();
+}
+
 void World::populateResources()
 {
 	static const double densities[RESOURCE_COUNT] = {

@@ -21,14 +21,16 @@ class Core
 		static String				__consoleBuffer;
 
 		static int					currentLoad();
+		static void					mainProcess();
+		static String				handleGamesCommand();
 		static void					processConsoleInput();
 		static void					writeDataToSocket( int sd );
 		static void					readDataFromSocket( int sd );
 		static void					acceptNewConnection( int sd );
-		static int					buildSets(fd_set &readSet, fd_set &writeSet);
 		static void					processConsoleCommand( const String &command );
 		static void					proccessSelectEvent( int sd, fd_set &readSet, fd_set &writeSet, int &retV );
-		static void					mainProcess();
+		static String				routeGameCommand( t_command type, const t_svec &args );
+		static int					buildSets( fd_set &readSet, fd_set &writeSet );
 
 		Core();
 		Core( const Core &copy );
@@ -37,11 +39,13 @@ class Core
 
 	public:
 		static void					logServers();
+		static bool					hasGameServer();
 		static void					removeServer( int sd );
 		static bool					isServerSocket( int sd );
 		static void					removeConnection( int sd );
 		static void					addServer( Server *server );
 		static void					addConnection(Connection *connection);
+		static String				executeAdminCommand( const String &command );
 
 		static bool					up;
 		static void 				clear();

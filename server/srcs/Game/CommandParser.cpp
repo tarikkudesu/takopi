@@ -5,7 +5,7 @@ CommandParser::CommandParser(const CommandParser &copy) { (void)copy; }
 CommandParser &CommandParser::operator=(const CommandParser &assign) { (void)assign; return *this; }
 CommandParser::~CommandParser() {}
 
-e_command CommandParser::parseCommandType(const String &input)
+t_command CommandParser::parseCommandType(const String &input)
 {
 	String cmd = input;
 	size_t space = cmd.find(' ');
@@ -24,7 +24,10 @@ e_command CommandParser::parseCommandType(const String &input)
 	if (cmd == "inventaire")	return CMD_INVENTAIRE;
 	if (cmd == "incantation")	return CMD_INCANTATION;
 	if (cmd == "connect_nbr")	return CMD_CONNECT_NBR;
-
+	if (cmd == "resize")		return CMD_ADMIN_RESIZE;
+	if (cmd == "time")			return CMD_ADMIN_RETIME;
+	if (cmd == "games")			return CMD_ADMIN_GAMES;
+	if (cmd == "help")			return CMD_ADMIN_HELP;
 	return CMD_UNKNOWN;
 }
 

@@ -4,8 +4,7 @@
 ServerGame::ServerGame(String line) : 	Server(GAME),
 										__width(-1),
 									   	__height(-1),
-									   	__timeUnit(-1),
-									   	__clientsPerTeam(-1)
+									   	__timeUnit(-1)
 {
 	mzu::debug("ServerGame constructor");
 	parseBlock(line);
@@ -15,8 +14,6 @@ ServerGame::ServerGame(String line) : 	Server(GAME),
 		throw std::runtime_error("game server: missing map dimension directive (\"width\"/\"height\")");
 	if (this->__teams.empty())
 		throw std::runtime_error("game server: missing \"teams\" directive");
-	if (this->__clientsPerTeam < 1)
-		throw std::runtime_error("game server: missing \"clients_per_team\" directive");
 	if (this->__timeUnit < 1)
 		this->__timeUnit = 100;
 }
@@ -24,8 +21,7 @@ ServerGame::ServerGame(const ServerGame &copy) : Server(copy),
 												__teams(copy.__teams),
 												 __width(copy.__width),
 												 __height(copy.__height),
-												 __timeUnit(copy.__timeUnit),
-												 __clientsPerTeam(copy.__clientsPerTeam)
+												 __timeUnit(copy.__timeUnit)
 {
 	mzu::debug("ServerGame copy constructor");
 }
@@ -39,7 +35,6 @@ ServerGame &ServerGame::operator=(const ServerGame &assign)
 		this->__width = assign.__width;
 		this->__height = assign.__height;
 		this->__timeUnit = assign.__timeUnit;
-		this->__clientsPerTeam = assign.__clientsPerTeam;
 	}
 	return *this;
 }
@@ -56,19 +51,21 @@ ServerGame::~ServerGame()
 
 int ServerGame::getMapWidth() const
 {
+	if (this->__game)
+		return this->__game->getMapWidth();
 	return this->__width;
 }
 int ServerGame::getMapHeight() const
 {
+	if (this->__game)
+		return this->__game->getMapHeight();
 	return this->__height;
 }
 int ServerGame::getTimeUnit() const
 {
+	if (this->__game)
+		return this->__game->getTimeUnit();
 	return this->__timeUnit;
-}
-int ServerGame::getClientsPerTeam() const
-{
-	return this->__clientsPerTeam;
 }
 const t_svec &ServerGame::getTeams() const
 {
@@ -143,22 +140,6 @@ void ServerGame::proccessTimeToken(t_svec &tokens)
 	this->__timeUnit = static_cast<int>(t);
 }
 
-void ServerGame::proccessClientsToken(t_svec &tokens)
-{
-	if (this->__clientsPerTeam != -1)
-		throw std::runtime_error(tokens.at(0) + " directive is duplicate");
-	if (tokens.size() == 1)
-		throw std::runtime_error(tokens.at(0) + ": no value");
-	if (tokens.size() > 2)
-		throw std::runtime_error(tokens.at(0) + ": multiple values");
-	if (String::npos != tokens.at(1).find_first_not_of("0123456789"))
-		throw std::runtime_error(tokens.at(0) + ": invalid clients_per_team: not a number");
-	long c = mzu::stringToInt(tokens.at(1));
-	if (c < 1 || c > 1000)
-		throw std::runtime_error(tokens.at(0) + ": invalid clients_per_team: out of range");
-	this->__clientsPerTeam = static_cast<int>(c);
-}
-
 void ServerGame::proccessToken(t_svec &tokens)
 {
 	String key = tokens.at(0);
@@ -167,8 +148,7 @@ void ServerGame::proccessToken(t_svec &tokens)
 		key != "width" &&
 		key != "height" &&
 		key != "teams" &&
-		key != "time" &&
-		key != "clients_per_team")
+		key != "time")
 		throw std::runtime_error(key + ": unknown directive");
 	if (key == "port")
 		proccessPortToken(tokens);
@@ -182,8 +162,6 @@ void ServerGame::proccessToken(t_svec &tokens)
 		proccessTeamsToken(tokens);
 	else if (key == "time")
 		proccessTimeToken(tokens);
-	else
-		proccessClientsToken(tokens);
 }
 
 /****************************************************************************
@@ -195,5 +173,5 @@ void ServerGame::initGame()
 	if (__game)
 		return;
 	__game = new Game();
-	__game->init(__width, __height, __teams, __timeUnit, __clientsPerTeam);
+	__game->init(__width, __height, __teams, __timeUnit);
 }

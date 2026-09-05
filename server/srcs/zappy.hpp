@@ -40,8 +40,12 @@ typedef std::map<String, String> Map;
 #define READ_SIZE 1024
 #define MAX_MESSAGE_SIZE 1024
 #define MAX_ADMIN_AUTH_FAILURES 3
-#define ADMIN_PROMPT "zappyshell> "
+#define ADMIN_PROMPT GREEN "➜ " CYAN "zappy " RED "admin" YELLOW " ✗ " RESET
 #define ADMIN_DUMMY_RESPONSE "OK command received\n"
+#define ADMIN_OK    GREEN  "[OK]"   RESET " "
+#define ADMIN_ERR   RED    "[ERR]"  RESET " "
+#define ADMIN_WARN  YELLOW "[WARN]" RESET " "
+#define ADMIN_INFO  BLUE   "[INFO]" RESET " "
 
 #define DEFAULT_HOST "0.0.0.0"
 #define DEFAULT_CERTIFICATE "certs/server.crt"

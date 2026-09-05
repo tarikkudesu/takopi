@@ -7,14 +7,14 @@
 class ConnectionAdmin : public Connection
 {
 	private :
-		size_t							__responseOffset;
-		bool							__tlsHandshake;
-		e_tls_operation					__tlsOperation;
-		bool							__tlsFailed;
-		e_tls_wait						__tlsWait;
 		SSL								*__ssl;
-		bool							__authenticated;
+		t_tls_wait						__tlsWait;
+		t_tls_operation					__tlsOperation;
 		unsigned int					__authenticationFailures;
+		size_t							__responseOffset;
+		bool							__authenticated;
+		bool							__tlsHandshake;
+		bool							__tlsFailed;
 		bool							__closing;
 
 		void							processMessage(const String &message);
@@ -25,8 +25,8 @@ class ConnectionAdmin : public Connection
 
 	public:
 		bool							usesTLS() const;
-		void							setupTLS(SSL_CTX *ctx);
 		bool							processTLSHandshake();
+		void							setupTLS(SSL_CTX *ctx);
 		bool							tlsNeedsRead() const;
 		bool							tlsNeedsWrite() const;
 		bool							tlsReadPending() const;
