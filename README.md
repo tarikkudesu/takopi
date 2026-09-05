@@ -18,6 +18,35 @@ In addition, the server features an in-process **Raylib debug window** that rend
 
 ---
 
+### 1.1. Server Architecture
+
+```mermaid
+flowchart TD
+    Z[zappy.hpp] --> M[MZU.hpp]
+    M --> B[BasicString.hpp]
+    B --> T[Tile.hpp]
+    T --> P[Player.hpp]
+    P --> E[Egg.hpp]
+    E --> CMD[Command.hpp]
+    CMD --> CP[CommandParser.hpp]
+    CP --> EL[Elevation.hpp]
+    EL --> W[World.hpp]
+    W --> G[Game.hpp]
+
+    G --> S[Server.hpp]
+    S --> SG[ServerGame.hpp]
+    S --> SA[ServerAdmin.hpp]
+    S --> SGUI[ServerGui.hpp]
+
+    S --> C[Connection.hpp]
+    C --> CG[ConnectionGame.hpp]
+    C --> CA[ConnectionAdmin.hpp]
+    C --> CGUI[ConnectionGui.hpp]
+
+    C --> CORE[Core.hpp]
+    CORE --> SM[ServerManager.hpp]
+```
+
 ## 2. Compilation
 
 From the root directory:

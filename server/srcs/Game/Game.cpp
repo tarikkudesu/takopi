@@ -1,7 +1,8 @@
 #include "Game.hpp"
 #include <cstdlib>
 
-Game::Game() :  __timeUnit(100),
+Game::Game() :  __state(GAME_RUNNING),
+				__timeUnit(100),
 				__nextEggId(0),
 				__nextPlayerId(0),
 				__tickOffset(0)
@@ -9,7 +10,8 @@ Game::Game() :  __timeUnit(100),
 	mzu::bzero(&__startTime, sizeof(__startTime));
 }
 
-Game::Game(const Game &copy) :  __timeUnit(0),
+Game::Game(const Game &copy) :  __state(GAME_RUNNING),
+								__timeUnit(0),
 								__nextEggId(0),
 								__nextPlayerId(0),
 								__tickOffset(0)
@@ -39,6 +41,7 @@ Game::~Game()
 
 void Game::init(int width, int height, const t_svec &teams, int timeUnit)
 {
+	__state = GAME_RUNNING;
 	__tickOffset = 0;
 	__teams = teams;
 	__timeUnit = timeUnit;
@@ -94,10 +97,13 @@ void Game::setTimeUnit(int timeUnit)
 
 void Game::tick()
 {
+	if (__state != GAME_RUNNING)
+		return;
 	long currentTick = getCurrentTick();
 	processFood(currentTick);
 	processEggs(currentTick);
 	processCommands(currentTick);
+	checkVictory();
 	__world.display();
 }
 
@@ -152,6 +158,9 @@ void Game::processCommands(long currentTick)
 			{
 				String response = executeCommand(it->second);
 				addNotification(pid, response);
+				checkVictory();
+				if (__state != GAME_RUNNING)
+					return;
 			}
 			completedPlayers.push_back(pid);
 		}
@@ -267,7 +276,7 @@ String Game::executeVoir(int playerId)
 	Player *player = getPlayer(playerId);
 	if (!player)
 		return "ko\n";
-	return __world.buildVisionString(*player) + "\n";
+	return __world.buildVisionString(*player) + NEWLINE;
 }
 
 String Game::executeInventaire(int playerId)
@@ -275,7 +284,7 @@ String Game::executeInventaire(int playerId)
 	Player *player = getPlayer(playerId);
 	if (!player)
 		return "ko\n";
-	return player->inventoryString() + "\n";
+	return player->inventoryString() + NEWLINE;
 }
 
 String Game::executePrendre(int playerId, const String &object)
@@ -330,7 +339,7 @@ String Game::executeExpulse(int playerId)
 		int dir = __world.broadcastDirection(player->getX(), player->getY(),
 											 other->getX(), other->getY(),
 											 other->getDirection());
-		addNotification(otherId, "deplacement " + mzu::intToString(dir) + "\n");
+		addNotification(otherId, "deplacement " + mzu::intToString(dir) + NEWLINE);
 		kicked = true;
 	}
 	return kicked ? "ok\n" : "ko\n";
@@ -348,7 +357,7 @@ String Game::executeBroadcast(int playerId, const String &text)
 		int dir = __world.broadcastDirection(player->getX(), player->getY(),
 											 it->second->getX(), it->second->getY(),
 											 it->second->getDirection());
-		addNotification(it->first, "message " + mzu::intToString(dir) + "," + text + "\n");
+		addNotification(it->first, "message " + mzu::intToString(dir) + "," + text + NEWLINE);
 	}
 	return "ok\n";
 }
@@ -373,10 +382,10 @@ String Game::executeIncantation(int playerId)
 		{
 			p->setLevel(newLevel);
 			if (pids[i] != playerId)
-				addNotification(pids[i], "niveau actuel : " + mzu::intToString(newLevel) + "\n");
+				addNotification(pids[i], "niveau actuel : " + mzu::intToString(newLevel) + NEWLINE);
 		}
 	}
-	return "niveau actuel : " + mzu::intToString(newLevel) + "\n";
+	return "niveau actuel : " + mzu::intToString(newLevel) + NEWLINE;
 }
 
 String Game::executeFork(int playerId)
@@ -399,7 +408,7 @@ String Game::executeConnectNbr(int playerId)
 	if (!player)
 		return "ko\n";
 	int remaining = __teamSlots[player->getTeamIndex()];
-	return mzu::intToString(remaining) + "\n";
+	return mzu::intToString(remaining) + NEWLINE;
 }
 
 /*************************************************************************
@@ -408,17 +417,14 @@ String Game::executeConnectNbr(int playerId)
 
 String Game::handleHandshake(const String &teamName, int &outPlayerId)
 {
+	outPlayerId = -1;
+	if (__state != GAME_RUNNING)
+		return "ko\n";
 	int teamIndex = getTeamIndex(teamName);
 	if (teamIndex < 0)
-	{
-		outPlayerId = -1;
 		return "ko\n";
-	}
 	if (__teamSlots[teamIndex] <= 0)
-	{
-		outPlayerId = -1;
 		return "ko\n";
-	}
 	int x = rand() % __world.getWidth();
 	int y = rand() % __world.getHeight();
 	e_direction dir = static_cast<e_direction>(rand() % 4);
@@ -432,8 +438,8 @@ String Game::handleHandshake(const String &teamName, int &outPlayerId)
 	outPlayerId = __nextPlayerId;
 	__nextPlayerId++;
 
-	String response = mzu::intToString(__teamSlots[teamIndex]) + "\n";
-	response += mzu::intToString(__world.getWidth()) + " " + mzu::intToString(__world.getHeight()) + "\n";
+	String response = mzu::intToString(__teamSlots[teamIndex]) + NEWLINE;
+	response += mzu::intToString(__world.getWidth()) + " " + mzu::intToString(__world.getHeight()) + NEWLINE;
 	return response;
 }
 
@@ -443,11 +449,15 @@ String Game::handleHandshake(const String &teamName, int &outPlayerId)
 
 void Game::enqueueCommand(int playerId, const String &rawCommand)
 {
-	__pendingCommands[playerId].push(rawCommand);
+	Player *player = getPlayer(playerId);
+	if (__state == GAME_RUNNING && player && player->isAlive() && canAcceptCommand(playerId))
+		__pendingCommands[playerId].push(rawCommand);
 }
 
 bool Game::canAcceptCommand(int playerId) const
 {
+	if (__state != GAME_RUNNING)
+		return false;
 	std::map<int, std::queue<String> >::const_iterator it = __pendingCommands.find(playerId);
 	if (it == __pendingCommands.end())
 		return true;
@@ -518,7 +528,7 @@ void Game::killPlayer(int playerId)
 	__world.tileAt(player->getX(), player->getY()).removePlayer(playerId);
 	__activeCommands.erase(playerId);
 	__pendingCommands.erase(playerId);
-	addNotification(playerId, "mort\n");
+	addNotification(playerId, PLAYER_DEATH_MESSAGE);
 }
 
 int Game::countSameLevelPlayers(int playerId)
@@ -559,6 +569,8 @@ int Game::getTimeUnit() const
 
 String Game::executeAdminCommand(t_command type, const t_svec &args)
 {
+	if (__state != GAME_RUNNING)
+		return ADMIN_ERR "Game is ending.\n";
 	int values[3] = {0, 0, 0};
 
 	for (size_t i = 1; i < args.size(); i++)
@@ -580,7 +592,45 @@ String Game::executeAdminCommand(t_command type, const t_svec &args)
 	}
 	catch (const std::exception &e)
 	{
-		return String("ERR ") + e.what() + "\n";
+		return String("ERR ") + e.what() + NEWLINE;
 	}
-	return "OK " + args.at(0) + " " + args.at(1) + "\n";
+	return "OK " + args.at(0) + " " + args.at(1) + NEWLINE;
+}
+
+/*************************************************************************
+ *                          GAME COMPLETION                              *
+ *************************************************************************/
+
+t_game_state Game::getState() const
+{
+	return __state;
+}
+
+void Game::checkVictory()
+{
+	if (__state != GAME_RUNNING)
+		return;
+	for (size_t team = 0; team < __teams.size(); team++)
+	{
+		int count = 0;
+		bool allMaxLevel = true;
+		for (std::map<int, Player *>::iterator it = __players.begin(); it != __players.end(); it++)
+		{
+			Player *player = it->second;
+			if (!player->isAlive() || player->getTeamIndex() != static_cast<int>(team))
+				continue;
+			count++;
+			if (player->getLevel() != WIN_LEVEL)
+				allMaxLevel = false;
+		}
+		if (count < CLIENTS_PER_TEAM || !allMaxLevel)
+			continue;
+		__state = GAME_ENDING;
+		mzu::info("game ended: team " + __teams[team] + " won");
+		for (std::map<int, Player *>::iterator it = __players.begin(); it != __players.end(); it++)
+			killPlayer(it->first);
+		__activeCommands.clear();
+		__pendingCommands.clear();
+		return;
+	}
 }

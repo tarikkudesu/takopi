@@ -3,8 +3,8 @@
 #include "Game.hpp"
 
 ConnectionGame::ConnectionGame(Server *server) : 	Connection(server),
-													__playerId(-1),
-                                                    __state(PLAYER_HANDSHAKE)
+													__state(PLAYER_HANDSHAKE),
+													__playerId(-1)
 {
 	__responseQueue.push(BasicString("BIENVENUE\n"));
 	mzu::debug("ConnectionGame constructor");
@@ -43,10 +43,8 @@ bool ConnectionGame::readSocket()
 		buff[bytesRead] = '\0';
 		this->addData(BasicString(buff, bytesRead));
 	}
-	else
-	{
+	else if (errno != EAGAIN && errno != EWOULDBLOCK && errno != EINTR)
 		return false;
-	}
 	return true;
 }
 
@@ -57,17 +55,22 @@ bool ConnectionGame::writeSocket()
 	if (!this->hasPendingOutput())
 		return true;
 
-	const BasicString &out = this->frontOutput();
-	ssize_t bytesWritten = send(this->__sd, out.getBuff(), out.length(), 0);
+	BasicString &out = __responseQueue.front();
+	if (out.empty())
+	{
+		popOutput();
+		return true;
+	}
+	ssize_t bytesWritten = send(__sd, out.getBuff(), out.length(), MSG_NOSIGNAL);
 	if (bytesWritten > 0)
 	{
-		mzu::info("response sent");
-		this->popOutput();
+		if (static_cast<size_t>(bytesWritten) == out.length())
+			popOutput();
+		else
+			out.erase(0, static_cast<size_t>(bytesWritten));
 	}
-	else
-	{
+	else if (bytesWritten == 0 || (errno != EAGAIN && errno != EWOULDBLOCK && errno != EINTR))
 		return false;
-	}
 	return true;
 }
 
@@ -100,7 +103,7 @@ void ConnectionGame::processMessage(const String &message)
     mzu::info("received: \"" + message + "\"");
 	ServerGame *gs = static_cast<ServerGame *>(__server);
 	Game *game = gs->getGame();
-	if (!game)
+	if (!game || game->getState() != GAME_RUNNING || __state == PLAYER_DEAD)
 		return;
 
 	if (__state == PLAYER_HANDSHAKE)

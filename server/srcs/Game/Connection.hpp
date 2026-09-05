@@ -2,7 +2,6 @@
 # define __CONNECTION_HPP__
 
 # include "../ServerManager/Server.hpp"
-# include "Enums.hpp"
 # include <openssl/ssl.h>
 
 class Connection
@@ -22,6 +21,7 @@ class Connection
 		
 
 	public:
+		Server							*getServer() const;
 		void							processData();
 		e_type							getType() const;
 		void							setSocket( int sd );

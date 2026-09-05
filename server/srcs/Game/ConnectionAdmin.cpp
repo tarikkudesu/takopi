@@ -235,7 +235,7 @@ void ConnectionAdmin::processMessage(const String &message)
             mzu::warn("remote administrator authentication failed");
             if (this->__authenticationFailures >= MAX_ADMIN_AUTH_FAILURES)
             {
-                this->pushOutput( ADMIN_ERR "Too many authentication failures.\n" RED "      Connection closed." RESET "\n" );
+                this->pushOutput( ADMIN_ERR "Too many authentication failures.\n" RED "      Connection closed." RESET NEWLINE );
                 this->__closing = true;
                 return;
             }

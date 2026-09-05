@@ -25,7 +25,7 @@ class ServerManager
 		ServerManager();
 
 	public:
-		void						setUpZappy();
+		bool						setUpZappy();
 
 		ServerManager( const ServerManager &copy );
 		ServerManager( const String &configutation_file );

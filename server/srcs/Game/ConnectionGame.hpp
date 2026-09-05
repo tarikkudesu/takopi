@@ -6,8 +6,8 @@
 class ConnectionGame : public Connection
 {
 	private :
-		int								__playerId;
 		e_player_state					__state;
+		int								__playerId;
 
 		void							processMessage(const String &message);
 

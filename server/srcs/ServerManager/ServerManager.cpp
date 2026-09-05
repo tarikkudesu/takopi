@@ -211,10 +211,12 @@ void ServerManager::initServers()
 			if (admintmp)
 				admintmp->setupSSL();
 			Core::addServer(tmp);
+			*it = NULL;
 		}
 		catch (std::exception &e)
 		{
 			delete tmp;
+			*it = NULL;
 			mzu::error(e.what());
 		}
 	}
@@ -225,7 +227,7 @@ void ServerManager::initServers()
  *                             SERVER LAUNCHER                           *
  *************************************************************************/
 
-void ServerManager::setUpZappy()
+bool ServerManager::setUpZappy()
 {
 	try
 	{
@@ -235,11 +237,15 @@ void ServerManager::setUpZappy()
 		checkBraces();
 		setUpServers();
 		initServers();
+		if (!Core::hasGameServer())
+			throw std::runtime_error("at least one functional game server is required");
 		Core::logServers();
 		Core::mainLoop();
 	}
 	catch (std::exception &e)
 	{
 		mzu::terr(e.what());
+		return false;
 	}
+	return true;
 }

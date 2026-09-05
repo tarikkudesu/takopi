@@ -101,3 +101,8 @@ void Connection::pushOutput(const String &msg)
 {
 	__responseQueue.push(BasicString(msg));
 }
+
+Server *Connection::getServer() const
+{
+	return __server;
+}

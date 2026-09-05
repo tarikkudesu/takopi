@@ -1,7 +1,7 @@
 #ifndef __TILE_HPP__
 #define __TILE_HPP__
 
-#include "Enums.hpp"
+#include "../utilities/BasicString.hpp"
 
 class Tile
 {

@@ -1,7 +1,6 @@
 #ifndef __CORE_HPP__
 # define __CORE_HPP__
 
-#include "Server.hpp"
 #include "../Game/Connection.hpp"
 
 typedef std::map< int, Connection* >		t_Connections;

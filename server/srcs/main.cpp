@@ -18,10 +18,11 @@ int main(int ac, char **av)
 	std::vector<String> args;
 	for (int i = 1; i < ac; ++i)
 		args.push_back(String(av[i]));
+	bool success = false;
 	{
 		mzu::logs(args);
 		ServerManager manager(*(args.end() - 1));
-		manager.setUpZappy();
+		success = manager.setUpZappy();
 	}
-	exit(EXIT_FAILURE);
+	return success ? EXIT_SUCCESS : EXIT_FAILURE;
 }

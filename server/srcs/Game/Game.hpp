@@ -10,6 +10,7 @@
 class Game
 {
 	private:
+		t_game_state							__state;
 		t_svec									__teams;
 		World									__world;
 		int										__timeUnit;
@@ -25,7 +26,7 @@ class Game
 		std::map<int, Command>					__activeCommands;
 		std::map<int, int>						__teamSlots;
 
-		void									killPlayer(int playerId);
+		void									checkVictory();
 		void									processFood(long currentTick);
 		void									processEggs(long currentTick);
 		void									processCommands(long currentTick);
@@ -48,6 +49,9 @@ class Game
 		String									executePrendre(int playerId, const String &object);
 
 	public:
+		t_game_state							getState() const;
+		void									killPlayer(int playerId);
+
 		Game();
 		Game(const Game &copy);
 		Game	&operator=(const Game &assign);

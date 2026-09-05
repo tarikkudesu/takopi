@@ -45,16 +45,15 @@ void Core::clear()
 		tmpMapV.push_back(it->second->getServerSocket());
 	for (t_Connections::iterator it = Core::__connections.begin(); it != Core::__connections.end(); it++)
 		tmpMapC.push_back(it->second->getConnectionSocket());
-	for (std::vector<int>::iterator it = tmpMapV.begin(); it != tmpMapV.end(); it++)
-		Core::removeServer(*it);
 	for (std::vector<int>::iterator it = tmpMapC.begin(); it != tmpMapC.end(); it++)
 		Core::removeConnection(*it);
+	for (std::vector<int>::iterator it = tmpMapV.begin(); it != tmpMapV.end(); it++)
+		Core::removeServer(*it);
 	tmpMapV.clear();
 	tmpMapC.clear();
 	Core::__servers.clear();
 	Core::__connections.clear();
-	for (int i = 3; i < 1024; i++)
-		close(i);
+	Core::up = false;
 }
 void Core::removeConnection(int sd)
 {
@@ -63,6 +62,13 @@ void Core::removeConnection(int sd)
 	if (it != Core::__connections.end())
 	{
 		Connection *instance = it->second;
+		ConnectionGame *connection = dynamic_cast<ConnectionGame *>(instance);
+		if (connection)
+		{
+			Game *game = static_cast<ServerGame *>(connection->getServer())->getGame();
+			if (game)
+				game->killPlayer(connection->getPlayerId());
+		}
 		Core::__connections.erase(it);
 		delete instance;
 		close(sd);
@@ -88,6 +94,14 @@ void Core::removeServer(int sd)
 	if (it != Core::__servers.end())
 	{
 		Server *instance = it->second;
+		std::vector<int> connections;
+		for (t_Connections::iterator ci = __connections.begin(); ci != __connections.end(); ci++)
+		{
+			if (ci->second->getServer() == instance)
+				connections.push_back(ci->first);
+		}
+		for (size_t i = 0; i < connections.size(); i++)
+			removeConnection(connections[i]);
 		Core::__servers.erase(it);
 		delete instance;
 	}
@@ -159,6 +173,12 @@ int Core::buildSets(fd_set &readSet, fd_set &writeSet)
 	}
 	for (t_Server::iterator it = Core::__servers.begin(); it != Core::__servers.end(); it++)
 	{
+		if (it->second->getType() == GAME)
+		{
+			Game *game = static_cast<ServerGame *>(it->second)->getGame();
+			if (game && game->getState() == GAME_ENDING)
+				continue;
+		}
 		int sd = it->second->getServerSocket();
 		FD_SET(sd, &readSet);
 		if (sd > maxFd)
@@ -173,6 +193,15 @@ int Core::buildSets(fd_set &readSet, fd_set &writeSet)
 			if (connection->tlsNeedsRead())
 				FD_SET(sd, &readSet);
 			if (connection->tlsNeedsWrite())
+				FD_SET(sd, &writeSet);
+		}
+		else if (it->second->getType() == GAME)
+		{
+			ConnectionGame *connection = static_cast<ConnectionGame *>(it->second);
+			Game *game = static_cast<ServerGame *>(connection->getServer())->getGame();
+			if (connection->getState() != PLAYER_DEAD && game && game->getState() == GAME_RUNNING)
+				FD_SET(sd, &readSet);
+			if (connection->hasPendingOutput())
 				FD_SET(sd, &writeSet);
 		}
 		else
@@ -348,9 +377,9 @@ void Core::acceptNewConnection(int sd)
 			default: break;
 		}
 	}
-	else if (errno != EAGAIN && errno != EWOULDBLOCK && errno != ECONNABORTED)
+	else if (errno != EAGAIN && errno != EWOULDBLOCK && errno != EINTR && errno != ECONNABORTED)
 	{
-		removeServer(sd);
+		throw std::runtime_error("accept syscall failed");
 	}
 }
 
@@ -408,6 +437,9 @@ void Core::mainProcess()
 	{
 		try
 		{
+			ConnectionGame *connection = dynamic_cast<ConnectionGame *>(it->second);
+			if (connection && connection->getState() == PLAYER_DEAD)
+				continue;
 			it->second->processData();
 		}
 		catch (std::exception &e)
@@ -416,6 +448,10 @@ void Core::mainProcess()
 			closeConnection.push_back(it->second->getConnectionSocket());
 		}
 	}
+
+	for (size_t i = 0; i < closeConnection.size(); i++)
+		Core::removeConnection(closeConnection[i]);
+	closeConnection.clear();
 
 	for (t_Server::iterator it = __servers.begin(); it != __servers.end(); it++)
 	{
@@ -436,10 +472,10 @@ void Core::mainProcess()
 			for (t_Connections::iterator ci = __connections.begin(); ci != __connections.end(); ci++)
 			{
 				ConnectionGame *connectionGame = dynamic_cast<ConnectionGame *>(ci->second);
-				if (connectionGame && connectionGame->getPlayerId() == pid)
+				if (connectionGame && connectionGame->getServer() == gs && connectionGame->getPlayerId() == pid)
 				{
 					connectionGame->pushOutput(msg);
-					if (msg == "mort\n")
+					if (msg == PLAYER_DEATH_MESSAGE)
 						connectionGame->setState(PLAYER_DEAD);
 					break;
 				}
@@ -448,10 +484,44 @@ void Core::mainProcess()
 		game->clearNotifications();
 	}
 
-	for (std::vector<int>::iterator it = closeConnection.begin(); it != closeConnection.end(); it++)
+	for (t_Connections::iterator it = __connections.begin(); it != __connections.end(); it++)
 	{
-		Core::removeConnection(*it);
+		ConnectionGame *connection = dynamic_cast<ConnectionGame *>(it->second);
+		if (!connection)
+			continue;
+		Game *game = static_cast<ServerGame *>(connection->getServer())->getGame();
+		if (game && game->getState() == GAME_ENDING)
+			connection->setState(PLAYER_DEAD);
+		if (connection->getState() == PLAYER_DEAD && !connection->hasPendingOutput())
+			closeConnection.push_back(it->first);
 	}
+	for (size_t i = 0; i < closeConnection.size(); i++)
+		Core::removeConnection(closeConnection[i]);
+
+	std::vector<int> closeServer;
+	for (t_Server::iterator it = __servers.begin(); it != __servers.end(); it++)
+	{
+		if (it->second->getType() != GAME)
+			continue;
+		Game *game = static_cast<ServerGame *>(it->second)->getGame();
+		if (!game || game->getState() != GAME_ENDING)
+			continue;
+		bool hasConnections = false;
+		for (t_Connections::iterator ci = __connections.begin(); ci != __connections.end(); ci++)
+		{
+			if (ci->second->getServer() == it->second)
+			{
+				hasConnections = true;
+				break;
+			}
+		}
+		if (!hasConnections)
+			closeServer.push_back(it->first);
+	}
+	for (size_t i = 0; i < closeServer.size(); i++)
+		Core::removeServer(closeServer[i]);
+	if (!Core::hasGameServer())
+		Core::up = false;
 }
 void Core::mainLoop()
 {
@@ -478,12 +548,21 @@ void Core::mainLoop()
 	Core::up = true;
 	try
 	{
-		while (Core::up)
+		while (Core::up && Core::hasGameServer())
 		{
 			int maxFd = Core::buildSets(readSet, writeSet);
 			struct timeval tv;
-			tv.tv_sec = SELECT_TIMEOUT / 1000;
-			tv.tv_usec = (SELECT_TIMEOUT % 1000) * 1000;
+			long timeoutUs = SELECT_TIMEOUT * 1000;
+			for (t_Server::iterator it = __servers.begin(); it != __servers.end(); it++)
+			{
+				if (it->second->getType() != GAME)
+					continue;
+				Game *game = static_cast<ServerGame *>(it->second)->getGame();
+				if (game && game->getState() == GAME_RUNNING)
+					timeoutUs = std::min(timeoutUs, 1000000L / game->getTimeUnit());
+			}
+			tv.tv_sec = timeoutUs / 1000000;
+			tv.tv_usec = timeoutUs % 1000000;
 			retV = select(maxFd + 1, &readSet, &writeSet, NULL, &tv);
 			if (retV < 0)
 			{
@@ -512,10 +591,14 @@ void Core::mainLoop()
 			}
 		}
 	}
-	catch (std::exception &e)
+	catch (...)
 	{
-		mzu::terr(e.what());
+		Core::up = false;
+		if (consoleFlags >= 0)
+			fcntl(STDIN_FILENO, F_SETFL, consoleFlags);
+		throw;
 	}
+	Core::up = false;
 	if (consoleFlags >= 0)
 		fcntl(STDIN_FILENO, F_SETFL, consoleFlags);
 }
@@ -531,7 +614,7 @@ String Core::handleGamesCommand()
     {
         if (it->second->getType() != GAME)
             continue;
-        result += "\n" + mzu::intToString(it->first) + " " + it->second->getServerHost() + " " + mzu::intToString(it->second->getServerPort()) + "\n";
+        result += NEWLINE + mzu::intToString(it->first) + " " + it->second->getServerHost() + " " + mzu::intToString(it->second->getServerPort()) + NEWLINE;
     }
     return result;
 }
