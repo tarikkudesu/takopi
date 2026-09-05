@@ -1,8 +1,9 @@
 #ifndef __CONNECTION_HPP__
 # define __CONNECTION_HPP__
 
-# include "../ServerManager/Server.hpp"
-# include <openssl/ssl.h>
+# include "../utilities/BasicString.hpp"
+
+class Server;
 
 class Connection
 {
@@ -16,8 +17,8 @@ class Connection
 		virtual void					processMessage(const String &message) = 0;
 
 		Connection( Server *server );
-		Connection( const Connection &copy );
-		Connection	&operator=( const Connection &assign );
+		Connection( const Connection &copy ) = delete;
+		Connection	&operator=( const Connection &assign ) = delete;
 		
 
 	public:

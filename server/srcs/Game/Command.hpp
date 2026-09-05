@@ -1,7 +1,7 @@
 #ifndef __COMMAND_HPP__
 #define __COMMAND_HPP__
 
-#include "Egg.hpp"
+#include "../zappy.hpp"
 
 /*************************************************************************
  *                         GAME COMMAND                                  *
@@ -26,7 +26,6 @@ class Command
 		int								getPlayerId() const;
 		const String					&getArgument() const;
 		long							getExecutionTime() const;
-		bool							isReady(long currentTick) const;
 
 		static int						durationForCommand(t_command type);
 };

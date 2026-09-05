@@ -1,30 +1,11 @@
 #include "Connection.hpp"
-#include "../ServerManager/ServerGame.hpp"
-#include "../Game/Game.hpp"
+#include "Server.hpp"
 
 Connection::Connection(Server *server) :	__sd(-1),
 											__type(server->getType()),
 											__server(server)
 {
 	mzu::debug("Connection constructor");
-}
-Connection::Connection(const Connection &copy) : 	__sd(-1),
-													__server(NULL)
-{
-	mzu::debug("Connection copy constructor");
-	*this = copy;
-}
-Connection &Connection::operator=(const Connection &assign)
-{
-	mzu::debug("Connection copy assignement operator");
-	if (this != &assign)
-	{
-		__sd = assign.__sd;
-		__type = assign.__type;
-		__server = assign.__server;
-		__responseQueue = assign.__responseQueue;
-	}
-	return *this;
 }
 Connection::~Connection()
 {

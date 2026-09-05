@@ -50,11 +50,6 @@ int Command::getPlayerId() const
 	return __playerId;
 }
 
-bool Command::isReady(long currentTick) const
-{
-	return currentTick >= __executionTime;
-}
-
 int Command::durationForCommand(t_command type)
 {
 	switch (type)

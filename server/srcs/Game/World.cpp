@@ -1,5 +1,6 @@
 #include "World.hpp"
 #include "WorldDisplay.hpp"
+#include "Player.hpp"
 #include <cstdlib>
 #include <cmath>
 

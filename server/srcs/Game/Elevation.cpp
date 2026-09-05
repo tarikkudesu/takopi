@@ -1,10 +1,5 @@
 #include "Elevation.hpp"
 
-Elevation::Elevation() {}
-Elevation::Elevation(const Elevation &copy) { (void)copy; }
-Elevation &Elevation::operator=(const Elevation &assign) { (void)assign; return *this; }
-Elevation::~Elevation() {}
-
 const s_elevation_req Elevation::__requirements[7] = {
 	{1, 1, 1, 0, 0, 0, 0, 0},
 	{2, 2, 1, 1, 1, 0, 0, 0},
@@ -14,13 +9,6 @@ const s_elevation_req Elevation::__requirements[7] = {
 	{6, 6, 1, 2, 3, 0, 1, 0},
 	{7, 6, 2, 2, 2, 2, 2, 1}
 };
-
-const s_elevation_req &Elevation::getRequirement(int currentLevel)
-{
-	if (currentLevel < 1 || currentLevel > 7)
-		return __requirements[0];
-	return __requirements[currentLevel - 1];
-}
 
 bool Elevation::canElevate(int currentLevel, const Tile &tile, int sameLevelCount)
 {

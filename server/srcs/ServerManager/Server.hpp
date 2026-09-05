@@ -2,7 +2,6 @@
 # define __SERVER_HPP__
 
 # include "../utilities/BasicString.hpp"
-# include "../Game/Game.hpp"
 
 class Server;
 
@@ -18,7 +17,6 @@ class Server
 		
 	protected:
 		e_type							__type;
-		Game							*__game;
 		bool							__portSet;
 		t_svec							__directives;
 
@@ -31,8 +29,8 @@ class Server
 		virtual void					proccessToken( t_svec &tokens ) = 0;
 
 		Server(e_type type);
-		Server( const Server &copy );
-		Server	&operator=( const Server &assign );
+		Server( const Server &copy ) = delete;
+		Server	&operator=( const Server &assign ) = delete;
 
 	public:
 		void							setup();

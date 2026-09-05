@@ -98,10 +98,6 @@ size_t BasicString::length() const
 {
 	return __size;
 }
-BasicString BasicString::duplicate() const
-{
-	return BasicString(__buff, __size);
-}
 BasicString BasicString::substr(size_t start, size_t length)
 {
 	if (start >= __size)

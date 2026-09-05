@@ -9,23 +9,6 @@ ServerManager::ServerManager(const String &configutation_file) : __config(config
 	mzu::info("configuration file: " + configutation_file);
 }
 
-ServerManager::ServerManager(const ServerManager &copy)
-{
-	mzu::debug("ServerManager copy constructor");
-	*this = copy;
-}
-
-ServerManager &ServerManager::operator=(const ServerManager &assign)
-{
-	mzu::debug("ServerManager copy assignement operator");
-	if (this != &assign)
-	{
-		this->__lines = assign.__lines;
-		this->__config = assign.__config;
-		this->__serverTemplates = assign.__serverTemplates;
-	}
-	return *this;
-}
 ServerManager::~ServerManager()
 {
 	for (t_serVect::iterator it = __serverTemplates.begin(); it != __serverTemplates.end(); it++)

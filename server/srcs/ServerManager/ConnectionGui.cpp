@@ -1,21 +1,10 @@
 #include "ConnectionGui.hpp"
-#include "../ServerManager/ServerGame.hpp"
+#include "ServerGame.hpp"
 #include "../Game/Game.hpp"
 
 ConnectionGui::ConnectionGui(Server *server) : Connection(server)
 {
 	mzu::debug("ConnectionGui constructor");
-}
-ConnectionGui::ConnectionGui(const ConnectionGui &copy) : Connection(copy)
-{
-	mzu::debug("ConnectionGui copy constructor");
-	*this = copy;
-}
-ConnectionGui &ConnectionGui::operator=(const ConnectionGui &assign)
-{
-	mzu::debug("ConnectionGui copy assignement operator");
-	if (this != &assign) { }
-	return *this;
 }
 ConnectionGui::~ConnectionGui()
 {

@@ -1,6 +1,6 @@
 #include "ConnectionGame.hpp"
-#include "../ServerManager/ServerGame.hpp"
-#include "Game.hpp"
+#include "ServerGame.hpp"
+#include "../Game/Game.hpp"
 
 ConnectionGame::ConnectionGame(Server *server) : 	Connection(server),
 													__state(PLAYER_HANDSHAKE),
@@ -8,21 +8,6 @@ ConnectionGame::ConnectionGame(Server *server) : 	Connection(server),
 {
 	__responseQueue.push(BasicString("BIENVENUE\n"));
 	mzu::debug("ConnectionGame constructor");
-}
-ConnectionGame::ConnectionGame(const ConnectionGame &copy) : Connection(copy)
-{
-	mzu::debug("ConnectionGame copy constructor");
-	*this = copy;
-}
-ConnectionGame &ConnectionGame::operator=(const ConnectionGame &assign)
-{
-	mzu::debug("ConnectionGame copy assignement operator");
-	if (this != &assign)
-	{
-		__state = assign.__state;
-		__playerId = assign.__playerId;
-	}
-	return *this;
 }
 ConnectionGame::~ConnectionGame()
 {
@@ -87,11 +72,6 @@ void ConnectionGame::setState(e_player_state state)
 int ConnectionGame::getPlayerId() const
 {
 	return __playerId;
-}
-
-void ConnectionGame::setPlayerId(int id)
-{
-	__playerId = id;
 }
 
 /*****************************************************************************

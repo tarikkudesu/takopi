@@ -5,12 +5,14 @@
 
 class ServerGui : public Server
 {
+	private:
+		ServerGui( const ServerGui &copy ) = delete;
+		ServerGui	&operator=( const ServerGui &assign ) = delete;
+
 	public:
 		void							proccessToken( t_svec &tokens );
 
 		ServerGui( String line );
-		ServerGui( const ServerGui &copy );
-		ServerGui	&operator=( const ServerGui &assign );
 		~ServerGui();
 };
 

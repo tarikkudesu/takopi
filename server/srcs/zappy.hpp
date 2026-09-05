@@ -23,7 +23,6 @@
 
 typedef std::string String;
 typedef std::vector<String> t_svec;
-typedef std::map<String, String> Map;
 
 #define RED 							"\033[1;31m"
 #define BLUE 							"\033[1;34m"
@@ -60,12 +59,6 @@ typedef std::map<String, String> Map;
 #define MAP_MAX_SIZE								100
 #define WIN_LEVEL									8
 
-
-typedef enum e_endian
-{
-	SERVER,
-	CONNECTION,
-} t_endian;
 
 typedef enum e_resource
 {
@@ -104,8 +97,7 @@ typedef enum e_type
 {
 	GAME = 0,
 	GUI,
-	ADMIN,
-	UNKNOWN
+	ADMIN
 } t_type;
 
 typedef enum e_tls_operation

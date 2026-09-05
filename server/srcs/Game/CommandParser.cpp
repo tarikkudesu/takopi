@@ -1,10 +1,5 @@
 #include "CommandParser.hpp"
 
-CommandParser::CommandParser() {}
-CommandParser::CommandParser(const CommandParser &copy) { (void)copy; }
-CommandParser &CommandParser::operator=(const CommandParser &assign) { (void)assign; return *this; }
-CommandParser::~CommandParser() {}
-
 t_command CommandParser::parseCommandType(const String &input)
 {
 	String cmd = input;
@@ -37,21 +32,6 @@ String CommandParser::parseArgument(const String &input)
 	if (space == String::npos || space + 1 >= input.length())
 		return "";
 	return input.substr(space + 1);
-}
-
-String CommandParser::resourceName(e_resource res)
-{
-	switch (res)
-	{
-		case SIBUR:			return "sibur";
-		case PHIRAS:		return "phiras";
-		case LINEMATE:		return "linemate";
-		case NOURRITURE:	return "nourriture";
-		case DERAUMERE:		return "deraumere";
-		case MENDIANE:		return "mendiane";
-		case THYSTAME:		return "thystame";
-		default:			return "";
-	}
 }
 
 e_resource CommandParser::resourceFromName(const String &name)

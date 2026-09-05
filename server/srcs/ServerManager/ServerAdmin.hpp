@@ -14,8 +14,8 @@ class ServerAdmin : public Server
 		String							__privateKey;
 		String							__password;
 
-		ServerAdmin( const ServerAdmin &copy );
-		ServerAdmin	&operator=( const ServerAdmin &assign );
+		ServerAdmin( const ServerAdmin &copy ) = delete;
+		ServerAdmin	&operator=( const ServerAdmin &assign ) = delete;
 
 		void							proccessCertificateToken( t_svec &tokens );
 		void							proccessPrivateKeyToken( t_svec &tokens );

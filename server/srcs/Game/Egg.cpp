@@ -1,13 +1,13 @@
 #include "Egg.hpp"
 
 Egg::Egg() : __id(-1), __x(0), __y(0), __teamIndex(-1),
-			 __PlayerId(-1), __hatchTime(0), __hatched(false)
+			 __hatchTime(0)
 {
 }
 
-Egg::Egg(int id, int x, int y, int teamIndex, int playerId, long hatchTime)
+Egg::Egg(int id, int x, int y, int teamIndex, long hatchTime)
 	: __id(id), __x(x), __y(y), __teamIndex(teamIndex),
-	  __PlayerId(playerId), __hatchTime(hatchTime), __hatched(false)
+	  __hatchTime(hatchTime)
 {
 }
 
@@ -24,9 +24,7 @@ Egg &Egg::operator=(const Egg &assign)
 		__x = assign.__x;
 		__y = assign.__y;
 		__teamIndex = assign.__teamIndex;
-		__PlayerId = assign.__PlayerId;
 		__hatchTime = assign.__hatchTime;
-		__hatched = assign.__hatched;
 	}
 	return *this;
 }
@@ -59,21 +57,6 @@ int Egg::getTeamIndex() const
 	return __teamIndex;
 }
 
-int Egg::getPlayerId() const
-{
-	return __PlayerId;
-}
-
-long Egg::getHatchTime() const
-{
-	return __hatchTime;
-}
-
-bool Egg::isHatched() const
-{
-	return __hatched;
-}
-
 void Egg::setPosition(int x, int y)
 {
 	__x = x;
@@ -86,9 +69,8 @@ void Egg::setPosition(int x, int y)
 
 bool Egg::tryHatch(long currentTick)
 {
-	if (!__hatched && currentTick >= __hatchTime)
+	if (currentTick >= __hatchTime)
 	{
-		__hatched = true;
 		return true;
 	}
 	return false;

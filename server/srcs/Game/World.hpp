@@ -1,7 +1,9 @@
 #ifndef __WORLD_HPP__
 #define __WORLD_HPP__
 
-#include "Elevation.hpp"
+#include "Tile.hpp"
+
+class Player;
 
 class World
 {

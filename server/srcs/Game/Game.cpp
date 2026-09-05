@@ -1,4 +1,6 @@
 #include "Game.hpp"
+#include "CommandParser.hpp"
+#include "Elevation.hpp"
 #include <cstdlib>
 
 Game::Game() :  __state(GAME_RUNNING),
@@ -8,21 +10,6 @@ Game::Game() :  __state(GAME_RUNNING),
 				__tickOffset(0)
 {
 	mzu::bzero(&__startTime, sizeof(__startTime));
-}
-
-Game::Game(const Game &copy) :  __state(GAME_RUNNING),
-								__timeUnit(0),
-								__nextEggId(0),
-								__nextPlayerId(0),
-								__tickOffset(0)
-{
-	(void)copy;
-}
-
-Game &Game::operator=(const Game &assign)
-{
-	(void)assign;
-	return *this;
 }
 
 Game::~Game()
@@ -41,6 +28,17 @@ Game::~Game()
 
 void Game::init(int width, int height, const t_svec &teams, int timeUnit)
 {
+	for (std::map<int, Player *>::iterator it = __players.begin(); it != __players.end(); it++)
+		delete it->second;
+	for (size_t i = 0; i < __eggs.size(); i++)
+		delete __eggs[i];
+	__players.clear();
+	__eggs.clear();
+	__notifications.clear();
+	__pendingCommands.clear();
+	__activeCommands.clear();
+	__teamSlots.clear();
+	__teams.clear();
 	__state = GAME_RUNNING;
 	__tickOffset = 0;
 	__teams = teams;
@@ -135,13 +133,18 @@ void Game::processFood(long currentTick)
 
 void Game::processEggs(long currentTick)
 {
-	for (size_t i = 0; i < __eggs.size(); i++)
+	for (std::vector<Egg *>::iterator it = __eggs.begin(); it != __eggs.end(); )
 	{
-		if (!__eggs[i]->isHatched() && __eggs[i]->tryHatch(currentTick))
+		Egg *egg = *it;
+		if (egg->tryHatch(currentTick))
 		{
-			__teamSlots[__eggs[i]->getTeamIndex()]++;
-			mzu::info("egg " + mzu::intToString(__eggs[i]->getId()) + " hatched");
+			__teamSlots[egg->getTeamIndex()]++;
+			mzu::info("egg " + mzu::intToString(egg->getId()) + " hatched");
+			delete egg;
+			it = __eggs.erase(it);
 		}
+		else
+			it++;
 	}
 }
 
@@ -395,7 +398,7 @@ String Game::executeFork(int playerId)
 		return "ko\n";
 	long currentTick = getCurrentTick();
 	Egg *egg = new Egg(__nextEggId, player->getX(), player->getY(),
-					   player->getTeamIndex(), playerId,
+					   player->getTeamIndex(),
 					   currentTick + EGG_HATCH_DURATION);
 	__eggs.push_back(egg);
 	__nextEggId++;
@@ -511,14 +514,6 @@ int Game::getTeamIndex(const String &teamName) const
 	return -1;
 }
 
-int Game::getRemainingSlots(int teamIndex) const
-{
-	std::map<int, int>::const_iterator it = __teamSlots.find(teamIndex);
-	if (it != __teamSlots.end())
-		return it->second;
-	return 0;
-}
-
 void Game::killPlayer(int playerId)
 {
 	Player *player = getPlayer(playerId);
@@ -529,6 +524,26 @@ void Game::killPlayer(int playerId)
 	__activeCommands.erase(playerId);
 	__pendingCommands.erase(playerId);
 	addNotification(playerId, PLAYER_DEATH_MESSAGE);
+}
+
+void Game::removePlayer(int playerId)
+{
+	std::map<int, Player *>::iterator player = __players.find(playerId);
+	if (player == __players.end())
+		return;
+	if (player->second->isAlive())
+		__world.tileAt(player->second->getX(), player->second->getY()).removePlayer(playerId);
+	__activeCommands.erase(playerId);
+	__pendingCommands.erase(playerId);
+	for (std::vector<s_notification>::iterator it = __notifications.begin(); it != __notifications.end(); )
+	{
+		if (it->playerId == playerId)
+			it = __notifications.erase(it);
+		else
+			it++;
+	}
+	delete player->second;
+	__players.erase(player);
 }
 
 int Game::countSameLevelPlayers(int playerId)
@@ -551,16 +566,6 @@ int Game::countSameLevelPlayers(int playerId)
 /*************************************************************************
  *                          ADMIN COMMANDS                               *
  *************************************************************************/
-
-int Game::getMapWidth() const
-{
-	return __world.getWidth();
-}
-
-int Game::getMapHeight() const
-{
-	return __world.getHeight();
-}
 
 int Game::getTimeUnit() const
 {

@@ -20,8 +20,8 @@ class ConnectionAdmin : public Connection
 		void							processMessage(const String &message);
 
 		ConnectionAdmin();
-		ConnectionAdmin( const ConnectionAdmin &copy );
-		ConnectionAdmin	&operator=( const ConnectionAdmin &assign );
+		ConnectionAdmin( const ConnectionAdmin &copy ) = delete;
+		ConnectionAdmin	&operator=( const ConnectionAdmin &assign ) = delete;
 
 	public:
 		bool							usesTLS() const;
@@ -29,8 +29,6 @@ class ConnectionAdmin : public Connection
 		void							setupTLS(SSL_CTX *ctx);
 		bool							tlsNeedsRead() const;
 		bool							tlsNeedsWrite() const;
-		bool							tlsReadPending() const;
-		bool							tlsWritePending() const;
 		bool							tlsHandshakeFailed() const;
 		bool							tlsHandshakePending() const;
 

@@ -1,20 +1,19 @@
 #ifndef __COMMANDPARSER_HPP__
 #define __COMMANDPARSER_HPP__
 
-#include "Command.hpp"
+#include "../zappy.hpp"
 
 class CommandParser
 {
 	private:
-		CommandParser();
-		CommandParser(const CommandParser &copy);
-		CommandParser					&operator=(const CommandParser &assign);
-		~CommandParser();
+		CommandParser() = delete;
+		CommandParser(const CommandParser &copy) = delete;
+		CommandParser					&operator=(const CommandParser &assign) = delete;
+		~CommandParser() = delete;
 
 	public:
 		static t_command				parseCommandType(const String &input);
 		static String					parseArgument(const String &input);
-		static String					resourceName(e_resource res);
 		static e_resource				resourceFromName(const String &name);
 };
 

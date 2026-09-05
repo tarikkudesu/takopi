@@ -1,7 +1,7 @@
 #ifndef __PLAYER_HPP__
 #define __PLAYER_HPP__
 
-#include "Tile.hpp"
+#include "../utilities/BasicString.hpp"
 
 /*************************************************************************
  *                           TRANTORIAN                                  *
@@ -33,7 +33,6 @@ class Player
 		int								getLevel() const;
 		int								getTeamIndex() const;
 		e_direction						getDirection() const;
-		e_player_state					getState() const;
 		int								getInventory(e_resource type) const;
 		long							getNextFoodTick() const;
 

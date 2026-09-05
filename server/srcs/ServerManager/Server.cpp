@@ -4,28 +4,9 @@ Server::Server(e_type type) : 	__sd(-1),
 				   				__port(-1),
 				   				__host(DEFAULT_HOST),
 				   				__type(type),
-								__game(nullptr),
 				   				__portSet(false)
 {
 	mzu::debug("Server default constructor");
-}
-Server::Server(const Server &copy)
-{
-	mzu::debug("Server copy constructor");
-	*this = copy;
-}
-Server &Server::operator=(const Server &assign)
-{
-	mzu::debug("Server copy assignement operator");
-	if (this != &assign)
-	{
-		this->__sd = assign.__sd;
-		this->__port = assign.__port;
-		this->__host = assign.__host;
-		this->__type = assign.__type;
-		this->__portSet = assign.__portSet;
-	}
-	return *this;
 }
 Server::~Server()
 {
@@ -84,7 +65,7 @@ void Server::setup()
 		addr.sin_family = AF_INET;
 		{
 			struct addrinfo hint;
-			struct addrinfo *result;
+			struct addrinfo *result = NULL;
 			mzu::bzero(&hint, sizeof(hint));
 			hint.ai_family = AF_INET;
 			hint.ai_socktype = SOCK_STREAM;
@@ -97,7 +78,6 @@ void Server::setup()
 			}
 			else
 			{
-				freeaddrinfo(result);
 				throw std::runtime_error(serverIdentity() + " non functional: couldn't resolve server host name: " + this->__host);
 			}
 		}

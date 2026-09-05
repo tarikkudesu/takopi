@@ -1,7 +1,8 @@
 #ifndef __CORE_HPP__
 # define __CORE_HPP__
 
-#include "../Game/Connection.hpp"
+#include "Connection.hpp"
+#include "Server.hpp"
 
 typedef std::map< int, Connection* >		t_Connections;
 
@@ -17,6 +18,7 @@ class Core
 		static t_Connections		__connections;
 		static bool					__consoleOpen;
 		static bool					__consoleDiscarding;
+		static bool					__criticalOverload;
 		static String				__consoleBuffer;
 
 		static int					currentLoad();
@@ -31,10 +33,10 @@ class Core
 		static String				routeGameCommand( t_command type, const t_svec &args );
 		static int					buildSets( fd_set &readSet, fd_set &writeSet );
 
-		Core();
-		Core( const Core &copy );
-		Core	&operator=( const Core &assign );
-		~Core();
+		Core() = delete;
+		Core( const Core &copy ) = delete;
+		Core	&operator=( const Core &assign ) = delete;
+		~Core() = delete;
 
 	public:
 		static void					logServers();

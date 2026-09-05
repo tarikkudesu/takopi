@@ -2,6 +2,9 @@
 #define __GAME_HPP__
 
 #include "World.hpp"
+#include "Command.hpp"
+#include "Egg.hpp"
+#include "Player.hpp"
 
 /*************************************************************************
  *                         GAME ORCHESTRATOR                             *
@@ -10,6 +13,9 @@
 class Game
 {
 	private:
+		Game(const Game &copy) = delete;
+		Game	&operator=(const Game &assign) = delete;
+
 		t_game_state							__state;
 		t_svec									__teams;
 		World									__world;
@@ -53,8 +59,6 @@ class Game
 		void									killPlayer(int playerId);
 
 		Game();
-		Game(const Game &copy);
-		Game	&operator=(const Game &assign);
 		~Game();
 
 		void									clearNotifications();
@@ -64,15 +68,13 @@ class Game
 		String									executeAdminCommand(t_command type, const t_svec &args);
 		String									handleHandshake(const String &teamName, int &outPlayerId);
 		void									addNotification(int playerId, const String &msg);
+		void									removePlayer(int playerId);
 
 		const std::vector<s_notification>		&getNotifications() const;
 		Player									*getPlayer(int playerId);
 		long									getCurrentTick() const;
-		int										getMapHeight() const;
-		int										getMapWidth() const;
 		int										getTimeUnit() const;
 		int										getTeamIndex(const String &teamName) const;
-		int										getRemainingSlots(int teamIndex) const;
 		bool									canAcceptCommand(int playerId) const;
 
 		void									init(int width, int height, const t_svec &teams, int timeUnit);

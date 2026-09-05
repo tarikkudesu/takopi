@@ -2,6 +2,7 @@
 #include "../Game/Game.hpp"
 
 ServerGame::ServerGame(String line) : 	Server(GAME),
+										__game(NULL),
 										__width(-1),
 									   	__height(-1),
 									   	__timeUnit(-1)
@@ -17,27 +18,6 @@ ServerGame::ServerGame(String line) : 	Server(GAME),
 	if (this->__timeUnit < 1)
 		this->__timeUnit = 100;
 }
-ServerGame::ServerGame(const ServerGame &copy) : Server(copy),
-												__teams(copy.__teams),
-												 __width(copy.__width),
-												 __height(copy.__height),
-												 __timeUnit(copy.__timeUnit)
-{
-	mzu::debug("ServerGame copy constructor");
-}
-ServerGame &ServerGame::operator=(const ServerGame &assign)
-{
-	mzu::debug("ServerGame copy assignement operator");
-	if (this != &assign)
-	{
-		Server::operator=(assign);
-		this->__teams = assign.__teams;
-		this->__width = assign.__width;
-		this->__height = assign.__height;
-		this->__timeUnit = assign.__timeUnit;
-	}
-	return *this;
-}
 ServerGame::~ServerGame()
 {
 	delete __game;
@@ -49,28 +29,6 @@ ServerGame::~ServerGame()
  *								 MINI METHODS								*
  ****************************************************************************/
 
-int ServerGame::getMapWidth() const
-{
-	if (this->__game)
-		return this->__game->getMapWidth();
-	return this->__width;
-}
-int ServerGame::getMapHeight() const
-{
-	if (this->__game)
-		return this->__game->getMapHeight();
-	return this->__height;
-}
-int ServerGame::getTimeUnit() const
-{
-	if (this->__game)
-		return this->__game->getTimeUnit();
-	return this->__timeUnit;
-}
-const t_svec &ServerGame::getTeams() const
-{
-	return this->__teams;
-}
 Game *ServerGame::getGame()
 {
 	return this->__game;

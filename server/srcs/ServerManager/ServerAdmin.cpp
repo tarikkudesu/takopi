@@ -13,23 +13,6 @@ ServerAdmin::ServerAdmin(String line) : Server(ADMIN),
 	if (this->__password.empty())
 		throw std::runtime_error("admin server: missing \"password\" directive");
 }
-ServerAdmin::ServerAdmin(const ServerAdmin &copy) : Server(copy), __ctx(NULL), __certificate(copy.__certificate), __privateKey(copy.__privateKey), __password(copy.__password)
-{
-	mzu::debug("ServerAdmin copy constructor");
-	Server::operator=(copy);
-}
-ServerAdmin &ServerAdmin::operator=(const ServerAdmin &assign)
-{
-	mzu::debug("ServerAdmin copy assignement operator");
-	if (this != &assign)
-	{
-		Server::operator=(assign);
-		this->__certificate = assign.__certificate;
-		this->__privateKey = assign.__privateKey;
-		this->__password = assign.__password;
-	}
-	return *this;
-}
 ServerAdmin::~ServerAdmin()
 {
 	SSL_CTX_free(__ctx);

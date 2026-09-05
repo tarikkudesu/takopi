@@ -6,7 +6,7 @@
 #    By: tamehri <tamehri@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/09/03 23:50:00 by ooulcaid          #+#    #+#              #
-#    Updated: 2026/09/04 21:40:09 by tamehri          ###   ########.fr        #
+#    Updated: 2026/09/05 16:28:02 by tamehri          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -60,10 +60,10 @@ CLIENT_OBJS		= $(addprefix $(OBJ_DIR)/, $(CLIENT_SRCS:.cpp=.o))
 SERVER_SRCS		= server/srcs/main.cpp \
 				  server/srcs/Game/Command.cpp \
 				  server/srcs/Game/CommandParser.cpp \
-				  server/srcs/Game/Connection.cpp \
-				  server/srcs/Game/ConnectionAdmin.cpp \
-				  server/srcs/Game/ConnectionGame.cpp \
-				  server/srcs/Game/ConnectionGui.cpp \
+				  server/srcs/ServerManager/Connection.cpp \
+				  server/srcs/ServerManager/ConnectionAdmin.cpp \
+				  server/srcs/ServerManager/ConnectionGame.cpp \
+				  server/srcs/ServerManager/ConnectionGui.cpp \
 				  server/srcs/Game/Egg.cpp \
 				  server/srcs/Game/Elevation.cpp \
 				  server/srcs/Game/Game.cpp \
@@ -83,7 +83,6 @@ SERVER_SRCS		= server/srcs/main.cpp \
 SERVER_HEADERS	= server/srcs/zappy.hpp \
 				  server/srcs/utilities/MZU.hpp \
 				  server/srcs/utilities/BasicString.hpp \
-				  server/srcs/Game/Enums.hpp \
 				  server/srcs/Game/Tile.hpp \
 				  server/srcs/Game/Player.hpp \
 				  server/srcs/Game/Egg.hpp \
@@ -93,10 +92,10 @@ SERVER_HEADERS	= server/srcs/zappy.hpp \
 				  server/srcs/Game/World.hpp \
 				  server/srcs/Game/WorldDisplay.hpp \
 				  server/srcs/Game/Game.hpp \
-				  server/srcs/Game/Connection.hpp \
-				  server/srcs/Game/ConnectionAdmin.hpp \
-				  server/srcs/Game/ConnectionGame.hpp \
-				  server/srcs/Game/ConnectionGui.hpp \
+				  server/srcs/ServerManager/Connection.hpp \
+				  server/srcs/ServerManager/ConnectionAdmin.hpp \
+				  server/srcs/ServerManager/ConnectionGame.hpp \
+				  server/srcs/ServerManager/ConnectionGui.hpp \
 				  server/srcs/ServerManager/Server.hpp \
 				  server/srcs/ServerManager/ServerGame.hpp \
 				  server/srcs/ServerManager/ServerAdmin.hpp \

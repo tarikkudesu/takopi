@@ -79,11 +79,6 @@ e_direction Player::getDirection() const
 	return __direction;
 }
 
-e_player_state Player::getState() const
-{
-	return __state;
-}
-
 int Player::getInventory(e_resource type) const
 {
 	if (type < 0 || type >= RESOURCE_COUNT)

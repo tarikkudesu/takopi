@@ -22,14 +22,14 @@ class ServerManager
 		void						setUpServers();
 		void						setUpServer(size_t start);
 		String						checkOuterscope(String outerScope);
-		ServerManager();
+		ServerManager() = delete;
+		ServerManager( const ServerManager &copy ) = delete;
+		ServerManager	&operator=( const ServerManager &assign ) = delete;
 
 	public:
 		bool						setUpZappy();
 
-		ServerManager( const ServerManager &copy );
 		ServerManager( const String &configutation_file );
-		ServerManager	&operator=( const ServerManager &assign );
 		~ServerManager();
 };
 

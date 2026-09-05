@@ -12,13 +12,12 @@ class ConnectionGame : public Connection
 		void							processMessage(const String &message);
 
 		ConnectionGame();
-		ConnectionGame( const ConnectionGame &copy );
-		ConnectionGame	&operator=( const ConnectionGame &assign );
+		ConnectionGame( const ConnectionGame &copy ) = delete;
+		ConnectionGame	&operator=( const ConnectionGame &assign ) = delete;
 
 	public:
 		e_player_state					getState() const;
 		int								getPlayerId() const;
-		void							setPlayerId(int id);
 		void							setState(e_player_state state);
 
 		bool							readSocket();

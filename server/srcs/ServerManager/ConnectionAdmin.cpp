@@ -1,6 +1,6 @@
 #include "ConnectionAdmin.hpp"
-#include "../ServerManager/Core.hpp"
-#include "../ServerManager/ServerAdmin.hpp"
+#include "Core.hpp"
+#include "ServerAdmin.hpp"
 
 ConnectionAdmin::ConnectionAdmin(Server *server) :	Connection(server),
 													__ssl(NULL),
@@ -14,28 +14,6 @@ ConnectionAdmin::ConnectionAdmin(Server *server) :	Connection(server),
 													__closing(false)
 {
 	mzu::debug("ConnectionAdmin constructor");
-}
-ConnectionAdmin::ConnectionAdmin(const ConnectionAdmin &copy) : Connection(copy)
-{
-	mzu::debug("ConnectionAdmin copy constructor");
-	*this = copy;
-}
-ConnectionAdmin &ConnectionAdmin::operator=(const ConnectionAdmin &assign)
-{
-	mzu::debug("ConnectionAdmin copy assignement operator");
-	if (this != &assign)
-	{
-		__ssl = NULL;
-		__tlsFailed = false;
-		__tlsHandshake = false;
-		__tlsWait = TLS_WAIT_READ;
-		__closing = assign.__closing;
-		__tlsOperation = TLS_OPERATION_NONE;
-		__responseOffset = assign.__responseOffset;
-		__authenticated = assign.__authenticated;
-		__authenticationFailures = assign.__authenticationFailures;
-	}
-	return *this;
 }
 ConnectionAdmin::~ConnectionAdmin()
 {
@@ -108,16 +86,6 @@ bool ConnectionAdmin::tlsNeedsWrite() const
 	if (__tlsOperation == TLS_OPERATION_NONE)
 		return hasPendingOutput();
 	return __tlsWait == TLS_WAIT_WRITE;
-}
-
-bool ConnectionAdmin::tlsReadPending() const
-{
-	return usesTLS() && __tlsOperation == TLS_OPERATION_READ;
-}
-
-bool ConnectionAdmin::tlsWritePending() const
-{
-	return usesTLS() && __tlsOperation == TLS_OPERATION_WRITE;
 }
 
 bool ConnectionAdmin::tlsHandshakePending() const

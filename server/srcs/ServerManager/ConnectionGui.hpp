@@ -9,8 +9,8 @@ class ConnectionGui : public Connection
 		void							processMessage(const String &message);
 
 		ConnectionGui();
-		ConnectionGui( const ConnectionGui &copy );
-		ConnectionGui	&operator=( const ConnectionGui &assign );
+		ConnectionGui( const ConnectionGui &copy ) = delete;
+		ConnectionGui	&operator=( const ConnectionGui &assign ) = delete;
 
 	public:
 		bool							readSocket();

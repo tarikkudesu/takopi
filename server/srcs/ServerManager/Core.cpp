@@ -2,31 +2,18 @@
 #include "ServerAdmin.hpp"
 #include "ServerGame.hpp"
 #include "../Game/Game.hpp"
-#include "../Game/ConnectionAdmin.hpp"
-#include "../Game/ConnectionGame.hpp"
-#include "../Game/ConnectionGui.hpp"
+#include "ConnectionAdmin.hpp"
+#include "ConnectionGame.hpp"
+#include "ConnectionGui.hpp"
+#include "../Game/CommandParser.hpp"
 
 bool Core::up = false;
 t_Server Core::__servers;
 t_Connections Core::__connections;
 bool Core::__consoleDiscarding = false;
+bool Core::__criticalOverload = false;
 bool Core::__consoleOpen = true;
 String Core::__consoleBuffer;
-
-Core::Core() { }
-Core::Core(const Core &copy)
-{
-	(void)copy;
-}
-Core &Core::operator=(const Core &assign)
-{
-	(void)assign;
-	return *this;
-}
-Core::~Core()
-{
-	clear();
-}
 
 /****************************************************************************
  *								 MINI METHODS								*
@@ -67,7 +54,7 @@ void Core::removeConnection(int sd)
 		{
 			Game *game = static_cast<ServerGame *>(connection->getServer())->getGame();
 			if (game)
-				game->killPlayer(connection->getPlayerId());
+				game->removePlayer(connection->getPlayerId());
 		}
 		Core::__connections.erase(it);
 		delete instance;
@@ -281,7 +268,7 @@ void Core::writeDataToSocket(int sd)
 	if (iter == Core::__connections.end())
 		return;
 
-	if (mzu::__criticalOverLoad == true && !iter->second->hasPendingOutput())
+	if (Core::__criticalOverload == true && !iter->second->hasPendingOutput())
 		return Core::removeConnection(sd);
 
 	if (!iter->second->writeSocket())
@@ -301,7 +288,7 @@ void Core::acceptNewConnection(int sd)
 {
 	int newSock;
 
-	if (mzu::__criticalOverLoad == true)
+	if (Core::__criticalOverload == true)
 		return;
 
 	newSock = accept(sd, NULL, NULL);
@@ -395,7 +382,7 @@ void Core::proccessSelectEvent(int sd, fd_set &readSet, fd_set &writeSet, int &r
 		else if (isServerSocket(sd))
 		{
 			if (Core::currentLoad() >= MAX_EVENTS)
-				mzu::__criticalOverLoad = true;
+				Core::__criticalOverload = true;
 			else
 			{
 				acceptNewConnection(sd);
@@ -413,7 +400,7 @@ void Core::proccessSelectEvent(int sd, fd_set &readSet, fd_set &writeSet, int &r
 		writeDataToSocket(sd);
 		retV--;
 	}
-	else if (mzu::__criticalOverLoad == true)
+	else if (Core::__criticalOverload == true)
 	{
 		mzu::fatal("critcal server overload");
 		if (!Core::isServerSocket(sd))
@@ -421,8 +408,8 @@ void Core::proccessSelectEvent(int sd, fd_set &readSet, fd_set &writeSet, int &r
 			removeConnection(sd);
 		}
 	}
-	if (Core::__servers.size() == Core::__connections.size())
-		mzu::__criticalOverLoad = false;
+	if (Core::currentLoad() < MAX_EVENTS)
+		Core::__criticalOverload = false;
 }
 
 /***************************************************************************************
@@ -575,20 +562,13 @@ void Core::mainLoop()
 				Core::mainProcess();
 				continue;
 			}
-			try
+			for (int sd = 0; sd <= maxFd && retV > 0; sd++)
 			{
-				for (int sd = 0; sd <= maxFd && retV > 0; sd++)
-				{
-					if (mzu::__criticalOverLoad == true)
-						retV = maxFd + 1;
-					Core::proccessSelectEvent(sd, readSet, writeSet, retV);
-				}
-				Core::mainProcess();
+				if (Core::__criticalOverload == true)
+					retV = maxFd + 1;
+				Core::proccessSelectEvent(sd, readSet, writeSet, retV);
 			}
-			catch (mzu::Exit &e)
-			{
-				Core::up = false;
-			}
+			Core::mainProcess();
 		}
 	}
 	catch (...)
