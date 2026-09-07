@@ -30,7 +30,10 @@ class Game
 		std::vector<s_notification>				__notifications;
 		std::map<int, std::queue<String> >		__pendingCommands;
 		std::map<int, Command>					__activeCommands;
+		std::vector<s_gui_event>				__guiEvents;
 		std::map<int, int>						__teamSlots;
+		std::map<int, s_incantation_context>	__incantations;
+		unsigned long							__nextGuiEventSequence;
 
 		void									checkVictory();
 		void									processFood(long currentTick);
@@ -40,6 +43,10 @@ class Game
 
 		String									executeCommand(const Command &cmd);
 		int										countSameLevelPlayers(int playerId);
+		void									publishGuiEvent(const String &payload);
+		Egg										*findOldestHatchedEgg(int teamIndex);
+		int										availableSlots(int teamIndex) const;
+		void									publishFullGuiState();
 
 		String									executeVoir(int playerId);
 		String									executeFork(int playerId);
@@ -62,16 +69,26 @@ class Game
 		~Game();
 
 		void									clearNotifications();
+		void									clearGuiEvents();
 		void									setTimeUnit(int timeUnit);
 		void									resizeMap(int width, int height);
 		void									enqueueCommand(int playerId, const String &rawCommand);
 		String									executeAdminCommand(t_command type, const t_svec &args);
 		String									handleHandshake(const String &teamName, int &outPlayerId);
 		void									addNotification(int playerId, const String &msg);
+		void									addGuiMessage(const String &message);
 		void									removePlayer(int playerId);
 
 		const std::vector<s_notification>		&getNotifications() const;
+		const World								&getWorld() const;
+		const t_svec								&getTeams() const;
+		const std::map<int, Player *>			&getPlayers() const;
+		const std::vector<Egg *>				&getEggs() const;
+		const std::vector<s_gui_event>			&getGuiEvents() const;
 		Player									*getPlayer(int playerId);
+		const Player								*getPlayer(int playerId) const;
+		const String								&getTeamName(int teamIndex) const;
+		unsigned long							getLastGuiEventSequence() const;
 		long									getCurrentTick() const;
 		int										getTimeUnit() const;
 		int										getTeamIndex(const String &teamName) const;

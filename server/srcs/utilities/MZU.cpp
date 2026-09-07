@@ -140,3 +140,8 @@ long mzu::stringToInt(const String &str)
 	iss >> number;
 	return number;
 }
+
+void mzu::close()
+{
+	mzu::__logFile.close();
+}

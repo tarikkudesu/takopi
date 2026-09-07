@@ -20,7 +20,8 @@ ServerGame::ServerGame(String line) : 	Server(GAME),
 }
 ServerGame::~ServerGame()
 {
-	delete __game;
+	if (__game)
+		delete __game;
 	this->__teams.clear();
 	mzu::debug("ServerGame destructor");
 }
@@ -126,7 +127,7 @@ void ServerGame::proccessToken(t_svec &tokens)
  *							GAME INITIALIZATION								*
  ****************************************************************************/
 
-void ServerGame::initGame()
+void ServerGame::furtherSetup()
 {
 	if (__game)
 		return;

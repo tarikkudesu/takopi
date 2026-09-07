@@ -86,6 +86,7 @@ void Server::setup()
 			throw std::runtime_error(serverIdentity() + " non functional: failed to bind socket");
 		if (-1 == listen(this->__sd, SOMAXCONN))
 			throw std::runtime_error(serverIdentity() + " non functional: failed to listen for connections");
+		furtherSetup();
 	}
 	catch (std::runtime_error &e)
 	{

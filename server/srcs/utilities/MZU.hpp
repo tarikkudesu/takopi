@@ -28,7 +28,8 @@ class mzu
 		static void fatal(String __log_message);
 		static void running(String __log_message);
 		static void terr(const String &__error_message);
-
+		
+		static void close();
 		static String logDate();
 		static void trimSpaces(String &str);
 		static void bzero(void *s, size_t n);

@@ -1,4 +1,5 @@
 SRC		=	srcs/main.cpp \
+			srcs/Game/Protocole.cpp \
 			srcs/Game/Command.cpp \
 			srcs/Game/CommandParser.cpp \
 			srcs/Game/Egg.cpp \
@@ -24,6 +25,7 @@ OBJ		=	$(SRC:.cpp=.o)
 NAME	=	zappy
 
 HEADERS	=	srcs/zappy.hpp \
+			srcs/Game/Protocole.hpp \
 			srcs/utilities/MZU.hpp \
 			srcs/utilities/BasicString.hpp \
 			srcs/Game/Tile.hpp \

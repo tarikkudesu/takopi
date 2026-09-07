@@ -18,6 +18,8 @@ class ServerGame : public Server
 		void								proccessWidthToken( t_svec &tokens );
 		void								proccessTeamsToken( t_svec &tokens );
 		void								proccessHeightToken( t_svec &tokens );
+		void								furtherSetup();
+
 		ServerGame( const ServerGame &copy ) = delete;
 		ServerGame	&operator=( const ServerGame &assign ) = delete;
 
@@ -26,7 +28,6 @@ class ServerGame : public Server
 		Game								*getGame();
 
 		void								proccessToken( t_svec &tokens );
-		void								initGame();
 
 		ServerGame( String line );
 		~ServerGame();

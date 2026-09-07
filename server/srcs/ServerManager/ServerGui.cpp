@@ -22,3 +22,8 @@ void ServerGui::proccessToken(t_svec &tokens)
 	else
 		proccessHostToken(tokens);
 }
+
+void ServerGui::furtherSetup()
+{
+
+}

@@ -27,6 +27,7 @@ class Server
 		void							proccessPortToken( t_svec &tokens );
 		void							proccessHostToken( t_svec &tokens );
 		virtual void					proccessToken( t_svec &tokens ) = 0;
+		virtual void					furtherSetup() = 0;
 
 		Server(e_type type);
 		Server( const Server &copy ) = delete;

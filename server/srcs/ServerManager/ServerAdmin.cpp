@@ -76,7 +76,7 @@ bool ServerAdmin::checkPassword(const String &password) const
 	return CRYPTO_memcmp(password.data(), this->__password.data(), password.length()) == 0;
 }
 
-void ServerAdmin::setupSSL()
+void ServerAdmin::furtherSetup()
 {
 	if (this->__ctx)
 	{

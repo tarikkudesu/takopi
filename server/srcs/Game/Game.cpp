@@ -1,13 +1,15 @@
 #include "Game.hpp"
 #include "CommandParser.hpp"
 #include "Elevation.hpp"
+#include "Protocole.hpp"
 #include <cstdlib>
 
 Game::Game() :  __state(GAME_RUNNING),
 				__timeUnit(100),
 				__nextEggId(0),
 				__nextPlayerId(0),
-				__tickOffset(0)
+				__tickOffset(0),
+				__nextGuiEventSequence(1)
 {
 	mzu::bzero(&__startTime, sizeof(__startTime));
 }
@@ -39,6 +41,9 @@ void Game::init(int width, int height, const t_svec &teams, int timeUnit)
 	__notifications.clear();
 	__activeCommands.clear();
 	__pendingCommands.clear();
+	__guiEvents.clear();
+	__incantations.clear();
+	__nextGuiEventSequence = 1;
 	__teams = teams;
 	__tickOffset = 0;
 	__timeUnit = timeUnit;
@@ -75,6 +80,7 @@ void Game::resizeMap(int width, int height)
 		it->second->setPosition(__world.wrapX(it->second->getX()), __world.wrapY(it->second->getY()));
 	for (size_t i = 0; i < __eggs.size(); i++)
 		__eggs[i]->setPosition(__world.wrapX(__eggs[i]->getX()), __world.wrapY(__eggs[i]->getY()));
+	publishFullGuiState();
 }
 
 void Game::setTimeUnit(int timeUnit)
@@ -87,6 +93,7 @@ void Game::setTimeUnit(int timeUnit)
 	__tickOffset += elapsedUs * __timeUnit / 1000000.0;
 	__startTime = now;
 	__timeUnit = timeUnit;
+	publishGuiEvent(Protocole::timeUnit(*this));
 }
 
 /*************************************************************************
@@ -133,18 +140,14 @@ void Game::processFood(long currentTick)
 
 void Game::processEggs(long currentTick)
 {
-	for (std::vector<Egg *>::iterator it = __eggs.begin(); it != __eggs.end(); )
+	for (std::vector<Egg *>::iterator it = __eggs.begin(); it != __eggs.end(); it++)
 	{
 		Egg *egg = *it;
-		if (egg->tryHatch(currentTick))
+		if (egg->hatchIfReady(currentTick))
 		{
-			__teamSlots[egg->getTeamIndex()]++;
 			mzu::info("egg " + mzu::intToString(egg->getId()) + " hatched");
-			delete egg;
-			it = __eggs.erase(it);
+			publishGuiEvent(Protocole::eggHatched(egg->getId()));
 		}
-		else
-			it++;
 	}
 }
 
@@ -214,8 +217,23 @@ void Game::activateCommand(int playerId, const String &rawCmd, long currentTick)
 			addNotification(playerId, "ko\n");
 			return;
 		}
+		s_incantation_context context;
+		context.x = player->getX();
+		context.y = player->getY();
+		context.level = player->getLevel();
+		const std::vector<int> &players = tile.getPlayerIds();
+		for (size_t i = 0; i < players.size(); i++)
+		{
+			Player *participant = getPlayer(players[i]);
+			if (participant && participant->isAlive() && participant->getLevel() == context.level)
+				context.playerIds.push_back(players[i]);
+		}
+		__incantations[playerId] = context;
+		publishGuiEvent(Protocole::incantationStart(context));
 		addNotification(playerId, "elevation en cours\n");
 	}
+	else if (type == CMD_FORK)
+		publishGuiEvent(Protocole::forkStart(playerId));
 	int duration = Command::durationForCommand(type);
 	Command cmd(type, arg, currentTick + duration, playerId);
 	__activeCommands[playerId] = cmd;
@@ -253,6 +271,7 @@ String Game::executeAvance(int playerId)
 	__world.tileAt(player->getX(), player->getY()).removePlayer(playerId);
 	player->moveForward(__world.getWidth(), __world.getHeight());
 	__world.tileAt(player->getX(), player->getY()).addPlayer(playerId);
+	publishGuiEvent(Protocole::playerPosition(*player));
 	return "ok\n";
 }
 
@@ -262,6 +281,7 @@ String Game::executeDroite(int playerId)
 	if (!player)
 		return "ko\n";
 	player->turnRight();
+	publishGuiEvent(Protocole::playerPosition(*player));
 	return "ok\n";
 }
 
@@ -271,6 +291,7 @@ String Game::executeGauche(int playerId)
 	if (!player)
 		return "ko\n";
 	player->turnLeft();
+	publishGuiEvent(Protocole::playerPosition(*player));
 	return "ok\n";
 }
 
@@ -303,6 +324,9 @@ String Game::executePrendre(int playerId, const String &object)
 		return "ko\n";
 	tile.removeResource(res);
 	player->addToInventory(res, 1);
+	publishGuiEvent(Protocole::resourceTaken(playerId, res));
+	publishGuiEvent(Protocole::playerInventory(*player));
+	publishGuiEvent(Protocole::tile(*this, player->getX(), player->getY()));
 	return "ok\n";
 }
 
@@ -317,6 +341,9 @@ String Game::executePoser(int playerId, const String &object)
 	if (!player->removeFromInventory(res))
 		return "ko\n";
 	__world.tileAt(player->getX(), player->getY()).addResource(res, 1);
+	publishGuiEvent(Protocole::resourceDropped(playerId, res));
+	publishGuiEvent(Protocole::playerInventory(*player));
+	publishGuiEvent(Protocole::tile(*this, player->getX(), player->getY()));
 	return "ok\n";
 }
 
@@ -327,6 +354,7 @@ String Game::executeExpulse(int playerId)
 		return "ko\n";
 	Tile &tile = __world.tileAt(player->getX(), player->getY());
 	std::vector<int> onTile = tile.getPlayerIds();
+	std::vector<Player *> movedPlayers;
 	bool kicked = false;
 	for (size_t i = 0; i < onTile.size(); i++)
 	{
@@ -343,7 +371,14 @@ String Game::executeExpulse(int playerId)
 											 other->getX(), other->getY(),
 											 other->getDirection());
 		addNotification(otherId, "deplacement " + mzu::intToString(dir) + NEWLINE);
+		movedPlayers.push_back(other);
 		kicked = true;
+	}
+	if (kicked)
+	{
+		publishGuiEvent(Protocole::playerExpelled(playerId));
+		for (size_t i = 0; i < movedPlayers.size(); i++)
+			publishGuiEvent(Protocole::playerPosition(*movedPlayers[i]));
 	}
 	return kicked ? "ok\n" : "ko\n";
 }
@@ -362,32 +397,48 @@ String Game::executeBroadcast(int playerId, const String &text)
 											 it->second->getDirection());
 		addNotification(it->first, "message " + mzu::intToString(dir) + "," + text + NEWLINE);
 	}
+	publishGuiEvent(Protocole::playerBroadcast(playerId, text));
 	return "ok\n";
 }
 
 String Game::executeIncantation(int playerId)
 {
 	Player *player = getPlayer(playerId);
-	if (!player)
+	std::map<int, s_incantation_context>::iterator stored = __incantations.find(playerId);
+	if (!player || stored == __incantations.end())
 		return "ko\n";
-	Tile &tile = __world.tileAt(player->getX(), player->getY());
-	int sameLvl = countSameLevelPlayers(playerId);
-	if (!Elevation::canElevate(player->getLevel(), tile, sameLvl))
-		return "ko\n";
-	int currentLvl = player->getLevel();
-	Elevation::consumeStones(currentLvl, tile);
-	int newLevel = currentLvl + 1;
-	const std::vector<int> &pids = tile.getPlayerIds();
-	for (size_t i = 0; i < pids.size(); i++)
+	s_incantation_context context = stored->second;
+	Tile &tile = __world.tileAt(context.x, context.y);
+	bool valid = player->isAlive() && player->getX() == context.x && player->getY() == context.y;
+	for (size_t i = 0; valid && i < context.playerIds.size(); i++)
 	{
-		Player *p = getPlayer(pids[i]);
-		if (p && p->isAlive() && p->getLevel() == currentLvl)
+		Player *participant = getPlayer(context.playerIds[i]);
+		if (!participant || !participant->isAlive() || participant->getX() != context.x
+			|| participant->getY() != context.y || participant->getLevel() != context.level)
+			valid = false;
+	}
+	if (!valid || !Elevation::canElevate(context.level, tile, static_cast<int>(context.playerIds.size())))
+	{
+		publishGuiEvent(Protocole::incantationEnd(context.x, context.y, false));
+		__incantations.erase(stored);
+		return "ko\n";
+	}
+	Elevation::consumeStones(context.level, tile);
+	int newLevel = context.level + 1;
+	publishGuiEvent(Protocole::incantationEnd(context.x, context.y, true));
+	for (size_t i = 0; i < context.playerIds.size(); i++)
+	{
+		Player *p = getPlayer(context.playerIds[i]);
+		if (p)
 		{
 			p->setLevel(newLevel);
-			if (pids[i] != playerId)
-				addNotification(pids[i], "niveau actuel : " + mzu::intToString(newLevel) + NEWLINE);
+			publishGuiEvent(Protocole::playerLevel(*p));
+			if (context.playerIds[i] != playerId)
+				addNotification(context.playerIds[i], "niveau actuel : " + mzu::intToString(newLevel) + NEWLINE);
 		}
 	}
+	publishGuiEvent(Protocole::tile(*this, context.x, context.y));
+	__incantations.erase(stored);
 	return "niveau actuel : " + mzu::intToString(newLevel) + NEWLINE;
 }
 
@@ -397,11 +448,12 @@ String Game::executeFork(int playerId)
 	if (!player)
 		return "ko\n";
 	long currentTick = getCurrentTick();
-	Egg *egg = new Egg(__nextEggId, player->getX(), player->getY(),
+	Egg *egg = new Egg(__nextEggId, playerId, player->getX(), player->getY(),
 					   player->getTeamIndex(),
 					   currentTick + EGG_HATCH_DURATION);
 	__eggs.push_back(egg);
 	__nextEggId++;
+	publishGuiEvent(Protocole::eggNew(*egg));
 	return "ok\n";
 }
 
@@ -410,7 +462,7 @@ String Game::executeConnectNbr(int playerId)
 	Player *player = getPlayer(playerId);
 	if (!player)
 		return "ko\n";
-	int remaining = __teamSlots[player->getTeamIndex()];
+	int remaining = availableSlots(player->getTeamIndex());
 	return mzu::intToString(remaining) + NEWLINE;
 }
 
@@ -426,10 +478,13 @@ String Game::handleHandshake(const String &teamName, int &outPlayerId)
 	int teamIndex = getTeamIndex(teamName);
 	if (teamIndex < 0)
 		return "ko\n";
+	Egg *usedEgg = NULL;
 	if (__teamSlots[teamIndex] <= 0)
+		usedEgg = findOldestHatchedEgg(teamIndex);
+	if (__teamSlots[teamIndex] <= 0 && !usedEgg)
 		return "ko\n";
-	int x = rand() % __world.getWidth();
-	int y = rand() % __world.getHeight();
+	int x = usedEgg ? usedEgg->getX() : rand() % __world.getWidth();
+	int y = usedEgg ? usedEgg->getY() : rand() % __world.getHeight();
 	e_direction dir = static_cast<e_direction>(rand() % 4);
 	long currentTick = getCurrentTick();
 
@@ -437,11 +492,26 @@ String Game::handleHandshake(const String &teamName, int &outPlayerId)
 	player->setDirection(dir);
 	__players[__nextPlayerId] = player;
 	__world.tileAt(x, y).addPlayer(__nextPlayerId);
-	__teamSlots[teamIndex]--;
+	if (__teamSlots[teamIndex] > 0)
+		__teamSlots[teamIndex]--;
+	else
+	{
+		publishGuiEvent(Protocole::eggConsumed(usedEgg->getId()));
+		for (std::vector<Egg *>::iterator it = __eggs.begin(); it != __eggs.end(); it++)
+		{
+			if (*it == usedEgg)
+			{
+				__eggs.erase(it);
+				break;
+			}
+		}
+		delete usedEgg;
+	}
 	outPlayerId = __nextPlayerId;
 	__nextPlayerId++;
+	publishGuiEvent(Protocole::playerNew(*this, *player));
 
-	String response = mzu::intToString(__teamSlots[teamIndex]) + NEWLINE;
+	String response = mzu::intToString(availableSlots(teamIndex)) + NEWLINE;
 	response += mzu::intToString(__world.getWidth()) + " " + mzu::intToString(__world.getHeight()) + NEWLINE;
 	return response;
 }
@@ -482,6 +552,11 @@ void Game::addNotification(int playerId, const String &msg)
 	__notifications.push_back(n);
 }
 
+void Game::addGuiMessage(const String &message)
+{
+	publishGuiEvent(Protocole::serverMessage(message));
+}
+
 const std::vector<s_notification> &Game::getNotifications() const
 {
 	return __notifications;
@@ -490,6 +565,31 @@ const std::vector<s_notification> &Game::getNotifications() const
 void Game::clearNotifications()
 {
 	__notifications.clear();
+}
+
+const std::vector<s_gui_event> &Game::getGuiEvents() const
+{
+	return __guiEvents;
+}
+
+void Game::clearGuiEvents()
+{
+	__guiEvents.clear();
+}
+
+unsigned long Game::getLastGuiEventSequence() const
+{
+	return __nextGuiEventSequence ? __nextGuiEventSequence - 1 : 0;
+}
+
+void Game::publishGuiEvent(const String &payload)
+{
+	if (payload.empty())
+		return;
+	s_gui_event event;
+	event.sequence = __nextGuiEventSequence++;
+	event.payload = payload;
+	__guiEvents.push_back(event);
 }
 
 /*************************************************************************
@@ -502,6 +602,66 @@ Player *Game::getPlayer(int playerId)
 	if (it != __players.end())
 		return it->second;
 	return NULL;
+}
+
+const Player *Game::getPlayer(int playerId) const
+{
+	std::map<int, Player *>::const_iterator it = __players.find(playerId);
+	if (it != __players.end())
+		return it->second;
+	return NULL;
+}
+
+const World &Game::getWorld() const { return __world; }
+const t_svec &Game::getTeams() const { return __teams; }
+const std::map<int, Player *> &Game::getPlayers() const { return __players; }
+const std::vector<Egg *> &Game::getEggs() const { return __eggs; }
+
+const String &Game::getTeamName(int teamIndex) const
+{
+	static const String empty;
+	if (teamIndex < 0 || static_cast<size_t>(teamIndex) >= __teams.size())
+		return empty;
+	return __teams[teamIndex];
+}
+
+Egg *Game::findOldestHatchedEgg(int teamIndex)
+{
+	for (size_t i = 0; i < __eggs.size(); i++)
+	{
+		if (__eggs[i]->getTeamIndex() == teamIndex && __eggs[i]->isHatched())
+			return __eggs[i];
+	}
+	return NULL;
+}
+
+int Game::availableSlots(int teamIndex) const
+{
+	std::map<int, int>::const_iterator slots = __teamSlots.find(teamIndex);
+	int result = slots == __teamSlots.end() ? 0 : slots->second;
+	for (size_t i = 0; i < __eggs.size(); i++)
+	{
+		if (__eggs[i]->getTeamIndex() == teamIndex && __eggs[i]->isHatched())
+			result++;
+	}
+	return result;
+}
+
+void Game::publishFullGuiState()
+{
+	String payload = Protocole::mapSize(*this) + Protocole::fullMap(*this);
+	for (std::map<int, Player *>::const_iterator it = __players.begin(); it != __players.end(); it++)
+	{
+		if (it->second && it->second->isAlive())
+			payload += Protocole::playerPosition(*it->second);
+	}
+	for (size_t i = 0; i < __eggs.size(); i++)
+	{
+		payload += Protocole::eggNew(*__eggs[i]);
+		if (__eggs[i]->isHatched())
+			payload += Protocole::eggHatched(__eggs[i]->getId());
+	}
+	publishGuiEvent(payload);
 }
 
 int Game::getTeamIndex(const String &teamName) const
@@ -523,7 +683,9 @@ void Game::killPlayer(int playerId)
 	__world.tileAt(player->getX(), player->getY()).removePlayer(playerId);
 	__activeCommands.erase(playerId);
 	__pendingCommands.erase(playerId);
+	__incantations.erase(playerId);
 	addNotification(playerId, PLAYER_DEATH_MESSAGE);
+	publishGuiEvent(Protocole::playerDeath(playerId));
 }
 
 void Game::removePlayer(int playerId)
@@ -535,6 +697,7 @@ void Game::removePlayer(int playerId)
 		__world.tileAt(player->second->getX(), player->second->getY()).removePlayer(playerId);
 	__activeCommands.erase(playerId);
 	__pendingCommands.erase(playerId);
+	__incantations.erase(playerId);
 	for (std::vector<s_notification>::iterator it = __notifications.begin(); it != __notifications.end(); )
 	{
 		if (it->playerId == playerId)
@@ -635,8 +798,10 @@ void Game::checkVictory()
 		mzu::info("game ended: team " + __teams[team] + " won");
 		for (std::map<int, Player *>::iterator it = __players.begin(); it != __players.end(); it++)
 			killPlayer(it->first);
+		publishGuiEvent(Protocole::gameEnd(__teams[team]));
 		__activeCommands.clear();
 		__pendingCommands.clear();
+		__incantations.clear();
 		return;
 	}
 }

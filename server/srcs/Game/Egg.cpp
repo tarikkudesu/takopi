@@ -1,13 +1,10 @@
 #include "Egg.hpp"
 
-Egg::Egg() : __id(-1), __x(0), __y(0), __teamIndex(-1),
-			 __hatchTime(0)
+Egg::Egg() : __id(-1), __x(0), __y(0), __teamIndex(-1), __parentPlayerId(-1), __hatchTime(0), __state(EGG_INCUBATING)
 {
 }
 
-Egg::Egg(int id, int x, int y, int teamIndex, long hatchTime)
-	: __id(id), __x(x), __y(y), __teamIndex(teamIndex),
-	  __hatchTime(hatchTime)
+Egg::Egg(int id, int parentPlayerId, int x, int y, int teamIndex, long hatchTime) : __id(id), __x(x), __y(y), __teamIndex(teamIndex), __parentPlayerId(parentPlayerId), __hatchTime(hatchTime), __state(EGG_INCUBATING)
 {
 }
 
@@ -20,11 +17,13 @@ Egg &Egg::operator=(const Egg &assign)
 {
 	if (this != &assign)
 	{
-		__id = assign.__id;
 		__x = assign.__x;
 		__y = assign.__y;
+		__id = assign.__id;
+		__state = assign.__state;
 		__teamIndex = assign.__teamIndex;
 		__hatchTime = assign.__hatchTime;
+		__parentPlayerId = assign.__parentPlayerId;
 	}
 	return *this;
 }
@@ -47,6 +46,11 @@ int Egg::getX() const
 	return __x;
 }
 
+int Egg::getParentPlayerId() const
+{
+	return __parentPlayerId;
+}
+
 int Egg::getY() const
 {
 	return __y;
@@ -55,6 +59,16 @@ int Egg::getY() const
 int Egg::getTeamIndex() const
 {
 	return __teamIndex;
+}
+
+t_egg_state Egg::getState() const
+{
+	return __state;
+}
+
+bool Egg::isHatched() const
+{
+	return __state == EGG_HATCHED;
 }
 
 void Egg::setPosition(int x, int y)
@@ -67,10 +81,11 @@ void Egg::setPosition(int x, int y)
  *                            HATCHING                                   *
  *************************************************************************/
 
-bool Egg::tryHatch(long currentTick)
+bool Egg::hatchIfReady(long currentTick)
 {
-	if (currentTick >= __hatchTime)
+	if (__state == EGG_INCUBATING && currentTick >= __hatchTime)
 	{
+		__state = EGG_HATCHED;
 		return true;
 	}
 	return false;

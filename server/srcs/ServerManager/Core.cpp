@@ -170,12 +170,9 @@ int Core::buildSets(fd_set &readSet, fd_set &writeSet)
 	}
 	for (t_Server::iterator it = Core::__servers.begin(); it != Core::__servers.end(); it++)
 	{
-		if (it->second->getType() == GAME)
-		{
-			Game *game = static_cast<ServerGame *>(it->second)->getGame();
-			if (game && game->getState() == GAME_ENDING)
-				continue;
-		}
+		Game *game = Core::getGame();
+		if (game && game->getState() == GAME_ENDING)
+			continue;
 		int sd = it->second->getServerSocket();
 		FD_SET(sd, &readSet);
 		if (sd > maxFd)
@@ -195,8 +192,15 @@ int Core::buildSets(fd_set &readSet, fd_set &writeSet)
 		else if (it->second->getType() == GAME)
 		{
 			ConnectionGame *connection = static_cast<ConnectionGame *>(it->second);
-			Game *game = static_cast<ServerGame *>(connection->getServer())->getGame();
-			if (connection->getState() != PLAYER_DEAD && game && game->getState() == GAME_RUNNING)
+			if (connection->getState() != PLAYER_DEAD)
+				FD_SET(sd, &readSet);
+			if (connection->hasPendingOutput())
+				FD_SET(sd, &writeSet);
+		}
+		else if (it->second->getType() == GUI)
+		{
+			ConnectionGui *connection = static_cast<ConnectionGui *>(it->second);
+			if (!connection->isClosing())
 				FD_SET(sd, &readSet);
 			if (connection->hasPendingOutput())
 				FD_SET(sd, &writeSet);
@@ -204,7 +208,8 @@ int Core::buildSets(fd_set &readSet, fd_set &writeSet)
 		else
 		{
 			FD_SET(sd, &readSet);
-			FD_SET(sd, &writeSet);
+			if (it->second->hasPendingOutput())
+				FD_SET(sd, &writeSet);
 		}
 		if (sd > maxFd)
 			maxFd = sd;
@@ -479,10 +484,17 @@ void Core::mainProcess()
 			}
 		}
 		game->clearNotifications();
+		Core::broadcastGuiEvents(game);
 	}
 
 	for (t_Connections::iterator it = __connections.begin(); it != __connections.end(); it++)
 	{
+		ConnectionGui *gui = dynamic_cast<ConnectionGui *>(it->second);
+		if (gui && gui->isClosing() && !gui->hasPendingOutput())
+		{
+			closeConnection.push_back(it->first);
+			continue;
+		}
 		ConnectionGame *connection = dynamic_cast<ConnectionGame *>(it->second);
 		if (!connection)
 			continue;
@@ -512,7 +524,7 @@ void Core::mainProcess()
 				break;
 			}
 		}
-		if (!hasConnections)
+		if (!hasConnections && !Core::hasPendingGuiOutput())
 			closeServer.push_back(it->first);
 	}
 	for (size_t i = 0; i < closeServer.size(); i++)
@@ -520,19 +532,38 @@ void Core::mainProcess()
 	if (!Core::hasGameServer())
 		Core::up = false;
 }
+
+void Core::broadcastGuiEvents(Game *game)
+{
+	if (!game)
+		return;
+	const std::vector<s_gui_event> &events = game->getGuiEvents();
+	for (t_Connections::iterator it = __connections.begin(); it != __connections.end(); it++)
+	{
+		ConnectionGui *connection = dynamic_cast<ConnectionGui *>(it->second);
+		if (!connection || !connection->isReady())
+			continue;
+		for (size_t i = 0; i < events.size(); i++)
+			connection->queueGameEvent(events[i]);
+	}
+	game->clearGuiEvents();
+}
+
+bool Core::hasPendingGuiOutput()
+{
+	for (t_Connections::iterator it = __connections.begin(); it != __connections.end(); it++)
+	{
+		ConnectionGui *connection = dynamic_cast<ConnectionGui *>(it->second);
+		if (connection && connection->hasPendingOutput())
+			return true;
+	}
+	return false;
+}
 void Core::mainLoop()
 {
 	int retV = 0;
 	fd_set readSet, writeSet;
 
-	for (t_Server::iterator it = __servers.begin(); it != __servers.end(); it++)
-	{
-		if (it->second->getType() == GAME)
-		{
-			ServerGame *game = static_cast<ServerGame *>(it->second);
-			game->initGame();
-		}
-	}
 	int consoleFlags = fcntl(STDIN_FILENO, F_GETFL, 0);
 	if (consoleFlags < 0 || fcntl(STDIN_FILENO, F_SETFL, consoleFlags | O_NONBLOCK) < 0)
 	{
@@ -545,32 +576,18 @@ void Core::mainLoop()
 	Core::up = true;
 	try
 	{
+		struct timeval tv;
+		tv.tv_usec = SELECT_TIMEOUT;
+		tv.tv_sec = 0;
 		while (Core::up && Core::hasGameServer())
 		{
 			int maxFd = Core::buildSets(readSet, writeSet);
-			struct timeval tv;
-			long timeoutUs = SELECT_TIMEOUT * 1000;
-			for (t_Server::iterator it = __servers.begin(); it != __servers.end(); it++)
-			{
-				if (it->second->getType() != GAME)
-					continue;
-				Game *game = static_cast<ServerGame *>(it->second)->getGame();
-				if (game && game->getState() == GAME_RUNNING)
-					timeoutUs = std::min(timeoutUs, 1000000L / game->getTimeUnit());
-			}
-			tv.tv_sec = timeoutUs / 1000000;
-			tv.tv_usec = timeoutUs % 1000000;
 			retV = select(maxFd + 1, &readSet, &writeSet, NULL, &tv);
 			if (retV < 0)
 			{
 				if (errno == EINTR)
 					continue;
 				throw std::runtime_error("select syscall failed");
-			}
-			if (retV == 0)
-			{
-				Core::mainProcess();
-				continue;
 			}
 			for (int sd = 0; sd <= maxFd && retV > 0; sd++)
 			{

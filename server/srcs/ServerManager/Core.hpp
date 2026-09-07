@@ -25,6 +25,8 @@ class Core
 		static Game					*getGame();
 		static int					currentLoad();
 		static void					mainProcess();
+		static void					broadcastGuiEvents( Game *game );
+		static bool					hasPendingGuiOutput();
 		static void					processConsoleInput();
 		static void					writeDataToSocket( int sd );
 		static void					readDataFromSocket( int sd );

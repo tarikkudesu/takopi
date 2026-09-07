@@ -11,6 +11,7 @@ class ServerGui : public Server
 
 	public:
 		void							proccessToken( t_svec &tokens );
+		void							furtherSetup();
 
 		ServerGui( String line );
 		~ServerGui();

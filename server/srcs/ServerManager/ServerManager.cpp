@@ -194,9 +194,6 @@ void ServerManager::initServers()
 		try
 		{
 			tmp->setup();
-			ServerAdmin *admintmp = dynamic_cast<ServerAdmin *>(tmp);
-			if (admintmp)
-				admintmp->setupSSL();
 			Core::addServer(tmp);
 			*it = NULL;
 		}

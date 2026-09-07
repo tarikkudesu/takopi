@@ -8,9 +8,15 @@ void signalHandler(int signal)
 	if (signal == SIGINT)
 		Core::up = false;
 }
+void f()
+{
+    std::string cmd = "lsof -p " + std::to_string(getpid());
+    system(cmd.c_str());
+}
 
 int main(int ac, char **av)
 {
+	atexit(f);
 	if (ac == 1)
 		exit(EXIT_FAILURE);
 	signal(SIGINT, signalHandler);
@@ -23,6 +29,7 @@ int main(int ac, char **av)
 		mzu::logs(args);
 		ServerManager manager(*(args.end() - 1));
 		success = manager.setUpZappy();
+		mzu::close();
 	}
 	return success ? EXIT_SUCCESS : EXIT_FAILURE;
 }
