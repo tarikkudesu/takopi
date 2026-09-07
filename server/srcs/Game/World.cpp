@@ -88,7 +88,7 @@ void World::init(int width, int height)
 void World::resize(int width, int height)
 {
 	if (width < 1 || width > MAP_MAX_SIZE || height < 1 || height > MAP_MAX_SIZE)
-		throw std::runtime_error("map dimensions must be between 1 and " + MAP_MAX_SIZE);
+		throw std::runtime_error("map dimensions must be between 1 and " + mzu::intToString(MAP_MAX_SIZE));
 
 	std::vector< std::vector<Tile> > map(height);
 	for (int y = 0; y < height; y++)

@@ -21,7 +21,6 @@ t_command CommandParser::parseCommandType(const String &input)
 	if (cmd == "connect_nbr")	return CMD_CONNECT_NBR;
 	if (cmd == "resize")		return CMD_ADMIN_RESIZE;
 	if (cmd == "time")			return CMD_ADMIN_RETIME;
-	if (cmd == "games")			return CMD_ADMIN_GAMES;
 	if (cmd == "help")			return CMD_ADMIN_HELP;
 	return CMD_UNKNOWN;
 }

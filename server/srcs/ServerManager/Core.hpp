@@ -6,6 +6,7 @@
 
 typedef std::map< int, Connection* >		t_Connections;
 
+class Game;
 
 /************************************************************************
  *                            SERVER CONTROL                            *
@@ -21,16 +22,16 @@ class Core
 		static bool					__criticalOverload;
 		static String				__consoleBuffer;
 
+		static Game					*getGame();
 		static int					currentLoad();
 		static void					mainProcess();
-		static String				handleGamesCommand();
 		static void					processConsoleInput();
 		static void					writeDataToSocket( int sd );
 		static void					readDataFromSocket( int sd );
 		static void					acceptNewConnection( int sd );
 		static void					processConsoleCommand( const String &command );
 		static void					proccessSelectEvent( int sd, fd_set &readSet, fd_set &writeSet, int &retV );
-		static String				routeGameCommand( t_command type, const t_svec &args );
+		static String				executeGameCommand( t_command type, const t_svec &args );
 		static int					buildSets( fd_set &readSet, fd_set &writeSet );
 
 		Core() = delete;

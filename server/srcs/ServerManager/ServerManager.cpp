@@ -164,19 +164,23 @@ void ServerManager::setUpServers()
 	mzu::info("syntax check: OK");
 }
 
-void ServerManager::initServers()
+void ServerManager::validateServerCardinality()
 {
-	bool				doesithaveatleastonegameserver = false;
-	std::vector<int> 	portsTaken;
+	size_t counts[3] = {0, 0, 0};
 
 	for (t_serVect::iterator it = __serverTemplates.begin(); it != __serverTemplates.end(); it++)
-	{
-		if ((*it)->getType() == GAME)
-			doesithaveatleastonegameserver = true;
-	}
+		counts[(*it)->getType()]++;
+	if (counts[GAME] != 1)
+		throw std::runtime_error("configuration requires exactly one game server");
+	if (counts[ADMIN] != 1)
+		throw std::runtime_error("configuration requires exactly one admin server");
+	if (counts[GUI] != 1)
+		throw std::runtime_error("configuration requires exactly one gui server");
+}
 
-	if (doesithaveatleastonegameserver == false)
-		throw std::runtime_error("at least one functional game server is required");
+void ServerManager::initServers()
+{
+	std::vector<int> 	portsTaken;
 
 	for (t_serVect::iterator it = __serverTemplates.begin(); it != __serverTemplates.end(); it++)
 	{
@@ -201,6 +205,7 @@ void ServerManager::initServers()
 			delete tmp;
 			*it = NULL;
 			mzu::error(e.what());
+			throw;
 		}
 	}
 	__serverTemplates.clear();
@@ -219,9 +224,8 @@ bool ServerManager::setUpZappy()
 		reduceSpaces();
 		checkBraces();
 		setUpServers();
+		validateServerCardinality();
 		initServers();
-		if (!Core::hasGameServer())
-			throw std::runtime_error("at least one functional game server is required");
 		Core::logServers();
 		Core::mainLoop();
 	}

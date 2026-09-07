@@ -2,8 +2,11 @@
 #include "ServerGame.hpp"
 #include "../Game/Game.hpp"
 
-ConnectionGui::ConnectionGui(Server *server) : Connection(server)
+ConnectionGui::ConnectionGui(Server *server, Game *game) : Connection(server),
+															__game(game)
 {
+	if (!__game)
+		throw std::runtime_error("gui connection: game is not initialized");
 	mzu::debug("ConnectionGui constructor");
 }
 ConnectionGui::~ConnectionGui()

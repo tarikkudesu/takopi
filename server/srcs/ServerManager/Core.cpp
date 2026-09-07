@@ -24,6 +24,16 @@ int Core::currentLoad()
 	return Core::__servers.size() + Core::__connections.size();
 }
 
+Game *Core::getGame()
+{
+	for (t_Server::iterator it = Core::__servers.begin(); it != Core::__servers.end(); it++)
+	{
+		if (it->second->getType() == GAME)
+			return static_cast<ServerGame *>(it->second)->getGame();
+	}
+	return NULL;
+}
+
 void Core::clear()
 {
 	mzu::debug("clearing data");
@@ -346,7 +356,7 @@ void Core::acceptNewConnection(int sd)
 			}
 			case GUI:
 			{
-				ConnectionGui *connectionGui = new ConnectionGui(server);
+				ConnectionGui *connectionGui = new ConnectionGui(server, Core::getGame());
 				Connection *connection = connectionGui;
 				try
 				{
@@ -587,32 +597,12 @@ void Core::mainLoop()
  *                             ADMINISTRATION                            *
  *************************************************************************/
 
-String Core::handleGamesCommand()
+String Core::executeGameCommand(t_command type, const t_svec &args)
 {
-    String result = "ID   HOST              PORT";
-    for (t_Server::iterator it = Core::__servers.begin(); it != Core::__servers.end(); it++)
-    {
-        if (it->second->getType() != GAME)
-            continue;
-        result += NEWLINE + mzu::intToString(it->first) + " " + it->second->getServerHost() + " " + mzu::intToString(it->second->getServerPort()) + NEWLINE;
-    }
-    return result;
-}
+	Game *game = Core::getGame();
 
-String Core::routeGameCommand(t_command type, const t_svec &args)
-{
-    int gameId;
-    if (args.at(1).empty() || args.at(1).find_first_not_of("0123456789") != String::npos)
-        return ADMIN_ERR "Invalid game ID.\n";
-    std::istringstream value(args.at(1));
-    if (!(value >> gameId))
-        return ADMIN_ERR "Invalid game ID.\n";
-    t_Server::iterator it = Core::__servers.find(gameId);
-    if (it == Core::__servers.end() || it->second->getType() != GAME)
-        return ADMIN_ERR "Unknown game ID: " + mzu::intToString(gameId) + ".\n";
-    Game *game = static_cast<ServerGame *>(it->second)->getGame();
     if (!game)
-        return ADMIN_ERR "Game " + mzu::intToString(gameId) + " is not initialized.\n";
+		return ADMIN_ERR "Game is not initialized.\n";
     return game->executeAdminCommand(type, args);
 }
 
@@ -634,27 +624,20 @@ String Core::executeAdminCommand(const String &command)
 			if (args.size() != 1)
 				return ADMIN_ERR "Usage: help";
 			return "Available commands:\n"
-				"  games\n"
-				"      List all running game servers.\n"
-				"  resize <game-id> <width> <height>\n"
+				"  resize <width> <height>\n"
 				"      Resize the map of a running game.\n"
-				"  time <game-id> <value>\n"
+				"  time <value>\n"
 				"      Change the time unit of a running game.\n";
 
-        case CMD_ADMIN_GAMES:
-            if (args.size() != 1)
-                return ADMIN_ERR "Usage: games";
-            return Core::handleGamesCommand();
-
         case CMD_ADMIN_RESIZE:
-            if (args.size() != 4)
-                return ADMIN_ERR "Usage: resize <game-id> <width> <height>\n";
-            return Core::routeGameCommand(type, args);
+			if (args.size() != 3)
+				return ADMIN_ERR "Usage: resize <width> <height>\n";
+			return Core::executeGameCommand(type, args);
 
         case CMD_ADMIN_RETIME:
-            if (args.size() != 3)
-                return ADMIN_ERR "Usage: time <game-id> <value>\n";
-            return Core::routeGameCommand(type, args);
+			if (args.size() != 2)
+				return ADMIN_ERR "Usage: time <value>\n";
+			return Core::executeGameCommand(type, args);
 
         default:
             return ADMIN_ERR "Unknown command. Type 'help' for available commands.\n";

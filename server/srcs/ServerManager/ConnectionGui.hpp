@@ -3,9 +3,13 @@
 
 # include "Connection.hpp"
 
+class Game;
+
 class ConnectionGui : public Connection
 {
 	private :
+		Game							*__game;
+
 		void							processMessage(const String &message);
 
 		ConnectionGui();
@@ -17,7 +21,7 @@ class ConnectionGui : public Connection
 		bool							writeSocket();
 		String                          getCurrentGameState();
 
-		ConnectionGui( Server *server );
+		ConnectionGui( Server *server, Game *game );
 		~ConnectionGui();
 };
 

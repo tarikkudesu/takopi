@@ -21,7 +21,9 @@ class ServerManager
 		void						reduceSpaces();
 		void						setUpServers();
 		void						setUpServer(size_t start);
+		void						validateServerCardinality();
 		String						checkOuterscope(String outerScope);
+
 		ServerManager() = delete;
 		ServerManager( const ServerManager &copy ) = delete;
 		ServerManager	&operator=( const ServerManager &assign ) = delete;

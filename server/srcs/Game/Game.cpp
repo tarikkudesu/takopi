@@ -32,17 +32,17 @@ void Game::init(int width, int height, const t_svec &teams, int timeUnit)
 		delete it->second;
 	for (size_t i = 0; i < __eggs.size(); i++)
 		delete __eggs[i];
-	__players.clear();
 	__eggs.clear();
-	__notifications.clear();
-	__pendingCommands.clear();
-	__activeCommands.clear();
-	__teamSlots.clear();
 	__teams.clear();
-	__state = GAME_RUNNING;
-	__tickOffset = 0;
+	__players.clear();
+	__teamSlots.clear();
+	__notifications.clear();
+	__activeCommands.clear();
+	__pendingCommands.clear();
 	__teams = teams;
+	__tickOffset = 0;
 	__timeUnit = timeUnit;
+	__state = GAME_RUNNING;
 	for (size_t i = 0; i < teams.size(); i++)
 		__teamSlots[static_cast<int>(i)] = CLIENTS_PER_TEAM;
 	srand(static_cast<unsigned int>(time(NULL)));
@@ -590,16 +590,17 @@ String Game::executeAdminCommand(t_command type, const t_svec &args)
 	{
 		switch (type)
 		{
-			case CMD_ADMIN_RESIZE:	resizeMap(values[1], values[2]); break;
-			case CMD_ADMIN_RETIME:	setTimeUnit(values[1]); break;
+			case CMD_ADMIN_RESIZE:	resizeMap(values[0], values[1]); break;
+			case CMD_ADMIN_RETIME:	setTimeUnit(values[0]); break;
 			default:				return "ERR invalid game command\n";
 		}
 	}
 	catch (const std::exception &e)
 	{
+		mzu::debug(e.what());
 		return String("ERR ") + e.what() + NEWLINE;
 	}
-	return "OK " + args.at(0) + " " + args.at(1) + NEWLINE;
+	return "OK " + args.at(0) + NEWLINE;
 }
 
 /*************************************************************************

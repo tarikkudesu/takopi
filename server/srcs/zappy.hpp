@@ -131,7 +131,6 @@ typedef enum e_command
 	CMD_ADMIN_HELP,
 	CMD_ADMIN_RESIZE,
 	CMD_ADMIN_RETIME,
-	CMD_ADMIN_GAMES,
 	CMD_UNKNOWN,
 } t_command;
 
