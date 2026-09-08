@@ -5,6 +5,7 @@ ServerGame::ServerGame(String line) : 	Server(GAME),
 										__game(NULL),
 										__width(-1),
 									   	__height(-1),
+										__clientsPerTeam(-1),
 									   	__timeUnit(-1)
 {
 	mzu::debug("ServerGame constructor");
@@ -15,6 +16,8 @@ ServerGame::ServerGame(String line) : 	Server(GAME),
 		throw std::runtime_error("game server: missing map dimension directive (\"width\"/\"height\")");
 	if (this->__teams.empty())
 		throw std::runtime_error("game server: missing \"teams\" directive");
+	if (this->__clientsPerTeam < 1)
+		throw std::runtime_error("game server: missing \"clients_per_team\" directive");
 	if (this->__timeUnit < 1)
 		this->__timeUnit = 100;
 }
@@ -83,6 +86,22 @@ void ServerGame::proccessTeamsToken(t_svec &tokens)
 		throw std::runtime_error(tokens.at(0) + ": no teams values");
 }
 
+void ServerGame::proccessClientsPerTeamToken(t_svec &tokens)
+{
+	if (this->__clientsPerTeam != -1)
+		throw std::runtime_error(tokens.at(0) + " directive is duplicate");
+	if (tokens.size() == 1)
+		throw std::runtime_error(tokens.at(0) + ": no clients per team value");
+	if (tokens.size() > 2)
+		throw std::runtime_error(tokens.at(0) + ": multiple clients per team values");
+	if (String::npos != tokens.at(1).find_first_not_of("0123456789"))
+		throw std::runtime_error(tokens.at(0) + ": invalid clients per team: not a number");
+	long clientsPerTeam = mzu::stringToInt(tokens.at(1));
+	if (clientsPerTeam < 1 || clientsPerTeam > 10000)
+		throw std::runtime_error(tokens.at(0) + ": invalid clients per team: out of range");
+	this->__clientsPerTeam = static_cast<int>(clientsPerTeam);
+}
+
 void ServerGame::proccessTimeToken(t_svec &tokens)
 {
 	if (this->__timeUnit != -1)
@@ -107,6 +126,7 @@ void ServerGame::proccessToken(t_svec &tokens)
 		key != "width" &&
 		key != "height" &&
 		key != "teams" &&
+		key != "clients_per_team" &&
 		key != "time")
 		throw std::runtime_error(key + ": unknown directive");
 	if (key == "port")
@@ -119,6 +139,8 @@ void ServerGame::proccessToken(t_svec &tokens)
 		proccessHeightToken(tokens);
 	else if (key == "teams")
 		proccessTeamsToken(tokens);
+	else if (key == "clients_per_team")
+		proccessClientsPerTeamToken(tokens);
 	else if (key == "time")
 		proccessTimeToken(tokens);
 }
@@ -132,5 +154,5 @@ void ServerGame::furtherSetup()
 	if (__game)
 		return;
 	__game = new Game();
-	__game->init(__width, __height, __teams, __timeUnit);
+	__game->init(__width, __height, __teams, __clientsPerTeam, __timeUnit);
 }

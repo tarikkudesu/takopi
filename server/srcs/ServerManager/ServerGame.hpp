@@ -12,12 +12,14 @@ class ServerGame : public Server
 		t_svec								__teams;
 		int									__width;
 		int									__height;
+		int									__clientsPerTeam;
 		int									__timeUnit;
 
 		void								proccessTimeToken( t_svec &tokens );
 		void								proccessWidthToken( t_svec &tokens );
 		void								proccessTeamsToken( t_svec &tokens );
 		void								proccessHeightToken( t_svec &tokens );
+		void								proccessClientsPerTeamToken( t_svec &tokens );
 		void								furtherSetup();
 
 		ServerGame( const ServerGame &copy ) = delete;

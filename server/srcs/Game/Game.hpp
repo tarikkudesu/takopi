@@ -94,7 +94,7 @@ class Game
 		bool									canAcceptCommand(int playerId) const;
 		int										getTeamIndex(const String &teamName) const;
 
-		void									init(int width, int height, const t_svec &teams, int timeUnit);
+		void									init(int width, int height, const t_svec &teams, int clientsPerTeam, int timeUnit);
 		void									tick();
 };
 

@@ -53,10 +53,10 @@ typedef std::vector<String> t_svec;
 
 #define INITIAL_FOOD								10
 #define FOOD_LIFE_UNITS								99999
-#define CLIENTS_PER_TEAM							6
 #define MAX_PENDING_COMMANDS						10
 #define EGG_HATCH_DURATION							600
 #define MAP_MAX_SIZE								100
+#define WIN_PLAYERS									6
 #define WIN_LEVEL									8
 
 

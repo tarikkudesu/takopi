@@ -122,21 +122,17 @@ String Protocole::playerNew(const Game &game, const Player &player)
 
 String Protocole::playerPosition(const Player &player)
 {
-	return verb(PROTOCOL_PPO) + " #" + mzu::intToString(player.getId()) + " "
-		+ mzu::intToString(player.getX()) + " " + mzu::intToString(player.getY()) + " "
-		+ mzu::intToString(protocolOrientation(player.getDirection())) + NEWLINE;
+	return verb(PROTOCOL_PPO) + " #" + mzu::intToString(player.getId()) + " " + mzu::intToString(player.getX()) + " " + mzu::intToString(player.getY()) + " " + mzu::intToString(protocolOrientation(player.getDirection())) + NEWLINE;
 }
 
 String Protocole::playerLevel(const Player &player)
 {
-	return verb(PROTOCOL_PLV) + " #" + mzu::intToString(player.getId()) + " "
-		+ mzu::intToString(player.getLevel()) + NEWLINE;
+	return verb(PROTOCOL_PLV) + " #" + mzu::intToString(player.getId()) + " " + mzu::intToString(player.getLevel()) + NEWLINE;
 }
 
 String Protocole::playerInventory(const Player &player)
 {
-	String result = verb(PROTOCOL_PIN) + " #" + mzu::intToString(player.getId()) + " "
-		+ mzu::intToString(player.getX()) + " " + mzu::intToString(player.getY());
+	String result = verb(PROTOCOL_PIN) + " #" + mzu::intToString(player.getId()) + " " + mzu::intToString(player.getX()) + " " + mzu::intToString(player.getY());
 	for (int i = 0; i < RESOURCE_COUNT; i++)
 		result += " " + mzu::intToString(player.getInventory(g_guiResourceOrder[i]));
 	return result + NEWLINE;
@@ -144,9 +140,7 @@ String Protocole::playerInventory(const Player &player)
 
 String Protocole::eggNew(const Egg &egg)
 {
-	return verb(PROTOCOL_ENW) + " #" + mzu::intToString(egg.getId()) + " #"
-		+ mzu::intToString(egg.getParentPlayerId()) + " "
-		+ mzu::intToString(egg.getX()) + " " + mzu::intToString(egg.getY()) + NEWLINE;
+	return verb(PROTOCOL_ENW) + " #" + mzu::intToString(egg.getId()) + " #" + mzu::intToString(egg.getParentPlayerId()) + " " + mzu::intToString(egg.getX()) + " " + mzu::intToString(egg.getY()) + NEWLINE;
 }
 
 String Protocole::snapshot(const Game &game)
@@ -278,8 +272,7 @@ String Protocole::badParameters()
 
 String Protocole::incantationStart(const s_incantation_context &context)
 {
-	String result = verb(PROTOCOL_PIC) + " " + mzu::intToString(context.x) + " " + mzu::intToString(context.y)
-		+ " " + mzu::intToString(context.level);
+	String result = verb(PROTOCOL_PIC) + " " + mzu::intToString(context.x) + " " + mzu::intToString(context.y) + " " + mzu::intToString(context.level);
 	for (size_t i = 0; i < context.playerIds.size(); i++)
 		result += " #" + mzu::intToString(context.playerIds[i]);
 	return result + NEWLINE;
@@ -287,8 +280,7 @@ String Protocole::incantationStart(const s_incantation_context &context)
 
 String Protocole::incantationEnd(int x, int y, bool success)
 {
-	return verb(PROTOCOL_PIE) + " " + mzu::intToString(x) + " " + mzu::intToString(y) + " "
-		+ mzu::intToString(success ? 1 : 0) + NEWLINE;
+	return verb(PROTOCOL_PIE) + " " + mzu::intToString(x) + " " + mzu::intToString(y) + " " + mzu::intToString(success ? 1 : 0) + NEWLINE;
 }
 
 String Protocole::serverMessage(const String &message)

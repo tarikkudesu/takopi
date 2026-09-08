@@ -28,7 +28,7 @@ Game::~Game()
  *                         INITIALIZATION                                *
  *************************************************************************/
 
-void Game::init(int width, int height, const t_svec &teams, int timeUnit)
+void Game::init(int width, int height, const t_svec &teams, int clientsPerTeam, int timeUnit)
 {
 	for (std::map<int, Player *>::iterator it = __players.begin(); it != __players.end(); it++)
 		delete it->second;
@@ -49,7 +49,7 @@ void Game::init(int width, int height, const t_svec &teams, int timeUnit)
 	__timeUnit = timeUnit;
 	__state = GAME_RUNNING;
 	for (size_t i = 0; i < teams.size(); i++)
-		__teamSlots[static_cast<int>(i)] = CLIENTS_PER_TEAM;
+		__teamSlots[static_cast<int>(i)] = clientsPerTeam;
 	srand(static_cast<unsigned int>(time(NULL)));
 	__world.init(width, height);
 	__world.populateResources();
@@ -805,7 +805,7 @@ void Game::checkVictory()
 			if (player->getLevel() != WIN_LEVEL)
 				allMaxLevel = false;
 		}
-		if (count < CLIENTS_PER_TEAM || !allMaxLevel)
+		if (count < WIN_PLAYERS || !allMaxLevel)
 			continue;
 		__state = GAME_ENDING;
 		mzu::info("game ended: team " + __teams[team] + " won");
