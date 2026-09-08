@@ -25,15 +25,21 @@ class Core
 		static Game					*getGame();
 		static int					currentLoad();
 		static void					mainProcess();
+		static void					processGame();
+		static void					processConnections();
+		static void					dispatchGameNotifications( Game *game );
+		static String				executeGameCommand( t_command type, const t_svec &args );
+		static void					processConsoleCommand( const String &command );
 		static void					broadcastGuiEvents( Game *game );
-		static bool					hasPendingGuiOutput();
+		static void					removeClosedConnections();
+		static void					removeFinishedGameServer();
 		static void					processConsoleInput();
+		static bool					hasPendingGuiOutput();
+
 		static void					writeDataToSocket( int sd );
 		static void					readDataFromSocket( int sd );
 		static void					acceptNewConnection( int sd );
-		static void					processConsoleCommand( const String &command );
 		static void					proccessSelectEvent( int sd, fd_set &readSet, fd_set &writeSet, int &retV );
-		static String				executeGameCommand( t_command type, const t_svec &args );
 		static int					buildSets( fd_set &readSet, fd_set &writeSet );
 
 		Core() = delete;

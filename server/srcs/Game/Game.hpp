@@ -41,11 +41,11 @@ class Game
 		void									processCommands(long currentTick);
 		void									activateCommand(int playerId, const String &rawCmd, long currentTick);
 
-		String									executeCommand(const Command &cmd);
-		int										countSameLevelPlayers(int playerId);
 		void									publishGuiEvent(const String &payload);
 		Egg										*findOldestHatchedEgg(int teamIndex);
+		int										countSameLevelPlayers(int playerId);
 		int										availableSlots(int teamIndex) const;
+		String									executeCommand(const Command &cmd);
 		void									publishFullGuiState();
 
 		String									executeVoir(int playerId);
@@ -68,8 +68,8 @@ class Game
 		Game();
 		~Game();
 
-		void									clearNotifications();
 		void									clearGuiEvents();
+		void									clearNotifications();
 		void									setTimeUnit(int timeUnit);
 		void									resizeMap(int width, int height);
 		void									enqueueCommand(int playerId, const String &rawCommand);
@@ -79,20 +79,20 @@ class Game
 		void									addGuiMessage(const String &message);
 		void									removePlayer(int playerId);
 
-		const std::vector<s_notification>		&getNotifications() const;
 		const World								&getWorld() const;
-		const t_svec								&getTeams() const;
+		const t_svec							&getTeams() const;
 		const std::map<int, Player *>			&getPlayers() const;
-		const std::vector<Egg *>				&getEggs() const;
+		const std::vector<s_notification>		&getNotifications() const;
 		const std::vector<s_gui_event>			&getGuiEvents() const;
-		Player									*getPlayer(int playerId);
-		const Player								*getPlayer(int playerId) const;
-		const String								&getTeamName(int teamIndex) const;
-		unsigned long							getLastGuiEventSequence() const;
-		long									getCurrentTick() const;
+		const std::vector<Egg *>				&getEggs() const;
 		int										getTimeUnit() const;
-		int										getTeamIndex(const String &teamName) const;
+		long									getCurrentTick() const;
+		Player									*getPlayer(int playerId);
+		const Player							*getPlayer(int playerId) const;
+		unsigned long							getLastGuiEventSequence() const;
+		const String							&getTeamName(int teamIndex) const;
 		bool									canAcceptCommand(int playerId) const;
+		int										getTeamIndex(const String &teamName) const;
 
 		void									init(int width, int height, const t_svec &teams, int timeUnit);
 		void									tick();

@@ -28,6 +28,11 @@ static bool	sInitialized = false;
 
 /* ---- resource colours --------------------------------------------------- */
 
+static const e_resource RESOURCE_ORDER[RESOURCE_COUNT] = {
+	NOURRITURE, LINEMATE, DERAUMERE, SIBUR,
+	MENDIANE, PHIRAS, THYSTAME
+};
+
 static const Color RESOURCE_COLORS[RESOURCE_COUNT] = {
 	GREEN,        // NOURRITURE
 	SKYBLUE,      // LINEMATE
@@ -86,7 +91,7 @@ void updateDisplay(const World &world)
 			int dotCount = 0;
 			for (int r = 0; r < RESOURCE_COUNT && dotCount < 7; r++)
 			{
-				int qty = tile.getResource(static_cast<e_resource>(r));
+				int qty = tile.getResource(RESOURCE_ORDER[r]);
 				if (qty > 0)
 				{
 					int dx = 4 + dotCount * 4;

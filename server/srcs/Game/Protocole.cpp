@@ -1,12 +1,14 @@
 #include "Protocole.hpp"
 #include <limits>
 
-static const e_resource g_guiResourceOrder[RESOURCE_COUNT] = {
+static const e_resource g_guiResourceOrder[RESOURCE_COUNT] =
+{
 	NOURRITURE, LINEMATE, DERAUMERE, SIBUR,
 	MENDIANE, PHIRAS, THYSTAME
 };
 
-static const char *g_protocolVerbs[] = {
+static const char *g_protocolVerbs[] =
+{
 	"BIENVENUE", "GRAPHIC", "msz", "bct", "mct", "tna", "pnw", "ppo",
 	"plv", "pin", "pex", "pbc", "pic", "pie", "pfk", "pdr", "pgt",
 	"pdi", "enw", "eht", "ebo", "edi", "sgt", "sst", "seg", "smg",
@@ -214,18 +216,65 @@ String Protocole::executeRequest(const String &request, Game &game)
 	return unknownCommand();
 }
 
-String Protocole::resourceDropped(int playerId, e_resource resource) { return verb(PROTOCOL_PDR) + " #" + mzu::intToString(playerId) + " " + mzu::intToString(protocolResource(resource)) + NEWLINE; }
-String Protocole::resourceTaken(int playerId, e_resource resource) { return verb(PROTOCOL_PGT) + " #" + mzu::intToString(playerId) + " " + mzu::intToString(protocolResource(resource)) + NEWLINE; }
-String Protocole::playerBroadcast(int playerId, const String &message) { return verb(PROTOCOL_PBC) + " #" + mzu::intToString(playerId) + " " + message + NEWLINE; }
-String Protocole::playerExpelled(int playerId) { return verb(PROTOCOL_PEX) + " #" + mzu::intToString(playerId) + NEWLINE; }
-String Protocole::playerDeath(int playerId) { return verb(PROTOCOL_PDI) + " #" + mzu::intToString(playerId) + NEWLINE; }
-String Protocole::forkStart(int playerId) { return verb(PROTOCOL_PFK) + " #" + mzu::intToString(playerId) + NEWLINE; }
-String Protocole::eggConsumed(int eggId) { return verb(PROTOCOL_EBO) + " #" + mzu::intToString(eggId) + NEWLINE; }
-String Protocole::eggHatched(int eggId) { return verb(PROTOCOL_EHT) + " #" + mzu::intToString(eggId) + NEWLINE; }
-String Protocole::eggDeath(int eggId) { return verb(PROTOCOL_EDI) + " #" + mzu::intToString(eggId) + NEWLINE; }
-String Protocole::gameEnd(const String &teamName) { return verb(PROTOCOL_SEG) + " " + teamName + NEWLINE; }
-String Protocole::unknownCommand() { return verb(PROTOCOL_SUC) + NEWLINE; }
-String Protocole::badParameters() { return verb(PROTOCOL_SBP) + NEWLINE; }
+String Protocole::resourceDropped(int playerId, e_resource resource)
+{
+	return verb(PROTOCOL_PDR) + " #" + mzu::intToString(playerId) + " " + mzu::intToString(protocolResource(resource)) + NEWLINE;
+}
+
+String Protocole::resourceTaken(int playerId, e_resource resource)
+{
+	return verb(PROTOCOL_PGT) + " #" + mzu::intToString(playerId) + " " + mzu::intToString(protocolResource(resource)) + NEWLINE;
+}
+
+String Protocole::playerBroadcast(int playerId, const String &message)
+{
+	return verb(PROTOCOL_PBC) + " #" + mzu::intToString(playerId) + " " + message + NEWLINE;
+}
+
+String Protocole::playerExpelled(int playerId)
+{ 
+	return verb(PROTOCOL_PEX) + " #" + mzu::intToString(playerId) + NEWLINE;
+}
+
+String Protocole::playerDeath(int playerId)
+{ 
+	return verb(PROTOCOL_PDI) + " #" + mzu::intToString(playerId) + NEWLINE;
+}
+
+String Protocole::forkStart(int playerId)
+{ 
+	return verb(PROTOCOL_PFK) + " #" + mzu::intToString(playerId) + NEWLINE;
+}
+
+String Protocole::eggConsumed(int eggId)
+{ 
+	return verb(PROTOCOL_EBO) + " #" + mzu::intToString(eggId) + NEWLINE;
+}
+
+String Protocole::eggHatched(int eggId)
+{ 
+	return verb(PROTOCOL_EHT) + " #" + mzu::intToString(eggId) + NEWLINE;
+}
+
+String Protocole::eggDeath(int eggId)
+{ 
+	return verb(PROTOCOL_EDI) + " #" + mzu::intToString(eggId) + NEWLINE;
+}
+
+String Protocole::gameEnd(const String &teamName)
+{
+	return verb(PROTOCOL_SEG) + " " + teamName + NEWLINE;
+}
+
+String Protocole::unknownCommand()
+{
+	return verb(PROTOCOL_SUC) + NEWLINE;
+}
+
+String Protocole::badParameters()
+{
+	return verb(PROTOCOL_SBP) + NEWLINE;
+}
 
 String Protocole::incantationStart(const s_incantation_context &context)
 {

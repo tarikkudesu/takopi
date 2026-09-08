@@ -431,7 +431,7 @@ void Core::proccessSelectEvent(int sd, fd_set &readSet, fd_set &writeSet, int &r
  *									MAIN LOOP									   *
  ***************************************************************************************/
 
-void Core::mainProcess()
+void Core::processConnections()
 {
 	std::vector<int> closeConnection;
 
@@ -453,39 +453,47 @@ void Core::mainProcess()
 
 	for (size_t i = 0; i < closeConnection.size(); i++)
 		Core::removeConnection(closeConnection[i]);
-	closeConnection.clear();
+}
 
-	for (t_Server::iterator it = __servers.begin(); it != __servers.end(); it++)
+void Core::dispatchGameNotifications(Game *game)
+{
+	const std::vector<s_notification> &notifications = game->getNotifications();
+
+	for (size_t i = 0; i < notifications.size(); i++)
 	{
-		if (it->second->getType() != GAME)
-			continue;
-		ServerGame *gs = static_cast<ServerGame *>(it->second);
-		Game *game = gs->getGame();
-		if (!game)
-			continue;
-
-		game->tick();
-
-		const std::vector<s_notification> &notifications = game->getNotifications();
-		for (size_t n = 0; n < notifications.size(); n++)
+		int pid = notifications[i].playerId;
+		const String &msg = notifications[i].message;
+		for (t_Connections::iterator it = __connections.begin(); it != __connections.end(); it++)
 		{
-			int pid = notifications[n].playerId;
-			const String &msg = notifications[n].message;
-			for (t_Connections::iterator ci = __connections.begin(); ci != __connections.end(); ci++)
+			ConnectionGame *connection = dynamic_cast<ConnectionGame *>(it->second);
+			if (connection && connection->getPlayerId() == pid)
 			{
-				ConnectionGame *connectionGame = dynamic_cast<ConnectionGame *>(ci->second);
-				if (connectionGame && connectionGame->getServer() == gs && connectionGame->getPlayerId() == pid)
-				{
-					connectionGame->pushOutput(msg);
-					if (msg == PLAYER_DEATH_MESSAGE)
-						connectionGame->setState(PLAYER_DEAD);
-					break;
-				}
+				connection->pushOutput(msg);
+				if (msg == PLAYER_DEATH_MESSAGE)
+					connection->setState(PLAYER_DEAD);
+				break;
 			}
 		}
-		game->clearNotifications();
-		Core::broadcastGuiEvents(game);
 	}
+	game->clearNotifications();
+}
+
+void Core::processGame()
+{
+	Game *game = Core::getGame();
+
+	if (!game)
+		return;
+
+	game->tick();
+	Core::dispatchGameNotifications(game);
+	Core::broadcastGuiEvents(game);
+}
+
+void Core::removeClosedConnections()
+{
+	std::vector<int> closeConnection;
+	Game *game = Core::getGame();
 
 	for (t_Connections::iterator it = __connections.begin(); it != __connections.end(); it++)
 	{
@@ -498,7 +506,6 @@ void Core::mainProcess()
 		ConnectionGame *connection = dynamic_cast<ConnectionGame *>(it->second);
 		if (!connection)
 			continue;
-		Game *game = static_cast<ServerGame *>(connection->getServer())->getGame();
 		if (game && game->getState() == GAME_ENDING)
 			connection->setState(PLAYER_DEAD);
 		if (connection->getState() == PLAYER_DEAD && !connection->hasPendingOutput())
@@ -506,29 +513,35 @@ void Core::mainProcess()
 	}
 	for (size_t i = 0; i < closeConnection.size(); i++)
 		Core::removeConnection(closeConnection[i]);
+}
 
-	std::vector<int> closeServer;
+void Core::removeFinishedGameServer()
+{
+	Game *game = Core::getGame();
+
+	if (!game || game->getState() != GAME_ENDING)
+		return;
 	for (t_Server::iterator it = __servers.begin(); it != __servers.end(); it++)
 	{
 		if (it->second->getType() != GAME)
 			continue;
-		Game *game = static_cast<ServerGame *>(it->second)->getGame();
-		if (!game || game->getState() != GAME_ENDING)
-			continue;
-		bool hasConnections = false;
 		for (t_Connections::iterator ci = __connections.begin(); ci != __connections.end(); ci++)
 		{
 			if (ci->second->getServer() == it->second)
-			{
-				hasConnections = true;
-				break;
-			}
+				return;
 		}
-		if (!hasConnections && !Core::hasPendingGuiOutput())
-			closeServer.push_back(it->first);
+		if (!Core::hasPendingGuiOutput())
+			Core::removeServer(it->first);
+		return;
 	}
-	for (size_t i = 0; i < closeServer.size(); i++)
-		Core::removeServer(closeServer[i]);
+}
+
+void Core::mainProcess()
+{
+	Core::processConnections();
+	Core::processGame();
+	Core::removeClosedConnections();
+	Core::removeFinishedGameServer();
 	if (!Core::hasGameServer())
 		Core::up = false;
 }

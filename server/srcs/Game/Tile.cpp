@@ -1,5 +1,21 @@
 #include "Tile.hpp"
 
+static const char *resourceName(t_resource resource)
+{
+	switch (resource)
+	{
+		case NOURRITURE: 			return "nourriture";
+		case DERAUMERE: 			return "deraumere";
+		case LINEMATE: 				return "linemate";
+		case SIBUR: 				return "sibur";
+		case PHIRAS: 				return "phiras";
+		case THYSTAME: 				return "thystame";
+		case MENDIANE: 				return "mendiane";
+		case RESOURCE_COUNT:		return "";
+	}
+	return "";
+}
+
 Tile::Tile() : __x(0), __y(0)
 {
 	for (int i = 0; i < RESOURCE_COUNT; i++)
@@ -106,10 +122,6 @@ void Tile::removePlayer(int playerId)
 
 String Tile::contentString() const
 {
-	static const char *names[] = {
-		"nourriture", "linemate", "deraumere", "sibur",
-		"mendiane", "phiras", "thystame"
-	};
 	String result;
 	for (size_t i = 0; i < __playerIds.size(); i++)
 	{
@@ -123,7 +135,7 @@ String Tile::contentString() const
 		{
 			if (!result.empty())
 				result += " ";
-			result += names[r];
+			result += resourceName(static_cast<t_resource>(r));
 		}
 	}
 	return result;

@@ -52,7 +52,7 @@ typedef std::vector<String> t_svec;
 #define PRINTABLE						" \t\n\r\v\f0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
 
 #define INITIAL_FOOD								10
-#define FOOD_LIFE_UNITS								126
+#define FOOD_LIFE_UNITS								99999
 #define CLIENTS_PER_TEAM							6
 #define MAX_PENDING_COMMANDS						10
 #define EGG_HATCH_DURATION							600
@@ -149,14 +149,14 @@ typedef enum e_command
 
 typedef struct s_elevation_req
 {
-	int level;
-	int players_needed;
-	int deraumere;
-	int linemate;
-	int mendiane;
-	int thystame;
-	int phiras;
-	int sibur;
+    int level;
+    int players_needed;
+    int linemate;
+    int deraumere;
+    int sibur;
+    int mendiane;
+    int phiras;
+    int thystame;
 } t_elevation_req;
 
 typedef struct s_notification

@@ -8,6 +8,22 @@
 # define M_PI 3.14159265358979323846
 #endif
 
+static double resourceDensity(e_resource resource)
+{
+	switch (resource)
+	{
+		case NOURRITURE:		return 0.5;
+		case DERAUMERE:			return 0.15;
+		case LINEMATE:			return 0.3;
+		case SIBUR:				return 0.1;
+		case PHIRAS:			return 0.08;
+		case THYSTAME:			return 0.05;
+		case MENDIANE:			return 0.1;
+		case RESOURCE_COUNT:	return 0.0;
+	}
+	return 0.0;
+}
+
 World::World() : __width(0), __height(0)
 {
 }
@@ -121,24 +137,16 @@ void World::resize(int width, int height)
 
 void World::populateResources()
 {
-	static const double densities[RESOURCE_COUNT] = {
-		0.5,
-		0.3,
-		0.15,
-		0.1,
-		0.1,
-		0.08,
-		0.05
-	};
 	for (int y = 0; y < __height; y++)
 	{
 		for (int x = 0; x < __width; x++)
 		{
 			for (int r = 0; r < RESOURCE_COUNT; r++)
 			{
+				e_resource resource = static_cast<e_resource>(r);
 				double roll = static_cast<double>(rand()) / RAND_MAX;
-				if (roll < densities[r])
-					__map[y][x].addResource(static_cast<e_resource>(r), 1);
+				if (roll < resourceDensity(resource))
+					__map[y][x].addResource(resource, 1);
 			}
 		}
 	}
@@ -150,10 +158,10 @@ void World::populateResources()
 
 String World::buildVisionString(const Player &player) const
 {
-	static const int fwd_dx[] = {0, 1, 0, -1};
-	static const int fwd_dy[] = {-1, 0, 1, 0};
-	static const int rgt_dx[] = {1, 0, -1, 0};
-	static const int rgt_dy[] = {0, 1, 0, -1};
+	static const int forward_dx[] = {0, 1, 0, -1};
+	static const int forward_dy[] = {-1, 0, 1, 0};
+	static const int right_dx[] = {1, 0, -1, 0};
+	static const int right_dy[] = {0, 1, 0, -1};
 
 	int dir = player.getDirection();
 	int px = player.getX();
@@ -170,8 +178,8 @@ String World::buildVisionString(const Player &player) const
 			if (!first)
 				result += ",";
 			first = false;
-			int x = px + fwd_dx[dir] * i + rgt_dx[dir] * s;
-			int y = py + fwd_dy[dir] * i + rgt_dy[dir] * s;
+			int x = px + forward_dx[dir] * i + right_dx[dir] * s;
+			int y = py + forward_dy[dir] * i + right_dy[dir] * s;
 			result += " " + tileAt(x, y).contentString();
 		}
 	}

@@ -38,11 +38,11 @@ void Game::init(int width, int height, const t_svec &teams, int timeUnit)
 	__teams.clear();
 	__players.clear();
 	__teamSlots.clear();
+	__guiEvents.clear();
+	__incantations.clear();
 	__notifications.clear();
 	__activeCommands.clear();
 	__pendingCommands.clear();
-	__guiEvents.clear();
-	__incantations.clear();
 	__nextGuiEventSequence = 1;
 	__teams = teams;
 	__tickOffset = 0;
@@ -64,8 +64,7 @@ long Game::getCurrentTick() const
 {
 	struct timeval now;
 	gettimeofday(&now, NULL);
-	long elapsedUs = (now.tv_sec - __startTime.tv_sec) * 1000000L
-				   + (now.tv_usec - __startTime.tv_usec);
+	long elapsedUs = (now.tv_sec - __startTime.tv_sec) * 1000000L + (now.tv_usec - __startTime.tv_usec);
 	return static_cast<long>(__tickOffset + elapsedUs * static_cast<double>(__timeUnit) / 1000000.0);
 }
 
@@ -413,8 +412,7 @@ String Game::executeIncantation(int playerId)
 	for (size_t i = 0; valid && i < context.playerIds.size(); i++)
 	{
 		Player *participant = getPlayer(context.playerIds[i]);
-		if (!participant || !participant->isAlive() || participant->getX() != context.x
-			|| participant->getY() != context.y || participant->getLevel() != context.level)
+		if (!participant || !participant->isAlive() || participant->getX() != context.x || participant->getY() != context.y || participant->getLevel() != context.level)
 			valid = false;
 	}
 	if (!valid || !Elevation::canElevate(context.level, tile, static_cast<int>(context.playerIds.size())))
@@ -612,10 +610,25 @@ const Player *Game::getPlayer(int playerId) const
 	return NULL;
 }
 
-const World &Game::getWorld() const { return __world; }
-const t_svec &Game::getTeams() const { return __teams; }
-const std::map<int, Player *> &Game::getPlayers() const { return __players; }
-const std::vector<Egg *> &Game::getEggs() const { return __eggs; }
+const World &Game::getWorld() const
+{
+	return __world;
+}
+
+const t_svec &Game::getTeams() const
+{
+	return __teams;
+}
+
+const std::map<int, Player *> &Game::getPlayers() const
+{
+	return __players;
+}
+
+const std::vector<Egg *> &Game::getEggs() const
+{
+	return __eggs;
+}
 
 const String &Game::getTeamName(int teamIndex) const
 {
