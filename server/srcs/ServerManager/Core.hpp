@@ -8,10 +8,6 @@ typedef std::map< int, Connection* >		t_Connections;
 
 class Game;
 
-/************************************************************************
- *                            SERVER CONTROL                            *
- ************************************************************************/
-
 class Core
 {
 	private:

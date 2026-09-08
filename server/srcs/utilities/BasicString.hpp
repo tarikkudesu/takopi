@@ -6,8 +6,8 @@
 class BasicString
 {
 	private:
-		char *__buff;
-		size_t __size;
+		char 		*__buff;
+		size_t 		__size;
 
 	public:
 		BasicString substr(size_t start, size_t length);
