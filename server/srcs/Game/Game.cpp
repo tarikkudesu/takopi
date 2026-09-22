@@ -792,21 +792,25 @@ void Game::checkVictory()
 {
 	if (__state != GAME_RUNNING)
 		return;
+
 	for (size_t team = 0; team < __teams.size(); team++)
 	{
 		int count = 0;
 		bool allMaxLevel = true;
+		bool playerAlive = false;
 		for (std::map<int, Player *>::iterator it = __players.begin(); it != __players.end(); it++)
 		{
 			Player *player = it->second;
 			if (!player->isAlive() || player->getTeamIndex() != static_cast<int>(team))
 				continue;
+			playerAlive = true;
 			count++;
 			if (player->getLevel() != WIN_LEVEL)
 				allMaxLevel = false;
 		}
-		if (count < WIN_PLAYERS || !allMaxLevel)
+		if (count < WIN_PLAYERS || !allMaxLevel || !playerAlive)
 			continue;
+		
 		__state = GAME_ENDING;
 		mzu::info("game ended: team " + __teams[team] + " won");
 		for (std::map<int, Player *>::iterator it = __players.begin(); it != __players.end(); it++)

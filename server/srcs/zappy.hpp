@@ -63,13 +63,13 @@ typedef std::vector<String> t_svec;
 typedef enum e_resource
 {
 	NOURRITURE = 0,
-	DERAUMERE,
-	LINEMATE,
-	SIBUR,
-	PHIRAS,
-	THYSTAME,
-	MENDIANE,
-	RESOURCE_COUNT
+	LINEMATE = 1,
+	DERAUMERE = 2,
+	SIBUR = 3,
+	MENDIANE = 4,
+	PHIRAS = 5,
+	THYSTAME = 6,
+	RESOURCE_COUNT = 7
 } t_resource;
 
 typedef enum e_direction
@@ -99,6 +99,15 @@ typedef enum e_gui_connection_state
 	GUI_READY,
 	GUI_CLOSING
 } t_gui_connection_state;
+
+typedef enum e_admin_connection_state
+{
+	ADMIN_TLS_HANDSHAKE,
+	ADMIN_AUTHENTICATING,
+	ADMIN_READY,
+	ADMIN_CLOSING,
+	ADMIN_FAILED
+} t_admin_connection_state;
 
 typedef enum e_egg_state
 {

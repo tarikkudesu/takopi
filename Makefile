@@ -58,6 +58,7 @@ CLIENT_OBJS		= $(addprefix $(OBJ_DIR)/, $(CLIENT_SRCS:.cpp=.o))
 #                                SERVER SOURCES
 # ==============================================================================
 SERVER_SRCS		= server/srcs/main.cpp \
+				  server/srcs/Game/Protocole.cpp \
 				  server/srcs/Game/Command.cpp \
 				  server/srcs/Game/CommandParser.cpp \
 				  server/srcs/ServerManager/Connection.cpp \
@@ -81,6 +82,7 @@ SERVER_SRCS		= server/srcs/main.cpp \
 				  server/srcs/utilities/MZU.cpp
 
 SERVER_HEADERS	= server/srcs/zappy.hpp \
+				  server/srcs/Game/Protocole.hpp \
 				  server/srcs/utilities/MZU.hpp \
 				  server/srcs/utilities/BasicString.hpp \
 				  server/srcs/Game/Tile.hpp \

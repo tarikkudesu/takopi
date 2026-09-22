@@ -69,11 +69,13 @@ bool ConnectionGui::writeSocket()
 void ConnectionGui::processMessage(const String &message)
 {
 	String request = message;
+
 	if (!request.empty() && request[request.length() - 1] == '\r')
 		request.erase(request.length() - 1);
-	mzu::info("received: \"" + request + "\"");
+
 	if (__state == GUI_CLOSING)
 		return;
+
 	if (__state == GUI_WAITING_HANDSHAKE)
 	{
 		if (Protocole::parseVerb(request) != PROTOCOL_GRAPHIC)

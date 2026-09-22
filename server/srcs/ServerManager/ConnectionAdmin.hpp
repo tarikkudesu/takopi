@@ -8,14 +8,11 @@ class ConnectionAdmin : public Connection
 {
 	private :
 		SSL								*__ssl;
+		t_admin_connection_state		__state;
 		t_tls_wait						__tlsWait;
 		t_tls_operation					__tlsOperation;
 		unsigned int					__authenticationFailures;
 		size_t							__responseOffset;
-		bool							__authenticated;
-		bool							__tlsHandshake;
-		bool							__tlsFailed;
-		bool							__closing;
 
 		void							processMessage(const String &message);
 
@@ -25,12 +22,13 @@ class ConnectionAdmin : public Connection
 
 	public:
 		bool							usesTLS() const;
-		bool							processTLSHandshake();
-		void							setupTLS(SSL_CTX *ctx);
 		bool							tlsNeedsRead() const;
 		bool							tlsNeedsWrite() const;
+		bool							processTLSHandshake();
+		void							setupTLS(SSL_CTX *ctx);
 		bool							tlsHandshakeFailed() const;
 		bool							tlsHandshakePending() const;
+		t_admin_connection_state		getState() const;
 
 		bool							readSocket();
 		bool							writeSocket();

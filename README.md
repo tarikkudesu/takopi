@@ -8,11 +8,15 @@ This guide explains how to build, run, and test the **Zappy** server and client.
 
 The server binary (`./server`) runs three logical services configured in `server/zappy.conf`:
 
+The configuration must contain exactly one `game`, one `admin`, and one `gui`
+block. Missing or repeated service blocks are rejected during startup. The admin
+and GUI endpoints both operate on the single configured game.
+
 | Service | Default Port | Protocol | Description |
 | :--- | :--- | :--- | :--- |
 | **Game Server** | `4242` | TCP (Plaintext) | Handles AI player bots (`client` or `nc`) |
 | **Admin Server** | `4243` | TCP (TLS / SSL) | Secure administration and monitoring endpoint |
-| **GUI Server** | `4244` | TCP (Plaintext) | Streams live world snapshots and game notifications |
+| **GUI Server** | `4244` | TCP (Plaintext) | Implements the graphical monitor protocol |
 
 In addition, the server features an in-process **Raylib debug window** that renders the grid and resources in real-time.
 
@@ -32,6 +36,7 @@ flowchart TD
     CP --> EL[Elevation.hpp]
     EL --> W[World.hpp]
     W --> G[Game.hpp]
+    G --> PROTO[Protocole.hpp]
 
     G --> S[Server.hpp]
     S --> SG[ServerGame.hpp]
@@ -185,7 +190,16 @@ The Admin server requires TLS/SSL. Test it with `openssl s_client` or `ncat`:
 ```bash
 openssl s_client -connect 127.0.0.1:4243 -quiet
 ```
-Type any message and press Enter; the server will process the TLS handshake and log the input.
+Authenticate after connecting, then use the administration commands:
+
+```text
+AUTH zappy-admin
+resize <width> <height>
+time <value>
+help
+```
+
+The commands always operate on the single game server; no game ID is required.
 
 ### Option B: Using Makefile Shortcut
 From the root directory:
@@ -198,13 +212,16 @@ make connect
 
 ## 7. Testing the GUI Server (Port 4244)
 
-Connect with `nc` to observe live notifications and world events:
+Connect with `nc` to test the GUI listener:
 
 ```bash
 nc 127.0.0.1 4244
 ```
 
-Whenever actions happen in the game (such as egg hatching, player movements, or resource collection), the GUI server pushes event updates to connected clients.
+The server first sends `BIENVENUE`. Reply with `GRAPHIC` to receive the complete
+game snapshot. The monitor can then request `msz`, `bct X Y`, `mct`, `tna`,
+`ppo #n`, `plv #n`, `pin #n`, `sgt`, or `sst T`. Live gameplay events are sent
+to every connected monitor according to [GUI-protocole.md](server/GUI-protocole.md).
 
 ---
 

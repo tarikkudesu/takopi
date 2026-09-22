@@ -1,4 +1,8 @@
 .vscode
+.prettierrc
+*AGENTS.md
+graphify-out
+
 
 # Prerequisites
 *.d

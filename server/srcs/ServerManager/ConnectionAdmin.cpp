@@ -4,14 +4,11 @@
 
 ConnectionAdmin::ConnectionAdmin(Server *server) :	Connection(server),
 													__ssl(NULL),
+													__state(ADMIN_TLS_HANDSHAKE),
 													__tlsWait(TLS_WAIT_READ),
 													__tlsOperation(TLS_OPERATION_NONE),
 													__authenticationFailures(0),
-													__responseOffset(0),
-													__authenticated(false),
-													__tlsHandshake(false),
-													__tlsFailed(false),
-													__closing(false)
+													__responseOffset(0)
 {
 	mzu::debug("ConnectionAdmin constructor");
 }
@@ -40,20 +37,21 @@ void ConnectionAdmin::setupTLS(SSL_CTX *ctx)
 	}
 	SSL_set_accept_state(__ssl);
 	__tlsOperation = TLS_OPERATION_HANDSHAKE;
+	__state = ADMIN_TLS_HANDSHAKE;
 	__tlsWait = TLS_WAIT_READ;
-	__tlsHandshake = true;
-	__tlsFailed = false;
 }
 
 bool ConnectionAdmin::processTLSHandshake()
 {
-	if (!__tlsHandshake)
+	if (this->tlsHandshakeFailed())
+		return false;
+	if (!this->tlsHandshakePending())
 		return true;
 	int result = SSL_accept(__ssl);
 	if (result == 1)
 	{
-		__tlsHandshake = false;
 		__tlsOperation = TLS_OPERATION_NONE;
+		__state = ADMIN_AUTHENTICATING;
 		return true;
 	}
 	int error = SSL_get_error(__ssl, result);
@@ -63,7 +61,8 @@ bool ConnectionAdmin::processTLSHandshake()
 		__tlsWait = TLS_WAIT_READ;
 	else
 	{
-		__tlsFailed = true;
+		__tlsOperation = TLS_OPERATION_NONE;
+		__state = ADMIN_FAILED;
 		return false;
 	}
 	return false;
@@ -84,30 +83,37 @@ bool ConnectionAdmin::tlsNeedsWrite() const
 	if (!usesTLS())
 		return false;
 	if (__tlsOperation == TLS_OPERATION_NONE)
-		return hasPendingOutput();
+		return __state == ADMIN_CLOSING || hasPendingOutput();
 	return __tlsWait == TLS_WAIT_WRITE;
 }
 
 bool ConnectionAdmin::tlsHandshakePending() const
 {
-	return __tlsHandshake;
+	return __state == ADMIN_TLS_HANDSHAKE;
 }
 
 bool ConnectionAdmin::tlsHandshakeFailed() const
 {
-	return __tlsFailed;
+	return __state == ADMIN_FAILED;
+}
+
+t_admin_connection_state ConnectionAdmin::getState() const
+{
+	return __state;
 }
 
 bool ConnectionAdmin::readSocket()
 {
     char buff[READ_SIZE + 1];
+	if (this->tlsHandshakeFailed())
+		return false;
 	if (this->tlsHandshakePending())
 	{
 		this->processTLSHandshake();
-		if (this->tlsHandshakePending())
-			return true;
 		if (this->tlsHandshakeFailed())
 			return false;
+		if (this->tlsHandshakePending())
+			return true;
 	}
 
 	__tlsOperation = TLS_OPERATION_READ;
@@ -131,16 +137,18 @@ bool ConnectionAdmin::readSocket()
 
 bool ConnectionAdmin::writeSocket()
 {
+	if (this->tlsHandshakeFailed())
+		return false;
 	if (this->tlsHandshakePending())
 	{
 		this->processTLSHandshake();
-		if (this->tlsHandshakePending())
-			return true;
 		if (this->tlsHandshakeFailed())
 			return false;
+		if (this->tlsHandshakePending())
+			return true;
 	}
 
-	if (__closing && !this->hasPendingOutput())
+	if (__state == ADMIN_CLOSING && !this->hasPendingOutput())
 		return false;
     if (!this->hasPendingOutput())
         return true;
@@ -176,59 +184,61 @@ bool ConnectionAdmin::writeSocket()
 
 void ConnectionAdmin::processMessage(const String &message)
 {
-    ServerAdmin *server = static_cast<ServerAdmin *>(this->__server);
-    String command = message;
+	ServerAdmin *server = static_cast<ServerAdmin *>(this->__server);
+	String command = message;
 
-    if (!command.empty() && command[command.length() - 1] == '\r')
-        command.erase(command.length() - 1);
+	if (!command.empty() && command[command.length() - 1] == '\r')
+		command.erase(command.length() - 1);
 
-    if (this->__closing)
-        return;
+	if (__state == ADMIN_CLOSING || __state == ADMIN_FAILED)
+		return;
 
-    if (!this->__authenticated)
-    {
-        if (command.find("AUTH ") == 0)
-        {
-            String password = command.substr(5);
+	if (__state == ADMIN_AUTHENTICATING)
+	{
+		if (command.find("AUTH ") == 0)
+		{
+			String password = command.substr(5);
 
-            if (server->checkPassword(password))
-            {
-                this->__authenticated = true;
-                this->__authenticationFailures = 0;
-                mzu::info("remote administrator authenticated");
-                this->pushOutput( ADMIN_OK "Authentication successful.\n" ADMIN_PROMPT );
-                return;
-            }
-            this->__authenticationFailures++;
-            mzu::warn("remote administrator authentication failed");
-            if (this->__authenticationFailures >= MAX_ADMIN_AUTH_FAILURES)
-            {
-                this->pushOutput( ADMIN_ERR "Too many authentication failures.\n" RED "      Connection closed." RESET NEWLINE );
-                this->__closing = true;
-                return;
-            }
-            this->pushOutput( ADMIN_ERR "Invalid password.\n" YELLOW "      Usage:" RESET " AUTH <password>\n" );
-            return;
-        }
-        this->pushOutput( ADMIN_WARN "Authentication required.\n" YELLOW "       Usage:" RESET " AUTH <password>\n" );
-        return;
-    }
-    if (command.empty())
-    {
-        this->pushOutput(ADMIN_PROMPT);
-        return;
-    }
-    if (command.find("AUTH ") == 0)
-    {
-        mzu::warn("authentication command ignored for authenticated administrator");
-        this->pushOutput( ADMIN_WARN "Already authenticated.\n" ADMIN_PROMPT );
-        return;
-    }
-    mzu::running("[admin remote] command received: " + command);
-    String response = Core::executeAdminCommand(command);
-    if (!response.empty())
-        this->pushOutput(response);
-    this->pushOutput(ADMIN_PROMPT);
+			if (server->checkPassword(password))
+			{
+				__state = ADMIN_READY;
+				this->__authenticationFailures = 0;
+				mzu::info("remote administrator authenticated");
+				this->pushOutput( ADMIN_OK "Authentication successful.\n" ADMIN_PROMPT );
+				return;
+			}
+			this->__authenticationFailures++;
+			mzu::warn("remote administrator authentication failed");
+			if (this->__authenticationFailures >= MAX_ADMIN_AUTH_FAILURES)
+			{
+				this->pushOutput( ADMIN_ERR "Too many authentication failures.\n" RED "      Connection closed." RESET NEWLINE );
+				__state = ADMIN_CLOSING;
+				return;
+			}
+			this->pushOutput( ADMIN_ERR "Invalid password.\n" YELLOW "      Usage:" RESET " AUTH <password>\n" );
+			return;
+		}
+		this->pushOutput( ADMIN_WARN "Authentication required.\n" YELLOW "       Usage:" RESET " AUTH <password>\n" );
+		return;
+	}
+	if (__state != ADMIN_READY)
+		return;
+	if (command.empty())
+	{
+		this->pushOutput(ADMIN_PROMPT);
+		return;
+	}
+	if (command.find("AUTH ") == 0)
+	{
+		mzu::warn("authentication command ignored for authenticated administrator");
+		this->pushOutput( ADMIN_WARN "Already authenticated.\n" ADMIN_PROMPT );
+		return;
+	}
+	mzu::running("[admin remote] command received: " + command);
+	String response = Core::executeAdminCommand(command);
+	if (!response.empty())
+		this->pushOutput(response);
+	this->pushOutput(ADMIN_PROMPT);
 }
 
 void ConnectionAdmin::popOutput()

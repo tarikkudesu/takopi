@@ -3,16 +3,46 @@
 
 static const e_resource g_guiResourceOrder[RESOURCE_COUNT] =
 {
-	NOURRITURE, LINEMATE, DERAUMERE, SIBUR,
-	MENDIANE, PHIRAS, THYSTAME
+	NOURRITURE,
+	LINEMATE,
+	DERAUMERE,
+	SIBUR,
+	MENDIANE,
+	PHIRAS,
+	THYSTAME
 };
 
 static const char *g_protocolVerbs[] =
 {
-	"BIENVENUE", "GRAPHIC", "msz", "bct", "mct", "tna", "pnw", "ppo",
-	"plv", "pin", "pex", "pbc", "pic", "pie", "pfk", "pdr", "pgt",
-	"pdi", "enw", "eht", "ebo", "edi", "sgt", "sst", "seg", "smg",
-	"suc", "sbp", ""
+	"BIENVENUE",
+	"GRAPHIC",
+	"msz",
+	"bct",
+	"mct",
+	"tna",
+	"pnw",
+	"ppo",
+	"plv",
+	"pin",
+	"pex",
+	"pbc",
+	"pic",
+	"pie",
+	"pfk",
+	"pdr",
+	"pgt",
+	"pdi",
+	"enw",
+	"eht",
+	"ebo",
+	"edi",
+	"sgt",
+	"sst",
+	"seg",
+	"smg",
+	"suc",
+	"sbp",
+	""
 };
 
 t_protocol_verb Protocole::parseVerb(const String &value)
@@ -168,8 +198,7 @@ String Protocole::executeRequest(const String &request, Game &game)
 	if (args.empty())
 		return unknownCommand();
 	t_protocol_verb command = parseVerb(args[0]);
-	if (command == PROTOCOL_MSZ || command == PROTOCOL_MCT
-		|| command == PROTOCOL_TNA || command == PROTOCOL_SGT)
+	if (command == PROTOCOL_MSZ || command == PROTOCOL_MCT || command == PROTOCOL_TNA || command == PROTOCOL_SGT)
 	{
 		if (args.size() != 1)
 			return badParameters();

@@ -80,16 +80,20 @@ int ConnectionGame::getPlayerId() const
 
 void ConnectionGame::processMessage(const String &message)
 {
-    mzu::info("received: \"" + message + "\"");
 	ServerGame *gs = static_cast<ServerGame *>(__server);
 	Game *game = gs->getGame();
+	String command = message;
+
+	if (!command.empty() && command[command.length() - 1] == '\r')
+        command.erase(command.length() - 1);
+
 	if (!game || game->getState() != GAME_RUNNING || __state == PLAYER_DEAD)
 		return;
 
 	if (__state == PLAYER_HANDSHAKE)
 	{
 		int playerId = -1;
-		String response = game->handleHandshake(message, playerId);
+		String response = game->handleHandshake(command, playerId);
 		if (playerId >= 0)
 		{
 			__playerId = playerId;
@@ -100,5 +104,5 @@ void ConnectionGame::processMessage(const String &message)
 		__responseQueue.push(BasicString(response));
 	}
 	else if (__state == PLAYER_ALIVE && game->canAcceptCommand(__playerId))
-		game->enqueueCommand(__playerId, message);
+		game->enqueueCommand(__playerId, command);
 }
