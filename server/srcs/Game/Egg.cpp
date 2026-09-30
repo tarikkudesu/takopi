@@ -32,10 +32,6 @@ Egg::~Egg()
 {
 }
 
-/*************************************************************************
- *                            ACCESSORS                                  *
- *************************************************************************/
-
 int Egg::getId() const
 {
 	return __id;
@@ -61,7 +57,7 @@ int Egg::getTeamIndex() const
 	return __teamIndex;
 }
 
-t_egg_state Egg::getState() const
+EggState Egg::getState() const
 {
 	return __state;
 }
@@ -76,10 +72,6 @@ void Egg::setPosition(int x, int y)
 	__x = x;
 	__y = y;
 }
-
-/*************************************************************************
- *                            HATCHING                                   *
- *************************************************************************/
 
 bool Egg::hatchIfReady(long currentTick)
 {

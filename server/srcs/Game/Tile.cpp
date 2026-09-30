@@ -1,6 +1,6 @@
 #include "Tile.hpp"
 
-static const char *resourceName(t_resource resource)
+static const char *resourceName(Resource resource)
 {
 	switch (resource)
 	{
@@ -64,7 +64,7 @@ int Tile::getY() const
 	return __y;
 }
 
-int Tile::getResource(e_resource type) const
+int Tile::getResource(Resource type) const
 {
 	if (type < 0 || type >= RESOURCE_COUNT)
 		return 0;
@@ -80,19 +80,19 @@ const std::vector<int> &Tile::getPlayerIds() const
  *                            MUTATORS                                   *
  *************************************************************************/
 
-void Tile::addResource(e_resource type, int count)
+void Tile::addResource(Resource type, int count)
 {
 	if (type >= 0 && type < RESOURCE_COUNT)
 		__resources[type] += count;
 }
 
-void Tile::removeResource(e_resource type)
+void Tile::removeResource(Resource type)
 {
 	if (type >= 0 && type < RESOURCE_COUNT && __resources[type] > 0)
 		__resources[type]--;
 }
 
-bool Tile::hasResource(e_resource type) const
+bool Tile::hasResource(Resource type) const
 {
 	if (type < 0 || type >= RESOURCE_COUNT)
 		return false;
@@ -135,7 +135,7 @@ String Tile::contentString() const
 		{
 			if (!result.empty())
 				result += " ";
-			result += resourceName(static_cast<t_resource>(r));
+			result += resourceName(static_cast<Resource>(r));
 		}
 	}
 	return result;

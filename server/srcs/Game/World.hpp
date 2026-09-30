@@ -15,7 +15,7 @@ class World
 	public:
 		World();
 		World(const World &copy);
-		World									&operator=(const World &assign);
+		World	&operator=(const World &assign);
 		~World();
 
 		int										getWidth() const;
@@ -28,9 +28,8 @@ class World
 		void									init(int width, int height);
 		void									resize(int width, int height);
 
-		int										broadcastDirection(int fromX, int fromY, int toX, int toY, e_direction facing) const;
+		int										broadcastDirection(int fromX, int fromY, int toX, int toY, Direction facing) const;
 		String									buildVisionString(const Player &player) const;
-		void									display() const;
 };
 
 #endif

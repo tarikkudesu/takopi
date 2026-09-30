@@ -6,7 +6,7 @@ ConnectionGame::ConnectionGame(Server *server) : 	Connection(server),
 													__state(PLAYER_HANDSHAKE),
 													__playerId(-1)
 {
-	__responseQueue.push(BasicString("BIENVENUE\n"));
+	__responseQueue.push(BasicString("BIENVENUE" NEWLINE));
 	mzu::debug("ConnectionGame constructor");
 }
 ConnectionGame::~ConnectionGame()
@@ -59,12 +59,12 @@ bool ConnectionGame::writeSocket()
 	return true;
 }
 
-e_player_state ConnectionGame::getState() const
+PlayerState ConnectionGame::getState() const
 {
 	return __state;
 }
 
-void ConnectionGame::setState(e_player_state state)
+void ConnectionGame::setState(PlayerState state)
 {
 	__state = state;
 }
@@ -85,7 +85,7 @@ void ConnectionGame::processMessage(const String &message)
 	String command = message;
 
 	if (!command.empty() && command[command.length() - 1] == '\r')
-        command.erase(command.length() - 1);
+		command.erase(command.length() - 1);
 
 	if (!game || game->getState() != GAME_RUNNING || __state == PLAYER_DEAD)
 		return;

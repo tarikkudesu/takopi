@@ -10,11 +10,11 @@ class Player
 		int								__x;
 		int								__y;
 		int								__level;
+		PlayerState						__state;
+		Direction						__direction;
 		int								__teamIndex;
-		e_direction						__direction;
-		e_player_state					__state;
-		int								__inventory[RESOURCE_COUNT];
 		long							__nextFoodTick;
+		int								__inventory[RESOURCE_COUNT];
 
 	public:
 		Player();
@@ -23,29 +23,29 @@ class Player
 		Player							&operator=(const Player &assign);
 		~Player();
 
-		int								getId() const;
 		int								getX() const;
 		int								getY() const;
+		int								getId() const;
 		int								getLevel() const;
 		int								getTeamIndex() const;
-		e_direction						getDirection() const;
-		int								getInventory(e_resource type) const;
+		Direction						getDirection() const;
 		long							getNextFoodTick() const;
+		int								getInventory(Resource type) const;
 
-		void							setPosition(int x, int y);
 		void							setLevel(int level);
-		void							setState(e_player_state state);
-		void							setDirection(e_direction dir);
+		void							setPosition(int x, int y);
 		void							setNextFoodTick(long tick);
+		void							setDirection(Direction dir);
+		void							setState(PlayerState state);
 
-		void							moveForward(int mapW, int mapH);
-		void							moveInDirection(e_direction dir, int mapW, int mapH);
 		void							turnLeft();
 		void							turnRight();
-		void							addToInventory(e_resource type, int count);
-		bool							removeFromInventory(e_resource type);
-		String							inventoryString() const;
 		bool							isAlive() const;
+		String							inventoryString() const;
+		void							moveForward(int mapW, int mapH);
+		bool							removeFromInventory(Resource type);
+		void							addToInventory(Resource type, int count);
+		void							moveInDirection(Direction dir, int mapW, int mapH);
 };
 
 #endif

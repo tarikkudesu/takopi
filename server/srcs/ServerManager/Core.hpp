@@ -24,7 +24,7 @@ class Core
 		static void					processGame();
 		static void					processConnections();
 		static void					dispatchGameNotifications( Game *game );
-		static String				executeGameCommand( t_command type, const t_svec &args );
+		static String				executeGameCommand( CommandType type, const t_svec &args );
 		static void					processConsoleCommand( const String &command );
 		static void					broadcastGuiEvents( Game *game );
 		static void					removeClosedConnections();

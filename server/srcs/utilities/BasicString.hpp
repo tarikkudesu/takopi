@@ -14,7 +14,7 @@ class BasicString
 		void erase(size_t start, size_t end);
 		size_t find(const String &f) const;
 		void join(const BasicString &j);
-		std::string to_string() const;
+		String to_string() const;
 		char *getBuff() const;
 		size_t length() const;
 		bool empty() const;

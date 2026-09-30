@@ -8,7 +8,6 @@ SRC		=	srcs/main.cpp \
 			srcs/Game/Player.cpp \
 			srcs/Game/Tile.cpp \
 			srcs/Game/World.cpp \
-			srcs/Game/WorldDisplay.cpp \
 			srcs/ServerManager/ServerAdmin.cpp \
 			srcs/ServerManager/Connection.cpp \
 			srcs/ServerManager/ConnectionAdmin.cpp \
@@ -35,7 +34,6 @@ HEADERS	=	srcs/zappy.hpp \
 			srcs/Game/CommandParser.hpp \
 			srcs/Game/Elevation.hpp \
 			srcs/Game/World.hpp \
-			srcs/Game/WorldDisplay.hpp \
 			srcs/Game/Game.hpp \
 			srcs/ServerManager/Connection.hpp \
 			srcs/ServerManager/ConnectionAdmin.hpp \

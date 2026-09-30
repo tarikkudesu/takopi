@@ -29,10 +29,6 @@ ServerGame::~ServerGame()
 	mzu::debug("ServerGame destructor");
 }
 
-/****************************************************************************
- *								 MINI METHODS								*
- ****************************************************************************/
-
 Game *ServerGame::getGame()
 {
 	return this->__game;

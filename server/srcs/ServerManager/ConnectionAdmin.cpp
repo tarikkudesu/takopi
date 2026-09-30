@@ -97,7 +97,7 @@ bool ConnectionAdmin::tlsHandshakeFailed() const
 	return __state == ADMIN_FAILED;
 }
 
-t_admin_connection_state ConnectionAdmin::getState() const
+AdminConnectionState ConnectionAdmin::getState() const
 {
 	return __state;
 }
@@ -204,21 +204,21 @@ void ConnectionAdmin::processMessage(const String &message)
 				__state = ADMIN_READY;
 				this->__authenticationFailures = 0;
 				mzu::info("remote administrator authenticated");
-				this->pushOutput( ADMIN_OK "Authentication successful.\n" ADMIN_PROMPT );
+				this->pushOutput( ADMIN_OK "Authentication successful." NEWLINE ADMIN_PROMPT );
 				return;
 			}
 			this->__authenticationFailures++;
 			mzu::warn("remote administrator authentication failed");
 			if (this->__authenticationFailures >= MAX_ADMIN_AUTH_FAILURES)
 			{
-				this->pushOutput( ADMIN_ERR "Too many authentication failures.\n" RED "      Connection closed." RESET NEWLINE );
+				this->pushOutput( ADMIN_ERR "Too many authentication failures." NEWLINE RED "      Connection closed." RESET NEWLINE );
 				__state = ADMIN_CLOSING;
 				return;
 			}
-			this->pushOutput( ADMIN_ERR "Invalid password.\n" YELLOW "      Usage:" RESET " AUTH <password>\n" );
+			this->pushOutput( ADMIN_ERR "Invalid password." NEWLINE YELLOW "      Usage:" RESET " AUTH <password>" NEWLINE );
 			return;
 		}
-		this->pushOutput( ADMIN_WARN "Authentication required.\n" YELLOW "       Usage:" RESET " AUTH <password>\n" );
+		this->pushOutput( ADMIN_WARN "Authentication required." NEWLINE YELLOW "       Usage:" RESET " AUTH <password>" NEWLINE );
 		return;
 	}
 	if (__state != ADMIN_READY)
@@ -231,7 +231,7 @@ void ConnectionAdmin::processMessage(const String &message)
 	if (command.find("AUTH ") == 0)
 	{
 		mzu::warn("authentication command ignored for authenticated administrator");
-		this->pushOutput( ADMIN_WARN "Already authenticated.\n" ADMIN_PROMPT );
+		this->pushOutput( ADMIN_WARN "Already authenticated." NEWLINE ADMIN_PROMPT );
 		return;
 	}
 	mzu::running("[admin remote] command received: " + command);

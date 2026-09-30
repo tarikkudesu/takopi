@@ -44,9 +44,9 @@ void Game::init(int width, int height, const t_svec &teams, int clientsPerTeam, 
 	__activeCommands.clear();
 	__pendingCommands.clear();
 	__nextGuiEventSequence = 1;
-	__teams = teams;
-	__tickOffset = 0;
 	__timeUnit = timeUnit;
+	__tickOffset = 0;
+	__teams = teams;
 	__state = GAME_RUNNING;
 	for (size_t i = 0; i < teams.size(); i++)
 		__teamSlots[static_cast<int>(i)] = clientsPerTeam;
@@ -56,8 +56,7 @@ void Game::init(int width, int height, const t_svec &teams, int clientsPerTeam, 
 	gettimeofday(&__startTime, NULL);
 	__nextPlayerId = 0;
 	__nextEggId = 0;
-	mzu::info("game initialized: " + mzu::intToString(width) + "x" + mzu::intToString(height)
-			  + ", " + mzu::intToString(static_cast<int>(teams.size())) + " teams, t=" + mzu::intToString(timeUnit));
+	mzu::info("game initialized: " + mzu::intToString(width) + "x" + mzu::intToString(height) + ", " + mzu::intToString(static_cast<int>(teams.size())) + " teams, t=" + mzu::intToString(timeUnit));
 }
 
 long Game::getCurrentTick() const
@@ -108,7 +107,6 @@ void Game::tick()
 	processEggs(currentTick);
 	processCommands(currentTick);
 	checkVictory();
-	__world.display();
 }
 
 void Game::processFood(long currentTick)
@@ -196,12 +194,12 @@ void Game::processCommands(long currentTick)
 
 void Game::activateCommand(int playerId, const String &rawCmd, long currentTick)
 {
-	t_command type = CommandParser::parseCommandType(rawCmd);
+	CommandType type = CommandParser::parseCommandType(rawCmd);
 	String arg = CommandParser::parseArgument(rawCmd);
 
 	if (type == CMD_UNKNOWN)
 	{
-		addNotification(playerId, "ko\n");
+		addNotification(playerId, KO);
 		return;
 	}
 	if (type == CMD_INCANTATION)
@@ -213,10 +211,10 @@ void Game::activateCommand(int playerId, const String &rawCmd, long currentTick)
 		int sameLvl = countSameLevelPlayers(playerId);
 		if (!Elevation::canElevate(player->getLevel(), tile, sameLvl))
 		{
-			addNotification(playerId, "ko\n");
+			addNotification(playerId, KO);
 			return;
 		}
-		s_incantation_context context;
+		IncantationContext context;
 		context.x = player->getX();
 		context.y = player->getY();
 		context.level = player->getLevel();
@@ -229,7 +227,7 @@ void Game::activateCommand(int playerId, const String &rawCmd, long currentTick)
 		}
 		__incantations[playerId] = context;
 		publishGuiEvent(Protocole::incantationStart(context));
-		addNotification(playerId, "elevation en cours\n");
+		addNotification(playerId, "elevation en cours" NEWLINE);
 	}
 	else if (type == CMD_FORK)
 		publishGuiEvent(Protocole::forkStart(playerId));
@@ -258,7 +256,7 @@ String Game::executeCommand(const Command &cmd)
 		case CMD_BROADCAST:		return executeBroadcast(cmd.getPlayerId(), cmd.getArgument());
 		case CMD_PREND:			return executePrendre(cmd.getPlayerId(), cmd.getArgument());
 		case CMD_POSE:			return executePoser(cmd.getPlayerId(), cmd.getArgument());
-		default:				return "ko\n";
+		default:				return KO;
 	}
 }
 
@@ -266,39 +264,39 @@ String Game::executeAvance(int playerId)
 {
 	Player *player = getPlayer(playerId);
 	if (!player)
-		return "ko\n";
+		return KO;
 	__world.tileAt(player->getX(), player->getY()).removePlayer(playerId);
 	player->moveForward(__world.getWidth(), __world.getHeight());
 	__world.tileAt(player->getX(), player->getY()).addPlayer(playerId);
 	publishGuiEvent(Protocole::playerPosition(*player));
-	return "ok\n";
+	return OK;
 }
 
 String Game::executeDroite(int playerId)
 {
 	Player *player = getPlayer(playerId);
 	if (!player)
-		return "ko\n";
+		return KO;
 	player->turnRight();
 	publishGuiEvent(Protocole::playerPosition(*player));
-	return "ok\n";
+	return OK;
 }
 
 String Game::executeGauche(int playerId)
 {
 	Player *player = getPlayer(playerId);
 	if (!player)
-		return "ko\n";
+		return KO;
 	player->turnLeft();
 	publishGuiEvent(Protocole::playerPosition(*player));
-	return "ok\n";
+	return OK;
 }
 
 String Game::executeVoir(int playerId)
 {
 	Player *player = getPlayer(playerId);
 	if (!player)
-		return "ko\n";
+		return KO;
 	return __world.buildVisionString(*player) + NEWLINE;
 }
 
@@ -306,7 +304,7 @@ String Game::executeInventaire(int playerId)
 {
 	Player *player = getPlayer(playerId);
 	if (!player)
-		return "ko\n";
+		return KO;
 	return player->inventoryString() + NEWLINE;
 }
 
@@ -314,43 +312,43 @@ String Game::executePrendre(int playerId, const String &object)
 {
 	Player *player = getPlayer(playerId);
 	if (!player)
-		return "ko\n";
-	e_resource res = CommandParser::resourceFromName(object);
+		return KO;
+	Resource res = CommandParser::resourceFromName(object);
 	if (res >= RESOURCE_COUNT)
-		return "ko\n";
+		return KO;
 	Tile &tile = __world.tileAt(player->getX(), player->getY());
 	if (!tile.hasResource(res))
-		return "ko\n";
+		return KO;
 	tile.removeResource(res);
 	player->addToInventory(res, 1);
 	publishGuiEvent(Protocole::resourceTaken(playerId, res));
 	publishGuiEvent(Protocole::playerInventory(*player));
 	publishGuiEvent(Protocole::tile(*this, player->getX(), player->getY()));
-	return "ok\n";
+	return OK;
 }
 
 String Game::executePoser(int playerId, const String &object)
 {
 	Player *player = getPlayer(playerId);
 	if (!player)
-		return "ko\n";
-	e_resource res = CommandParser::resourceFromName(object);
+		return KO;
+	Resource res = CommandParser::resourceFromName(object);
 	if (res >= RESOURCE_COUNT)
-		return "ko\n";
+		return KO;
 	if (!player->removeFromInventory(res))
-		return "ko\n";
+		return KO;
 	__world.tileAt(player->getX(), player->getY()).addResource(res, 1);
 	publishGuiEvent(Protocole::resourceDropped(playerId, res));
 	publishGuiEvent(Protocole::playerInventory(*player));
 	publishGuiEvent(Protocole::tile(*this, player->getX(), player->getY()));
-	return "ok\n";
+	return OK;
 }
 
 String Game::executeExpulse(int playerId)
 {
 	Player *player = getPlayer(playerId);
 	if (!player)
-		return "ko\n";
+		return KO;
 	Tile &tile = __world.tileAt(player->getX(), player->getY());
 	std::vector<int> onTile = tile.getPlayerIds();
 	std::vector<Player *> movedPlayers;
@@ -379,14 +377,14 @@ String Game::executeExpulse(int playerId)
 		for (size_t i = 0; i < movedPlayers.size(); i++)
 			publishGuiEvent(Protocole::playerPosition(*movedPlayers[i]));
 	}
-	return kicked ? "ok\n" : "ko\n";
+	return kicked ? OK : KO;
 }
 
 String Game::executeBroadcast(int playerId, const String &text)
 {
 	Player *player = getPlayer(playerId);
 	if (!player)
-		return "ko\n";
+		return KO;
 	for (std::map<int, Player *>::iterator it = __players.begin(); it != __players.end(); ++it)
 	{
 		if (it->first == playerId || !it->second->isAlive())
@@ -397,16 +395,16 @@ String Game::executeBroadcast(int playerId, const String &text)
 		addNotification(it->first, "message " + mzu::intToString(dir) + "," + text + NEWLINE);
 	}
 	publishGuiEvent(Protocole::playerBroadcast(playerId, text));
-	return "ok\n";
+	return OK;
 }
 
 String Game::executeIncantation(int playerId)
 {
 	Player *player = getPlayer(playerId);
-	std::map<int, s_incantation_context>::iterator stored = __incantations.find(playerId);
+	std::map<int, IncantationContext>::iterator stored = __incantations.find(playerId);
 	if (!player || stored == __incantations.end())
-		return "ko\n";
-	s_incantation_context context = stored->second;
+		return KO;
+	IncantationContext context = stored->second;
 	Tile &tile = __world.tileAt(context.x, context.y);
 	bool valid = player->isAlive() && player->getX() == context.x && player->getY() == context.y;
 	for (size_t i = 0; valid && i < context.playerIds.size(); i++)
@@ -419,7 +417,7 @@ String Game::executeIncantation(int playerId)
 	{
 		publishGuiEvent(Protocole::incantationEnd(context.x, context.y, false));
 		__incantations.erase(stored);
-		return "ko\n";
+		return KO;
 	}
 	Elevation::consumeStones(context.level, tile);
 	int newLevel = context.level + 1;
@@ -444,7 +442,7 @@ String Game::executeFork(int playerId)
 {
 	Player *player = getPlayer(playerId);
 	if (!player)
-		return "ko\n";
+		return KO;
 	long currentTick = getCurrentTick();
 	Egg *egg = new Egg(__nextEggId, playerId, player->getX(), player->getY(),
 					   player->getTeamIndex(),
@@ -452,14 +450,14 @@ String Game::executeFork(int playerId)
 	__eggs.push_back(egg);
 	__nextEggId++;
 	publishGuiEvent(Protocole::eggNew(*egg));
-	return "ok\n";
+	return OK;
 }
 
 String Game::executeConnectNbr(int playerId)
 {
 	Player *player = getPlayer(playerId);
 	if (!player)
-		return "ko\n";
+		return KO;
 	int remaining = availableSlots(player->getTeamIndex());
 	return mzu::intToString(remaining) + NEWLINE;
 }
@@ -472,18 +470,18 @@ String Game::handleHandshake(const String &teamName, int &outPlayerId)
 {
 	outPlayerId = -1;
 	if (__state != GAME_RUNNING)
-		return "ko\n";
+		return KO;
 	int teamIndex = getTeamIndex(teamName);
 	if (teamIndex < 0)
-		return "ko\n";
+		return KO;
 	Egg *usedEgg = NULL;
 	if (__teamSlots[teamIndex] <= 0)
 		usedEgg = findOldestHatchedEgg(teamIndex);
 	if (__teamSlots[teamIndex] <= 0 && !usedEgg)
-		return "ko\n";
+		return KO;
 	int x = usedEgg ? usedEgg->getX() : rand() % __world.getWidth();
 	int y = usedEgg ? usedEgg->getY() : rand() % __world.getHeight();
-	e_direction dir = static_cast<e_direction>(rand() % 4);
+	Direction dir = static_cast<Direction>(rand() % 4);
 	long currentTick = getCurrentTick();
 
 	Player *player = new Player(__nextPlayerId, x, y, teamIndex, currentTick);
@@ -544,9 +542,9 @@ bool Game::canAcceptCommand(int playerId) const
 
 void Game::addNotification(int playerId, const String &msg)
 {
-	s_notification n;
-	n.playerId = playerId;
+	Notification n;
 	n.message = msg;
+	n.playerId = playerId;
 	__notifications.push_back(n);
 }
 
@@ -555,7 +553,7 @@ void Game::addGuiMessage(const String &message)
 	publishGuiEvent(Protocole::serverMessage(message));
 }
 
-const std::vector<s_notification> &Game::getNotifications() const
+const std::vector<Notification> &Game::getNotifications() const
 {
 	return __notifications;
 }
@@ -565,7 +563,7 @@ void Game::clearNotifications()
 	__notifications.clear();
 }
 
-const std::vector<s_gui_event> &Game::getGuiEvents() const
+const std::vector<GuiEvent> &Game::getGuiEvents() const
 {
 	return __guiEvents;
 }
@@ -584,7 +582,7 @@ void Game::publishGuiEvent(const String &payload)
 {
 	if (payload.empty())
 		return;
-	s_gui_event event;
+	GuiEvent event;
 	event.sequence = __nextGuiEventSequence++;
 	event.payload = payload;
 	__guiEvents.push_back(event);
@@ -711,7 +709,7 @@ void Game::removePlayer(int playerId)
 	__activeCommands.erase(playerId);
 	__pendingCommands.erase(playerId);
 	__incantations.erase(playerId);
-	for (std::vector<s_notification>::iterator it = __notifications.begin(); it != __notifications.end(); )
+	for (std::vector<Notification>::iterator it = __notifications.begin(); it != __notifications.end(); )
 	{
 		if (it->playerId == playerId)
 			it = __notifications.erase(it);
@@ -748,19 +746,19 @@ int Game::getTimeUnit() const
 	return __timeUnit;
 }
 
-String Game::executeAdminCommand(t_command type, const t_svec &args)
+String Game::executeAdminCommand(CommandType type, const t_svec &args)
 {
 	if (__state != GAME_RUNNING)
-		return ADMIN_ERR "Game is ending.\n";
+		return ADMIN_ERR "Game is ending." NEWLINE;
 	int values[3] = {0, 0, 0};
 
 	for (size_t i = 1; i < args.size(); i++)
 	{
 		if (args.at(i).find_first_not_of("0123456789") != String::npos)
-			return "ERR arguments must be unsigned integers\n";
+			return "ERR arguments must be unsigned integers" NEWLINE;
 		std::istringstream number(args.at(i));
 		if (!(number >> values[i - 1]))
-			return "ERR integer out of range\n";
+			return "ERR integer out of range" NEWLINE;
 	}
 	try
 	{
@@ -768,7 +766,7 @@ String Game::executeAdminCommand(t_command type, const t_svec &args)
 		{
 			case CMD_ADMIN_RESIZE:	resizeMap(values[0], values[1]); break;
 			case CMD_ADMIN_RETIME:	setTimeUnit(values[0]); break;
-			default:				return "ERR invalid game command\n";
+			default:				return "ERR invalid game command" NEWLINE;
 		}
 	}
 	catch (const std::exception &e)
@@ -783,7 +781,7 @@ String Game::executeAdminCommand(t_command type, const t_svec &args)
  *                          GAME COMPLETION                              *
  *************************************************************************/
 
-t_game_state Game::getState() const
+GameState Game::getState() const
 {
 	return __state;
 }

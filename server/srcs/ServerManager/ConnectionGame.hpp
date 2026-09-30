@@ -6,7 +6,7 @@
 class ConnectionGame : public Connection
 {
 	private :
-		e_player_state					__state;
+		PlayerState						__state;
 		int								__playerId;
 
 		void							processMessage(const String &message);
@@ -16,9 +16,9 @@ class ConnectionGame : public Connection
 		ConnectionGame	&operator=( const ConnectionGame &assign ) = delete;
 
 	public:
-		e_player_state					getState() const;
+		PlayerState						getState() const;
 		int								getPlayerId() const;
-		void							setState(e_player_state state);
+		void							setState(PlayerState state);
 
 		bool							readSocket();
 		bool							writeSocket();

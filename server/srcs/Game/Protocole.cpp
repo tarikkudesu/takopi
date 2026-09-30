@@ -1,7 +1,7 @@
 #include "Protocole.hpp"
 #include <limits>
 
-static const e_resource g_guiResourceOrder[RESOURCE_COUNT] =
+static const Resource g_guiResourceOrder[RESOURCE_COUNT] =
 {
 	NOURRITURE,
 	LINEMATE,
@@ -45,17 +45,17 @@ static const char *g_protocolVerbs[] =
 	""
 };
 
-t_protocol_verb Protocole::parseVerb(const String &value)
+ProtocoleVerb Protocole::parseVerb(const String &value)
 {
 	for (int current = PROTOCOL_WELCOME; current < PROTOCOL_UNKNOWN; current++)
 	{
 		if (value == g_protocolVerbs[current])
-			return static_cast<t_protocol_verb>(current);
+			return static_cast<ProtocoleVerb>(current);
 	}
 	return PROTOCOL_UNKNOWN;
 }
 
-String Protocole::verb(t_protocol_verb value)
+String Protocole::verb(ProtocoleVerb value)
 {
 	if (value < PROTOCOL_WELCOME || value > PROTOCOL_UNKNOWN)
 		return "";
@@ -79,12 +79,12 @@ bool Protocole::parsePlayerId(const String &token, int &playerId)
 	return token.length() > 1 && token[0] == '#' && parseUnsigned(token.substr(1), playerId);
 }
 
-int Protocole::protocolOrientation(e_direction direction)
+int Protocole::protocolOrientation(Direction direction)
 {
 	return static_cast<int>(direction) + 1;
 }
 
-int Protocole::protocolResource(e_resource resource)
+int Protocole::protocolResource(Resource resource)
 {
 	for (int i = 0; i < RESOURCE_COUNT; i++)
 	{
@@ -197,7 +197,7 @@ String Protocole::executeRequest(const String &request, Game &game)
 	t_svec args = mzu::splitBySpaces(request);
 	if (args.empty())
 		return unknownCommand();
-	t_protocol_verb command = parseVerb(args[0]);
+	ProtocoleVerb command = parseVerb(args[0]);
 	if (command == PROTOCOL_MSZ || command == PROTOCOL_MCT || command == PROTOCOL_TNA || command == PROTOCOL_SGT)
 	{
 		if (args.size() != 1)
@@ -239,12 +239,12 @@ String Protocole::executeRequest(const String &request, Game &game)
 	return unknownCommand();
 }
 
-String Protocole::resourceDropped(int playerId, e_resource resource)
+String Protocole::resourceDropped(int playerId, Resource resource)
 {
 	return verb(PROTOCOL_PDR) + " #" + mzu::intToString(playerId) + " " + mzu::intToString(protocolResource(resource)) + NEWLINE;
 }
 
-String Protocole::resourceTaken(int playerId, e_resource resource)
+String Protocole::resourceTaken(int playerId, Resource resource)
 {
 	return verb(PROTOCOL_PGT) + " #" + mzu::intToString(playerId) + " " + mzu::intToString(protocolResource(resource)) + NEWLINE;
 }
@@ -299,7 +299,7 @@ String Protocole::badParameters()
 	return verb(PROTOCOL_SBP) + NEWLINE;
 }
 
-String Protocole::incantationStart(const s_incantation_context &context)
+String Protocole::incantationStart(const IncantationContext &context)
 {
 	String result = verb(PROTOCOL_PIC) + " " + mzu::intToString(context.x) + " " + mzu::intToString(context.y) + " " + mzu::intToString(context.level);
 	for (size_t i = 0; i < context.playerIds.size(); i++)

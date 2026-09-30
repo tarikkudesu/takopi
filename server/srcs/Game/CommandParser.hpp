@@ -8,13 +8,13 @@ class CommandParser
 	private:
 		CommandParser() = delete;
 		CommandParser(const CommandParser &copy) = delete;
-		CommandParser					&operator=(const CommandParser &assign) = delete;
+		CommandParser	&operator=(const CommandParser &assign) = delete;
 		~CommandParser() = delete;
 
 	public:
-		static t_command				parseCommandType(const String &input);
+		static CommandType				parseCommandType(const String &input);
+		static Resource					resourceFromName(const String &name);
 		static String					parseArgument(const String &input);
-		static e_resource				resourceFromName(const String &name);
 };
 
 #endif

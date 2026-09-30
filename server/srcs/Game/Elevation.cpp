@@ -1,6 +1,6 @@
 #include "Elevation.hpp"
 
-const s_elevation_req Elevation::__requirements[7] = {
+const ElevationReq Elevation::__requirements[7] = {
 	{1, 1, 1, 0, 0, 0, 0, 0},
 	{2, 2, 1, 1, 1, 0, 0, 0},
 	{3, 2, 2, 0, 1, 0, 2, 0},
@@ -14,7 +14,7 @@ bool Elevation::canElevate(int currentLevel, const Tile &tile, int sameLevelCoun
 {
 	if (currentLevel < 1 || currentLevel > 7)
 		return false;
-	const s_elevation_req &req = __requirements[currentLevel - 1];
+	const ElevationReq &req = __requirements[currentLevel - 1];
 	if (sameLevelCount < req.players_needed)
 		return false;
 	if (tile.getResource(LINEMATE) < req.linemate)
@@ -36,7 +36,7 @@ void Elevation::consumeStones(int currentLevel, Tile &tile)
 {
 	if (currentLevel < 1 || currentLevel > 7)
 		return;
-	const s_elevation_req &req = __requirements[currentLevel - 1];
+	const ElevationReq &req = __requirements[currentLevel - 1];
 	for (int i = 0; i < req.linemate; i++)
 		tile.removeResource(LINEMATE);
 	for (int i = 0; i < req.deraumere; i++)

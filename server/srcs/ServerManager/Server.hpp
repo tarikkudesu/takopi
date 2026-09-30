@@ -16,7 +16,7 @@ class Server
 		String							__host;
 		
 	protected:
-		e_type							__type;
+		Type							__type;
 		bool							__portSet;
 		t_svec							__directives;
 
@@ -29,7 +29,7 @@ class Server
 		virtual void					proccessToken( t_svec &tokens ) = 0;
 		virtual void					furtherSetup() = 0;
 
-		Server(e_type type);
+		Server(Type type);
 		Server( const Server &copy ) = delete;
 		Server	&operator=( const Server &assign ) = delete;
 
@@ -41,7 +41,7 @@ class Server
 		String							serverIdentity() const;
 		int								getServerPort() const;
 		void							setPort(int port);
-		const e_type					&getType() const;
+		const Type						&getType() const;
 
 		virtual ~Server();
 };

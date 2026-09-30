@@ -115,7 +115,7 @@ unsigned long ConnectionGui::getEventCursor() const
 	return __eventCursor;
 }
 
-void ConnectionGui::queueGameEvent(const s_gui_event &event)
+void ConnectionGui::queueGameEvent(const GuiEvent &event)
 {
 	if (!isReady() || event.sequence <= __eventCursor)
 		return;

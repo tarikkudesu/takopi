@@ -9,7 +9,7 @@ class ConnectionGui : public Connection
 {
 	private :
 		Game							*__game;
-		t_gui_connection_state			__state;
+		GuiConnectionState				__state;
 		unsigned long					__eventCursor;
 
 		void							processMessage(const String &message);
@@ -25,7 +25,7 @@ class ConnectionGui : public Connection
 		bool							isClosing() const;
 		unsigned long					getEventCursor() const;
 		String							getCurrentGameState() const;
-		void							queueGameEvent(const s_gui_event &event);
+		void							queueGameEvent(const GuiEvent &event);
 
 		ConnectionGui( Server *server, Game *game );
 		~ConnectionGui();

@@ -258,7 +258,7 @@ void Core::processConsoleInput()
 			if (Core::__consoleDiscarding)
 			{
 				mzu::warn("local administration command rejected: command exceeds maximum allowed size");
-				std::cout << "ERR command exceeds maximum allowed size\n" << ADMIN_PROMPT << std::flush;
+				std::cout << "ERR command exceeds maximum allowed size" NEWLINE << ADMIN_PROMPT << std::flush;
 			}
 			else
 				Core::processConsoleCommand(Core::__consoleBuffer);
@@ -457,7 +457,7 @@ void Core::processConnections()
 
 void Core::dispatchGameNotifications(Game *game)
 {
-	const std::vector<s_notification> &notifications = game->getNotifications();
+	const std::vector<Notification> &notifications = game->getNotifications();
 
 	for (size_t i = 0; i < notifications.size(); i++)
 	{
@@ -550,7 +550,7 @@ void Core::broadcastGuiEvents(Game *game)
 {
 	if (!game)
 		return;
-	const std::vector<s_gui_event> &events = game->getGuiEvents();
+	const std::vector<GuiEvent> &events = game->getGuiEvents();
 	for (t_Connections::iterator it = __connections.begin(); it != __connections.end(); it++)
 	{
 		ConnectionGui *connection = dynamic_cast<ConnectionGui *>(it->second);
@@ -627,12 +627,12 @@ void Core::mainLoop()
  *                             ADMINISTRATION                            *
  *************************************************************************/
 
-String Core::executeGameCommand(t_command type, const t_svec &args)
+String Core::executeGameCommand(CommandType type, const t_svec &args)
 {
 	Game *game = Core::getGame();
 
     if (!game)
-		return ADMIN_ERR "Game is not initialized.\n";
+		return ADMIN_ERR "Game is not initialized." NEWLINE;
     return game->executeAdminCommand(type, args);
 }
 
@@ -647,29 +647,29 @@ String Core::executeAdminCommand(const String &command)
     if (args.empty())
         return "";
 
-    t_command type = CommandParser::parseCommandType(command);
+    CommandType type = CommandParser::parseCommandType(command);
     switch (type)
     {
 		case CMD_ADMIN_HELP:
 			if (args.size() != 1)
 				return ADMIN_ERR "Usage: help";
-			return "Available commands:\n"
-				"  resize <width> <height>\n"
-				"      Resize the map of a running game.\n"
-				"  time <value>\n"
-				"      Change the time unit of a running game.\n";
+			return "Available commands:" NEWLINE
+				"  resize <width> <height>" NEWLINE
+				"      Resize the map of a running game." NEWLINE
+				"  time <value>" NEWLINE
+				"      Change the time unit of a running game." NEWLINE;
 
         case CMD_ADMIN_RESIZE:
 			if (args.size() != 3)
-				return ADMIN_ERR "Usage: resize <width> <height>\n";
+				return ADMIN_ERR "Usage: resize <width> <height>" NEWLINE;
 			return Core::executeGameCommand(type, args);
 
         case CMD_ADMIN_RETIME:
 			if (args.size() != 2)
-				return ADMIN_ERR "Usage: time <value>\n";
+				return ADMIN_ERR "Usage: time <value>" NEWLINE;
 			return Core::executeGameCommand(type, args);
 
         default:
-            return ADMIN_ERR "Unknown command. Type 'help' for available commands.\n";
+            return ADMIN_ERR "Unknown command. Type 'help' for available commands." NEWLINE;
     }
 }

@@ -6,11 +6,11 @@
 class Elevation
 {
 	private:
-		static const s_elevation_req		__requirements[7];
+		static const ElevationReq			__requirements[7];
 
 		Elevation() = delete;
 		Elevation(const Elevation &copy) = delete;
-		Elevation						&operator=(const Elevation &assign) = delete;
+		Elevation	&operator=(const Elevation &assign) = delete;
 		~Elevation() = delete;
 
 	public:

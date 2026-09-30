@@ -44,12 +44,15 @@ typedef std::vector<String> t_svec;
 #define PLAYER_DEATH_MESSAGE			"mort" NEWLINE
 
 #define NEWLINE							"\n"
+#define KO								"ko" NEWLINE
+#define OK								"ok" NEWLINE
 #define ADMIN_OK						GREEN  "[OK]"	RESET " "
 #define ADMIN_ERR						RED    "[ERR]"	RESET " "
 #define ADMIN_INFO						BLUE   "[INFO]" RESET " "
 #define ADMIN_WARN						YELLOW "[WARN]" RESET " "
 #define ADMIN_PROMPT					GREEN "➜ " CYAN "zappy " RED "admin" YELLOW " ✗ " RESET
 #define PRINTABLE						" \t\n\r\v\f0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~"
+#define WHITESPACE						" \t\n\r\v\f"
 
 #define INITIAL_FOOD					10
 #define FOOD_LIFE_UNITS					99999
@@ -70,7 +73,7 @@ typedef enum e_resource
 	PHIRAS = 5,
 	THYSTAME = 6,
 	RESOURCE_COUNT = 7
-} t_resource;
+} Resource;
 
 typedef enum e_direction
 {
@@ -78,27 +81,60 @@ typedef enum e_direction
 	EAST,
 	SOUTH,
 	WEST
-} t_direction;
+} Direction;
+
+typedef enum e_protocol_verb
+{
+	PROTOCOL_WELCOME,
+	PROTOCOL_GRAPHIC,
+	PROTOCOL_MSZ,
+	PROTOCOL_BCT,
+	PROTOCOL_MCT,
+	PROTOCOL_TNA,
+	PROTOCOL_PNW,
+	PROTOCOL_PPO,
+	PROTOCOL_PLV,
+	PROTOCOL_PIN,
+	PROTOCOL_PEX,
+	PROTOCOL_PBC,
+	PROTOCOL_PIC,
+	PROTOCOL_PIE,
+	PROTOCOL_PFK,
+	PROTOCOL_PDR,
+	PROTOCOL_PGT,
+	PROTOCOL_PDI,
+	PROTOCOL_ENW,
+	PROTOCOL_EHT,
+	PROTOCOL_EBO,
+	PROTOCOL_EDI,
+	PROTOCOL_SGT,
+	PROTOCOL_SST,
+	PROTOCOL_SEG,
+	PROTOCOL_SMG,
+	PROTOCOL_SUC,
+	PROTOCOL_SBP,
+	PROTOCOL_UNKNOWN
+} ProtocoleVerb;
 
 typedef enum e_player_state
 {
 	PLAYER_HANDSHAKE = 0,
 	PLAYER_ALIVE,
 	PLAYER_DEAD
-} t_player_state;
+} PlayerState;
 
 typedef enum e_game_state
 {
 	GAME_RUNNING,
 	GAME_ENDING
-} t_game_state;
+} GameState;
 
 typedef enum e_gui_connection_state
 {
 	GUI_WAITING_HANDSHAKE,
 	GUI_READY,
 	GUI_CLOSING
-} t_gui_connection_state;
+} GuiConnectionState;
 
 typedef enum e_admin_connection_state
 {
@@ -107,20 +143,20 @@ typedef enum e_admin_connection_state
 	ADMIN_READY,
 	ADMIN_CLOSING,
 	ADMIN_FAILED
-} t_admin_connection_state;
+} AdminConnectionState;
 
 typedef enum e_egg_state
 {
 	EGG_INCUBATING,
 	EGG_HATCHED
-} t_egg_state;
+} EggState;
 
 typedef enum e_type
 {
 	GAME = 0,
 	GUI,
 	ADMIN
-} t_type;
+} Type;
 
 typedef enum e_tls_operation
 {
@@ -128,13 +164,13 @@ typedef enum e_tls_operation
 	TLS_OPERATION_READ,
 	TLS_OPERATION_WRITE,
 	TLS_OPERATION_HANDSHAKE
-} t_tls_operation;
+} TLSOperation;
 
 typedef enum e_tls_wait
 {
 	TLS_WAIT_READ,
 	TLS_WAIT_WRITE
-} t_tls_wait;
+} TLSWait;
 
 typedef enum e_command
 {
@@ -154,7 +190,7 @@ typedef enum e_command
 	CMD_ADMIN_RESIZE,
 	CMD_ADMIN_RETIME,
 	CMD_UNKNOWN,
-} t_command;
+} CommandType;
 
 typedef struct s_elevation_req
 {
@@ -166,19 +202,19 @@ typedef struct s_elevation_req
     int mendiane;
     int phiras;
     int thystame;
-} t_elevation_req;
+} ElevationReq;
 
 typedef struct s_notification
 {
 	int playerId;
 	String message;
-} t_notification;
+} Notification;
 
 typedef struct s_gui_event
 {
 	unsigned long sequence;
 	String payload;
-} t_gui_event;
+} GuiEvent;
 
 typedef struct s_incantation_context
 {
@@ -186,6 +222,6 @@ typedef struct s_incantation_context
 	int y;
 	int level;
 	std::vector<int> playerIds;
-} t_incantation_context;
+} IncantationContext;
 
 #endif

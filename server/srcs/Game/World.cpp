@@ -7,7 +7,7 @@
 # define M_PI 3.14159265358979323846
 #endif
 
-static double resourceDensity(e_resource resource)
+static double resourceDensity(Resource resource)
 {
 	switch (resource)
 	{
@@ -112,7 +112,7 @@ void World::resize(int width, int height)
 			if (y < __height && x < __width)
 			{
 				for (int r = 0; r < RESOURCE_COUNT; r++)
-					tile.addResource(static_cast<e_resource>(r), __map[y][x].getResource(static_cast<e_resource>(r)));
+					tile.addResource(static_cast<Resource>(r), __map[y][x].getResource(static_cast<Resource>(r)));
 			}
 			map[y].push_back(tile);
 		}
@@ -140,7 +140,7 @@ void World::populateResources()
 		{
 			for (int r = 0; r < RESOURCE_COUNT; r++)
 			{
-				e_resource resource = static_cast<e_resource>(r);
+				Resource resource = static_cast<Resource>(r);
 				double roll = static_cast<double>(rand()) / RAND_MAX;
 				if (roll < resourceDensity(resource))
 					__map[y][x].addResource(resource, 1);
@@ -188,7 +188,7 @@ String World::buildVisionString(const Player &player) const
  *                      BROADCAST DIRECTION                              *
  *************************************************************************/
 
-int World::broadcastDirection(int fromX, int fromY, int toX, int toY, e_direction facing) const
+int World::broadcastDirection(int fromX, int fromY, int toX, int toY, Direction facing) const
 {
 	int dx = fromX - toX;
 	int dy = fromY - toY;
@@ -232,12 +232,4 @@ int World::broadcastDirection(int fromX, int fromY, int toX, int toY, e_directio
 	if (square > 8)
 		square = 1;
 	return square;
-}
-
-/*************************************************************************
- *                    TEMPORARY RAYLIB DISPLAY                           *
- *************************************************************************/
-
-void World::display() const
-{
 }

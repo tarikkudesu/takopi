@@ -4,7 +4,7 @@ Command::Command() : __type(CMD_UNKNOWN), __executionTime(0), __playerId(-1)
 {
 }
 
-Command::Command(t_command type, const String &argument, long executionTime, int playerId)
+Command::Command(CommandType type, const String &argument, long executionTime, int playerId)
 	: __type(type), __argument(argument), __executionTime(executionTime), __playerId(playerId)
 {
 }
@@ -20,8 +20,8 @@ Command &Command::operator=(const Command &assign)
 	{
 		__type = assign.__type;
 		__argument = assign.__argument;
-		__executionTime = assign.__executionTime;
 		__playerId = assign.__playerId;
+		__executionTime = assign.__executionTime;
 	}
 	return *this;
 }
@@ -30,7 +30,7 @@ Command::~Command()
 {
 }
 
-t_command Command::getType() const
+CommandType Command::getType() const
 {
 	return __type;
 }
@@ -50,7 +50,7 @@ int Command::getPlayerId() const
 	return __playerId;
 }
 
-int Command::durationForCommand(t_command type)
+int Command::durationForCommand(CommandType type)
 {
 	switch (type)
 	{

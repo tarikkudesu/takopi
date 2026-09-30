@@ -38,7 +38,7 @@ void ServerManager::readFile()
 		size_t pos = line.find("# ");
 		if (pos != std::string::npos)
 			line = line.substr(0, pos);
-		if (line.empty() || String::npos == line.find_first_not_of(" \t\n\r\v\f"))
+		if (line.empty() || String::npos == line.find_first_not_of(WHITESPACE))
 			continue;
 		this->__lines.append(line);
 		this->__lines.append(" ");
@@ -50,7 +50,7 @@ void ServerManager::readFile()
 }
 void ServerManager::firstCheck()
 {
-	if (__lines.empty() || String::npos == __lines.find_first_not_of(" \t\n\r\v\f"))
+	if (__lines.empty() || String::npos == __lines.find_first_not_of(WHITESPACE))
 		throw std::runtime_error("empty configuration file");
 	if (String::npos == __lines.find_first_of("{}"))
 		throw std::runtime_error("invalid configuration file");
@@ -76,7 +76,7 @@ void ServerManager::checkBraces()
 }
 void ServerManager::reduceSpaces()
 {
-	std::string result;
+	String result;
 	bool inSpace = false;
 
 	for (size_t i = 0; i < __lines.length(); i++)
@@ -155,7 +155,7 @@ void ServerManager::setUpServers()
 	do
 	{
 		size_t pos = this->__lines.find("{");
-		if (pos == String::npos && __lines.find_first_not_of(" \t\n\r\v\f") != String::npos)
+		if (pos == String::npos && __lines.find_first_not_of(WHITESPACE) != String::npos)
 			throw std::runtime_error("invalid configuration file");
 		else if (pos == String::npos)
 			break;

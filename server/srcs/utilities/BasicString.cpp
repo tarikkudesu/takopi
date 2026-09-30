@@ -106,9 +106,9 @@ BasicString BasicString::substr(size_t start, size_t length)
 		length = __size - start;
 	return BasicString(__buff + start, length);
 }
-std::string BasicString::to_string() const
+String BasicString::to_string() const
 {
-	std::string result;
+	String result;
 	result.reserve(__size);
 	for (size_t i = 0; i < __size; i++)
 		result += __buff[i];

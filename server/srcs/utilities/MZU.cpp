@@ -11,7 +11,7 @@ std::ofstream mzu::__logFile;
  *											   LOGS 											*
  ************************************************************************************************/
 
-void mzu::logs(const std::vector<String> &args)
+void mzu::logs(const t_svec &args)
 {
 	mzu::__logFile.open("zappy.log", std::ios::out | std::ios::trunc);
 	if (!mzu::__logFile.is_open())
@@ -20,7 +20,7 @@ void mzu::logs(const std::vector<String> &args)
 		exit(EXIT_FAILURE);
 	}
 	mzu::__logFile << std::unitbuf;
-	for (std::vector<String>::const_iterator it = args.begin(); it != args.end(); it++)
+	for (t_svec::const_iterator it = args.begin(); it != args.end(); it++)
 	{
 		if (*it == "debug")
 			mzu::__debug = true;
@@ -118,11 +118,11 @@ void mzu::trimSpaces(String &str)
 	else
 		str = str.substr(start, end - start + 1);
 }
-std::vector<String> mzu::splitBySpaces(const String &input)
+t_svec mzu::splitBySpaces(const String &input)
 {
 	String word;
 	std::istringstream iss(input);
-	std::vector<String> result;
+	t_svec result;
 	while (iss >> word)
 		result.push_back(word);
 	return result;

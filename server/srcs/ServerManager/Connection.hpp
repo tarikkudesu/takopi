@@ -9,7 +9,7 @@ class Connection
 {
 	protected:
 		int								__sd;
-		e_type							__type;
+		Type							__type;
 		BasicString						__buffer;
 		Server							*__server;
 		std::queue< BasicString >		__responseQueue;
@@ -22,9 +22,9 @@ class Connection
 		
 
 	public:
-		Server							*getServer() const;
 		void							processData();
-		e_type							getType() const;
+		Type							getType() const;
+		Server							*getServer() const;
 		void							setSocket( int sd );
 		int								getConnectionSocket();
 		void							addData(const BasicString &input);

@@ -20,7 +20,7 @@ class mzu
 		~mzu() = delete;
 
 	public:
-		static void logs(const std::vector<std::string> &args);
+		static void logs(const t_svec &args);
 		static void debug(String __log_message);
 		static void info(String __log_message);
 		static void warn(String __log_message);
@@ -35,7 +35,7 @@ class mzu
 		static void bzero(void *s, size_t n);
 		static String intToString(int number);
 		static long stringToInt(const String &str);
-		static std::vector<String> splitBySpaces(const String &input);
+		static t_svec splitBySpaces(const String &input);
 };
 
 #endif

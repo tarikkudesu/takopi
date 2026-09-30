@@ -12,7 +12,7 @@ class Egg
 		int								__teamIndex;
 		int								__parentPlayerId;
 		long							__hatchTime;
-		t_egg_state						__state;
+		EggState						__state;
 
 	public:
 		Egg();
@@ -24,7 +24,7 @@ class Egg
 		int								getX() const;
 		int								getY() const;
 		int								getId() const;
-		t_egg_state						getState() const;
+		EggState						getState() const;
 		bool							isHatched() const;
 		int								getTeamIndex() const;
 		int								getParentPlayerId() const;

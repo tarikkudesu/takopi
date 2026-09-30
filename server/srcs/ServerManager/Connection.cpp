@@ -22,7 +22,7 @@ int Connection::getConnectionSocket()
 	return __sd;
 }
 
-e_type	Connection::getType() const
+Type	Connection::getType() const
 {
 	return __type;
 }

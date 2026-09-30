@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-Server::Server(e_type type) : 	__sd(-1),
+Server::Server(Type type) : 	__sd(-1),
 				   				__port(-1),
 				   				__host(DEFAULT_HOST),
 				   				__type(type),
@@ -35,7 +35,7 @@ const String &Server::getServerHost() const
 {
 	return this->__host;
 }
-const e_type &Server::getType() const
+const Type &Server::getType() const
 {
 	return this->__type;
 }
@@ -128,7 +128,7 @@ void Server::parseServerDirectives(String line)
 	do
 	{
 		size_t pos = line.find_first_of(";{");
-		if (pos == String::npos && line.find_first_not_of(" \t\n\r\v\f") != String::npos)
+		if (pos == String::npos && line.find_first_not_of(WHITESPACE) != String::npos)
 			throw std::runtime_error("invalid block: expected \";\" at the end of each directive");
 		if (pos == String::npos)
 			break;

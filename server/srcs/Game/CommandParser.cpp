@@ -1,6 +1,6 @@
 #include "CommandParser.hpp"
 
-t_command CommandParser::parseCommandType(const String &input)
+CommandType CommandParser::parseCommandType(const String &input)
 {
 	String cmd = input;
 	size_t space = cmd.find(' ');
@@ -33,7 +33,7 @@ String CommandParser::parseArgument(const String &input)
 	return input.substr(space + 1);
 }
 
-e_resource CommandParser::resourceFromName(const String &name)
+Resource CommandParser::resourceFromName(const String &name)
 {
 	if (name == "sibur")		return SIBUR;
 	if (name == "phiras")		return PHIRAS;

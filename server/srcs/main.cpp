@@ -15,9 +15,11 @@ int main(int ac, char **av)
 		exit(EXIT_FAILURE);
 	signal(SIGINT, signalHandler);
 	signal(SIGPIPE, signalHandler);
-	std::vector<String> args;
+
+	t_svec args;
 	for (int i = 1; i < ac; ++i)
 		args.push_back(String(av[i]));
+
 	bool success = false;
 	{
 		mzu::logs(args);
