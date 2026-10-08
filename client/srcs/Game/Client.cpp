@@ -12,6 +12,7 @@ Client::Client(const String &team, const String &host, int port)
 	  __state(HS_WAIT_WELCOME), __hasPending(false), __incantationPending(false)
 {
 	mzu::debug("Client constructor");
+	__strategy.setTeamName(team);
 }
 Client::Client(const Client &copy) : __port(-1), __worldWidth(0), __worldHeight(0),
 	__state(HS_WAIT_WELCOME), __hasPending(false), __incantationPending(false)
@@ -187,6 +188,7 @@ void Client::handlePlayingLine(const String &line)
 	if (Protocol::parseBroadcast(line, direction, text))
 	{
 		mzu::info("heard from direction " + mzu::intToString(direction) + ": " + text);
+		__strategy.applyBroadcast(direction, text);
 		return;
 	}
 	if (Protocol::parseDeplacement(line, direction))

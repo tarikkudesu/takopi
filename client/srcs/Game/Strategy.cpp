@@ -1,20 +1,28 @@
 #include "Strategy.hpp"
 #include "../utilities/MZU.hpp"
+#include <cstdlib>
+#include <ctime>
+#include <cmath>
 
-static const int RESOURCE_STOCKPILE_CAP = 10;
 static const e_resource STONES[] = {LINEMATE, DERAUMERE, SIBUR, MENDIANE, PHIRAS, THYSTAME};
 static const size_t STONE_COUNT = sizeof(STONES) / sizeof(STONES[0]);
 
 Strategy::Strategy() : __level(1), __hasInventory(false), __hasVision(false),
-						__ticksSinceInventory(INVENTORY_POLL_INTERVAL)
+						__ticksSinceInventory(999), __teamName(""), __lastBaseDirection(-1),
+						__broadcastTimer(0), __phase(0)
 {
 	for (int i = 0; i < RESOURCE_COUNT; i++)
 		__inventory[i] = 0;
+	srand(time(NULL) ^ (long)this);
+	__myId = rand() % 1000000;
+	__baseId = __myId;
 }
+
 Strategy::Strategy(const Strategy &copy)
 {
 	*this = copy;
 }
+
 Strategy &Strategy::operator=(const Strategy &assign)
 {
 	if (this != &assign)
@@ -26,21 +34,29 @@ Strategy &Strategy::operator=(const Strategy &assign)
 		__hasVision = assign.__hasVision;
 		__ticksSinceInventory = assign.__ticksSinceInventory;
 		__vision = assign.__vision;
+		__teamName = assign.__teamName;
+		__myId = assign.__myId;
+		__baseId = assign.__baseId;
+		__lastBaseDirection = assign.__lastBaseDirection;
+		__broadcastTimer = assign.__broadcastTimer;
+		__phase = assign.__phase;
 	}
 	return *this;
 }
+
 Strategy::~Strategy()
 {
+}
+
+void Strategy::setTeamName(const String &team)
+{
+	__teamName = team;
 }
 
 int Strategy::getLevel() const
 {
 	return __level;
 }
-
-/****************************************************************************
- *								STATE UPDATES								*
- ****************************************************************************/
 
 void Strategy::applyVision(const String &rawLine)
 {
@@ -70,11 +86,7 @@ void Strategy::applyLevel(int level)
 
 void Strategy::applyPrendResult(e_resource resource, bool ok)
 {
-	if (!ok)
-	{
-		invalidateVision();
-		return;
-	}
+	if (!ok) { invalidateVision(); return; }
 	__inventory[resource]++;
 	if (__hasVision && !__vision.empty() && __vision[0].resources[resource] > 0)
 		__vision[0].resources[resource]--;
@@ -82,17 +94,28 @@ void Strategy::applyPrendResult(e_resource resource, bool ok)
 
 void Strategy::applyPoseResult(e_resource resource, bool ok)
 {
-	if (!ok)
-		return;
-	if (__inventory[resource] > 0)
-		__inventory[resource]--;
-	if (__hasVision && !__vision.empty())
-		__vision[0].resources[resource]++;
+	if (!ok) return;
+	if (__inventory[resource] > 0) __inventory[resource]--;
+	if (__hasVision && !__vision.empty()) __vision[0].resources[resource]++;
 }
 
-/****************************************************************************
- *							ELEVATION HELPERS								*
- ****************************************************************************/
+void Strategy::applyBroadcast(int direction, const String &text)
+{
+	t_svec tokens = mzu::splitBySpaces(text);
+	if (tokens.size() >= 2 && tokens[0] == __teamName)
+	{
+		int id = mzu::stringToInt(tokens[1]);
+		if (id > __baseId)
+		{
+			__baseId = id;
+			__lastBaseDirection = direction;
+		}
+		else if (id == __baseId)
+		{
+			__lastBaseDirection = direction;
+		}
+	}
+}
 
 bool Strategy::tileHasEnough(const t_tile_content &tile, const s_elevation_req &req) const
 {
@@ -104,130 +127,158 @@ bool Strategy::tileHasEnough(const t_tile_content &tile, const s_elevation_req &
 	return true;
 }
 
-e_resource Strategy::firstUnsatisfiedNeed(const t_tile_content &tile, const s_elevation_req &req) const
-{
-	for (size_t i = 0; i < STONE_COUNT; i++)
-	{
-		if (tile.resources[STONES[i]] < Elevation::requiredAmount(req, STONES[i]))
-			return STONES[i];
-	}
-	return RESOURCE_COUNT;
-}
-
-e_resource Strategy::anyStockpileableStone(const t_tile_content &tile, const s_elevation_req &req) const
-{
-	for (size_t i = 0; i < STONE_COUNT; i++)
-	{
-		/* Only take genuine surplus: a stone this level still needs must be
-		 * left in place once the ground holds just enough of it, otherwise
-		 * we'd pick up and re-lay the same pile forever while some other
-		 * requirement stays unmet. */
-		if (tile.resources[STONES[i]] > Elevation::requiredAmount(req, STONES[i])
-			&& __inventory[STONES[i]] < RESOURCE_STOCKPILE_CAP)
-			return STONES[i];
-	}
-	return RESOURCE_COUNT;
-}
-
-int Strategy::findNearestTileWithResource(e_resource type) const
-{
-	for (size_t i = 1; i < __vision.size(); i++)
-	{
-		if (__vision[i].resources[type] > 0)
-			return static_cast<int>(i);
-	}
-	return -1;
-}
-
-/****************************************************************************
- *								MOVEMENT										*
- ****************************************************************************/
-
-/* The vision string lists tile 0 (ourselves), then each ring of the field of
- * view outward; ring i holds tiles (2i+1) wide, so ring i starts at flat
- * index i*i. Recovering (ring, side-offset) from a flat index tells us
- * whether the target is dead ahead or off to one side. */
 String Strategy::stepToward(size_t tileIndex) const
 {
 	int idx = static_cast<int>(tileIndex);
 	int ring = static_cast<int>(std::sqrt(static_cast<double>(idx)));
-	while (ring * ring > idx)
-		ring--;
-	while ((ring + 1) * (ring + 1) <= idx)
-		ring++;
+	while (ring * ring > idx) ring--;
+	while ((ring + 1) * (ring + 1) <= idx) ring++;
 	int side = (idx - ring * ring) - ring;
 
-	if (side < 0)
-		return "gauche";
-	if (side > 0)
-		return "droite";
+	if (side < 0) return "gauche";
+	if (side > 0) return "droite";
+	return "avance";
+}
+
+String Strategy::stepDirection(int direction) const
+{
+	if (direction == 1) return "avance";
+	if (direction == 2 || direction == 3 || direction == 4) return "gauche";
+	if (direction == 5) return "gauche"; // Turn around
+	if (direction == 6 || direction == 7 || direction == 8) return "droite";
 	return "avance";
 }
 
 String Strategy::wander() const
 {
-	if (rand() % 6 == 0)
-		return (rand() % 2 == 0) ? "droite" : "gauche";
+	if (rand() % 6 == 0) return (rand() % 2 == 0) ? "droite" : "gauche";
 	return "avance";
 }
 
-/****************************************************************************
- *								DECISION MAKING								*
- ****************************************************************************/
-
 String Strategy::decideNextCommand()
 {
-	if (!__hasVision)
-		return "voir";
-	if (!__hasInventory)
-		return "inventaire";
-	if (__ticksSinceInventory >= INVENTORY_POLL_INTERVAL)
+	if (!__hasVision) return "voir";
+	if (!__hasInventory || __ticksSinceInventory >= 20)
 	{
-		__ticksSinceInventory = 0;
+		if (__hasInventory) __ticksSinceInventory = 0;
 		return "inventaire";
 	}
 	__ticksSinceInventory++;
 
+	if (__level >= WIN_LEVEL) return wander();
+
+	// Broadcast periodically
+	if (++__broadcastTimer >= 3)
+	{
+		__broadcastTimer = 0;
+		return "broadcast " + __teamName + " " + mzu::intToString(__myId);
+	}
+
 	const t_tile_content &here = __vision[0];
 
-	if (here.resources[NOURRITURE] > 0 && __inventory[NOURRITURE] < RESOURCE_STOCKPILE_CAP)
+	// Survival override
+	if (__inventory[NOURRITURE] < 10 && here.resources[NOURRITURE] > 0)
 		return "prend " + Protocol::resourceName(NOURRITURE);
 
-	if (__inventory[NOURRITURE] < FOOD_SAFETY_THRESHOLD)
+	// Phase management
+	if (__phase == 0 && __inventory[NOURRITURE] >= 35)
+		__phase = 1;
+	else if (__phase == 1 && __inventory[NOURRITURE] < 15)
+		__phase = 0;
+
+	if (__phase == 0)
 	{
-		int target = findNearestTileWithResource(NOURRITURE);
-		if (target > 0)
-			return stepToward(static_cast<size_t>(target));
+		// FORAGE phase: pick up food and stones
+		if (here.resources[NOURRITURE] > 0)
+			return "prend " + Protocol::resourceName(NOURRITURE);
+		for (size_t i = 0; i < STONE_COUNT; i++)
+		{
+			if (here.resources[STONES[i]] > 0)
+				return "prend " + Protocol::resourceName(STONES[i]);
+		}
+		// Move to nearest food if visible
+		for (size_t i = 1; i < __vision.size(); i++)
+		{
+			if (__vision[i].resources[NOURRITURE] > 0)
+				return stepToward(i);
+		}
 		return wander();
 	}
-
-	if (__level < WIN_LEVEL)
+	else
 	{
-		const s_elevation_req &req = Elevation::getRequirement(__level);
+		// GROUP phase
+		bool isBase = (__myId == __baseId);
 
-		if (tileHasEnough(here, req))
+		if (isBase)
 		{
+			// Base behavior: check incantation
+			const s_elevation_req &req = Elevation::getRequirement(__level);
 			if (here.players >= req.players_needed)
-				return "incantation";
-			/* Resources are already piled up; just watch for teammates to
-			 * join rather than picking the pile back apart. */
-			return "voir";
-		}
+			{
+				if (tileHasEnough(here, req))
+					return "incantation";
+			}
+			
+			// Drop all stones on the ground
+			for (size_t i = 0; i < STONE_COUNT; i++)
+			{
+				if (__inventory[STONES[i]] > 0)
+					return "pose " + Protocol::resourceName(STONES[i]);
+			}
+			
+			// Stay alive and take dropped food from workers
+			if (here.resources[NOURRITURE] > 0 && __inventory[NOURRITURE] < 80)
+				return "prend " + Protocol::resourceName(NOURRITURE);
 
-		e_resource need = firstUnsatisfiedNeed(here, req);
-		if (need != RESOURCE_COUNT)
+			return "voir"; // Just wait
+		}
+		else
 		{
-			if (__inventory[need] > 0)
-				return "pose " + Protocol::resourceName(need);
-			int target = findNearestTileWithResource(need);
-			if (target > 0)
-				return stepToward(static_cast<size_t>(target));
+			// Worker behavior: go to base
+			if (__lastBaseDirection > 0)
+			{
+				String cmd = stepDirection(__lastBaseDirection);
+				if (cmd == "gauche")
+				{
+					__lastBaseDirection -= 2;
+					if (__lastBaseDirection <= 0) __lastBaseDirection += 8;
+				}
+				else if (cmd == "droite")
+				{
+					__lastBaseDirection += 2;
+					if (__lastBaseDirection > 8) __lastBaseDirection -= 8;
+				}
+				else if (cmd == "avance")
+				{
+					// If we advance, we shouldn't necessarily keep advancing blindly forever
+					// Invalidate it so we wait for the next broadcast, which is very frequent (every 3 actions)
+					__lastBaseDirection = -1;
+				}
+				return cmd;
+			}
+			else if (__lastBaseDirection == 0)
+			{
+				// At base: drop all stones
+				for (size_t i = 0; i < STONE_COUNT; i++)
+				{
+					if (__inventory[STONES[i]] > 0)
+						return "pose " + Protocol::resourceName(STONES[i]);
+				}
+				
+				// Drop excess food to feed base
+				if (__inventory[NOURRITURE] > 25)
+				{
+					return "pose " + Protocol::resourceName(NOURRITURE);
+				}
+				
+				// Just wait at base for incantation
+				return "voir";
+			}
+			else
+			{
+				// No base known yet, just wait or wander?
+				return wander();
+			}
 		}
-
-		e_resource stray = anyStockpileableStone(here, req);
-		if (stray != RESOURCE_COUNT)
-			return "prend " + Protocol::resourceName(stray);
 	}
-
-	return wander();
 }

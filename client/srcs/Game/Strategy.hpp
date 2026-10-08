@@ -4,10 +4,6 @@
 #include "Protocol.hpp"
 #include "Elevation.hpp"
 
-/*************************************************************************
- *                    REACTIVE SURVIVE-AND-ELEVATE AI                    *
- *************************************************************************/
-
 class Strategy
 {
 	private:
@@ -18,12 +14,18 @@ class Strategy
 		int								__ticksSinceInventory;
 		std::vector<t_tile_content>	__vision;
 
+		String							__teamName;
+		int								__myId;
+		int								__baseId;
+		int								__lastBaseDirection;
+		int								__broadcastTimer;
+		int								__phase; // 0 = FORAGE, 1 = GROUP
+		int								__stonesToDrop; // bitmask or just state
+
 		String							wander() const;
 		String							stepToward( size_t tileIndex ) const;
+		String							stepDirection( int direction ) const;
 		bool							tileHasEnough( const t_tile_content &tile, const s_elevation_req &req ) const;
-		e_resource						firstUnsatisfiedNeed( const t_tile_content &tile, const s_elevation_req &req ) const;
-		e_resource						anyStockpileableStone( const t_tile_content &tile, const s_elevation_req &req ) const;
-		int								findNearestTileWithResource( e_resource type ) const;
 
 	public:
 		Strategy();
@@ -31,6 +33,7 @@ class Strategy
 		Strategy						&operator=( const Strategy &assign );
 		~Strategy();
 
+		void							setTeamName(const String &team);
 		String							decideNextCommand();
 
 		void							applyVision( const String &rawLine );
@@ -39,6 +42,7 @@ class Strategy
 		void							applyPrendResult( e_resource resource, bool ok );
 		void							applyPoseResult( e_resource resource, bool ok );
 		void							invalidateVision();
+		void							applyBroadcast( int direction, const String &text );
 
 		int								getLevel() const;
 };
