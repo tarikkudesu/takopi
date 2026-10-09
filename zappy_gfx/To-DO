@@ -1,0 +1,8 @@
+** => object goes out of scope or is deleted, this runs automatically. Here it closes the socket if one's open — 
+this is the C++ idiom called RAII (Resource Acquisition Is Initialization):
+** => std::string outBuffer_;
+
+** => Because your program has a graphical interface. You don't want the rendering loop to freeze while waiting for the socket to become writable.
+
+With this timeout, select() performs a poll: it checks the socket's current readiness and returns without waiting for it to become writable.
+
