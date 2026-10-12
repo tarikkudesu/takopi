@@ -6,27 +6,34 @@
 #    By: tamehri <tamehri@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/09/03 23:50:00 by ooulcaid          #+#    #+#              #
-#    Updated: 2026/09/05 16:28:02 by tamehri          ###   ########.fr        #
+#    Updated: 2026/10/11 13:11:00 by ooulcaid         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # ==============================================================================
-#                               COMPILER & FLAGS
+#                               COMPILERS & FLAGS
 # ==============================================================================
 CXX				= g++
-CXXFLAGS		= -Wall -Wextra -Werror -std=c++11 -g -O0 -fsanitize=address
+CXXFLAGS		= -Wall -Wextra -Werror -std=c++11 -g -O0 -MMD -MP
+CXXFLAGS_GFX	= -Wall -Wextra -std=c++17 -O2 -MMD -MP -Izappy_gfx/src
+
+CC				= gcc
+CFLAGS			= -O2 -Wall
 
 CLIENT_INCLUDES	= -Iclient/srcs -Iclient
 SERVER_INCLUDES	= -Iserver/srcs -Iserver/raylib -Iserver
 
 CLIENT_LDFLAGS	=
-SERVER_LDFLAGS	= -lssl -lcrypto -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+SERVER_LDFLAGS	= -lssl -lcrypto
+RAYLIB_LDFLAGS	= -lGL -lm -lpthread -ldl -lrt -lX11
 
 # ==============================================================================
 #                               TARGET NAMES
 # ==============================================================================
 SERVER_NAME		= server/server
 CLIENT_NAME		= client/client
+GUI_TEST_NAME	= gui-test/zappy_gui
+GFX_NAME		= zappy_gfx/gfx
 
 OBJ_DIR			= objs
 
@@ -39,6 +46,10 @@ CLIENT_SRCS		= client/main.cpp \
 				  client/srcs/Network/Connection.cpp \
 				  client/srcs/Game/Elevation.cpp \
 				  client/srcs/Game/Protocol.cpp \
+				  client/srcs/Game/BroadcastMessenger.cpp \
+				  client/srcs/Game/SoundNavigator.cpp \
+				  client/srcs/Game/ElevationManager.cpp \
+				  client/srcs/Game/StrategyStates.cpp \
 				  client/srcs/Game/Strategy.cpp \
 				  client/srcs/Game/Client.cpp
 
@@ -49,6 +60,11 @@ CLIENT_HEADERS	= client/srcs/zappy.hpp \
 				  client/srcs/Network/Connection.hpp \
 				  client/srcs/Game/Elevation.hpp \
 				  client/srcs/Game/Protocol.hpp \
+				  client/srcs/Game/BroadcastMessenger.hpp \
+				  client/srcs/Game/SoundNavigator.hpp \
+				  client/srcs/Game/ElevationManager.hpp \
+				  client/srcs/Game/IState.hpp \
+				  client/srcs/Game/StrategyStates.hpp \
 				  client/srcs/Game/Strategy.hpp \
 				  client/srcs/Game/Client.hpp
 
@@ -71,7 +87,6 @@ SERVER_SRCS		= server/srcs/main.cpp \
 				  server/srcs/Game/Player.cpp \
 				  server/srcs/Game/Tile.cpp \
 				  server/srcs/Game/World.cpp \
-				  server/srcs/Game/WorldDisplay.cpp \
 				  server/srcs/ServerManager/ServerAdmin.cpp \
 				  server/srcs/ServerManager/Core.cpp \
 				  server/srcs/ServerManager/ServerGame.cpp \
@@ -92,7 +107,6 @@ SERVER_HEADERS	= server/srcs/zappy.hpp \
 				  server/srcs/Game/CommandParser.hpp \
 				  server/srcs/Game/Elevation.hpp \
 				  server/srcs/Game/World.hpp \
-				  server/srcs/Game/WorldDisplay.hpp \
 				  server/srcs/Game/Game.hpp \
 				  server/srcs/ServerManager/Connection.hpp \
 				  server/srcs/ServerManager/ConnectionAdmin.hpp \
@@ -108,11 +122,39 @@ SERVER_HEADERS	= server/srcs/zappy.hpp \
 SERVER_OBJS		= $(addprefix $(OBJ_DIR)/, $(SERVER_SRCS:.cpp=.o))
 
 # ==============================================================================
+#                               GFX (3D CLIENT) SOURCES
+# ==============================================================================
+GFX_SRCS		:= $(shell find zappy_gfx/src -name '*.cpp' 2>/dev/null)
+GFX_OBJS		:= $(addprefix $(OBJ_DIR)/, $(GFX_SRCS:.cpp=.o))
+GFX_DEPS		:= $(GFX_OBJS:.o=.d)
+
+# ==============================================================================
 #                                   RULES
 # ==============================================================================
-all: $(SERVER_NAME) $(CLIENT_NAME)
+all: $(SERVER_NAME) $(CLIENT_NAME) $(GUI_TEST_NAME)
 
-# Client compilation
+# 1. Server Rule
+server: $(SERVER_NAME)
+
+certs/server.crt:
+	@mkdir -p server/certs certs
+	@openssl req -x509 -newkey rsa:2048 -keyout server/certs/server.key -out server/certs/server.crt -days 365 -nodes -subj "/CN=127.0.0.1" -addext "subjectAltName=IP:127.0.0.1,DNS:localhost"
+	@cp server/certs/server.* certs/
+	@echo "Generated server certificates in server/certs/ and certs/"
+
+certs: certs/server.crt
+
+$(SERVER_NAME): $(SERVER_OBJS) | certs/server.crt
+	@mkdir -p $(dir $@)
+	@$(CXX) $(CXXFLAGS) $(SERVER_OBJS) -o $(SERVER_NAME) $(SERVER_LDFLAGS)
+	@echo "Successfully compiled server: $(SERVER_NAME)"
+
+$(OBJ_DIR)/%.o: %.cpp
+	@mkdir -p $(dir $@)
+	@$(CXX) $(CXXFLAGS) $(SERVER_INCLUDES) $(CLIENT_INCLUDES) -c $< -o $@
+	@echo "Compiled $<"
+
+# 2. AI Client Rule
 client: $(CLIENT_NAME)
 
 $(CLIENT_NAME): $(CLIENT_OBJS)
@@ -120,47 +162,48 @@ $(CLIENT_NAME): $(CLIENT_OBJS)
 	@$(CXX) $(CXXFLAGS) $(CLIENT_OBJS) -o $(CLIENT_NAME) $(CLIENT_LDFLAGS)
 	@echo "Successfully compiled client: $(CLIENT_NAME)"
 
-$(OBJ_DIR)/client/%.o: client/%.cpp $(CLIENT_HEADERS)
+# 3. GUI Test Client Rule (gui-test/zappy_gui)
+gui: $(GUI_TEST_NAME)
+
+$(GUI_TEST_NAME): gui-test/zappy_gui.c server/raylib/libraylib.a
 	@mkdir -p $(dir $@)
-	@$(CXX) $(CXXFLAGS) $(CLIENT_INCLUDES) -c $< -o $@
+	@$(CC) $(CFLAGS) -o $(GUI_TEST_NAME) gui-test/zappy_gui.c \
+		-Iserver/raylib server/raylib/libraylib.a $(RAYLIB_LDFLAGS)
+	@echo "Successfully compiled GUI test client: $(GUI_TEST_NAME)"
+
+# 4. GFX 3D Client Rule (zappy_gfx/gfx)
+gfx: $(GFX_NAME)
+
+$(GFX_NAME): $(GFX_OBJS)
+	@mkdir -p $(dir $@)
+	@$(CXX) $(GFX_OBJS) -o $(GFX_NAME) $(RAYLIB_LDFLAGS)
+	@echo "Successfully compiled GFX client: $(GFX_NAME)"
+
+$(OBJ_DIR)/zappy_gfx/%.o: zappy_gfx/%.cpp
+	@mkdir -p $(dir $@)
+	@$(CXX) $(CXXFLAGS_GFX) -c $< -o $@
 	@echo "Compiled $<"
 
-# Server compilation
-server: $(SERVER_NAME)
+-include $(GFX_DEPS)
 
-gfx: $(SERVER_NAME)
-
-$(SERVER_NAME): $(SERVER_OBJS)
-	@mkdir -p $(dir $@)
-	@$(CXX) $(CXXFLAGS) $(SERVER_OBJS) -o $(SERVER_NAME) $(SERVER_LDFLAGS)
-	@echo "Successfully compiled server: $(SERVER_NAME)"
-
-$(OBJ_DIR)/server/%.o: server/%.cpp $(SERVER_HEADERS)
-	@mkdir -p $(dir $@)
-	@$(CXX) $(CXXFLAGS) $(SERVER_INCLUDES) -c $< -o $@
-	@echo "Compiled $<"
-
-# Helper rules
-bonus: all
-
-certs:
-	@mkdir -p server/certs
-	@openssl req -x509 -newkey rsa:2048 -keyout server/certs/server.key -out server/certs/server.crt -days 365 -nodes -subj "/CN=127.0.0.1" -addext "subjectAltName=IP:127.0.0.1,DNS:localhost"
-	@echo "Generated server certificates in server/certs/"
+# Helper Rules
+bonus: all gfx
 
 connect:
-	@ncat --ssl --ssl-verify --ssl-trustfile server/certs/server.crt localhost 4243
+	@ncat --ssl --ssl-verify --ssl-trustfile certs/server.crt localhost 9001
 
-# Cleanup rules
+# Cleanup Rules
 clean:
-	@rm -rf $(OBJ_DIR)
+	@rm -rf $(OBJ_DIR) zappy_gfx/obj
 	@rm -f $(CLIENT_SRCS:.cpp=.o) $(SERVER_SRCS:.cpp=.o)
 	@echo "Cleaned all object files."
 
 fclean: clean
-	@rm -f $(SERVER_NAME) $(CLIENT_NAME) server/zappy
-	@echo "Cleaned all executables."
+	@rm -rf $(SERVER_NAME) server/zappy $(CLIENT_NAME) $(GUI_TEST_NAME) $(GFX_NAME)
+	@rm -rf certs server/certs logs
+	@rm -f *.log server/*.log client/*.log
+	@echo "Cleaned all executables, certificates, and log files."
 
 re: fclean all
 
-.PHONY: clean certs connect
+.PHONY: all server client gui gfx bonus certs connect clean fclean re
