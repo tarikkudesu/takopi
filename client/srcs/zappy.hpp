@@ -31,10 +31,10 @@ typedef std::vector<String> t_svec;
 
 #define SELECT_TIMEOUT 5000
 
-#define READ_SIZE 1024
-#define MAX_MESSAGE_SIZE 1024
+#define READ_SIZE 8192
+#define MAX_MESSAGE_SIZE 65536
 
-#define DEFAULT_HOST "localhost"
+#define DEFAULT_HOST "127.0.0.1"
 
 #define NEWLINE "\n"
 

@@ -15,7 +15,7 @@ mzu::~mzu() {}
 
 void mzu::debug(String __log_message)
 {
-	(void)__log_message;
+	std::cout << BLUE << mzu::logDate() << " [DEBUG] " << RESET << __log_message << std::endl;
 }
 void mzu::info(String __log_message)
 {

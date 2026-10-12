@@ -40,6 +40,8 @@ int main(int ac, char **av)
 
 	signal(SIGINT, signalHandler);
 	signal(SIGPIPE, SIG_IGN);
+	std::cout << std::unitbuf;
+	std::cerr << std::unitbuf;
 
 	try
 	{

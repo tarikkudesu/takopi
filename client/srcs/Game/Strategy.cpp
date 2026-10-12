@@ -1,25 +1,33 @@
 #include "Strategy.hpp"
+#include "StrategyStates.hpp"
 #include "../utilities/MZU.hpp"
 #include <cstdlib>
 #include <ctime>
-#include <cmath>
-
-static const e_resource STONES[] = {LINEMATE, DERAUMERE, SIBUR, MENDIANE, PHIRAS, THYSTAME};
-static const size_t STONE_COUNT = sizeof(STONES) / sizeof(STONES[0]);
+#include <unistd.h>
 
 Strategy::Strategy() : __level(1), __hasInventory(false), __hasVision(false),
-						__ticksSinceInventory(999), __teamName(""), __lastBaseDirection(-1),
-						__broadcastTimer(0), __phase(0)
+						__ticksSinceInventory(999), __teamName(""),
+						__forked(false), __eggsLaidCount(0), __targetLeaderId(-1),
+						__targetLeaderDirection(-1), __targetLeaderLevel(-1),
+						__leaderHeartbeat(0), __broadcastTimer(0), __gatherTimeout(0),
+						__gatherWaitTicks(0), __consecutiveTurns(0), __consecutiveAdvances(0), __totalTeamEggs(0),
+						__eggLaidAtThisLevel(false)
 {
 	for (int i = 0; i < RESOURCE_COUNT; i++)
 		__inventory[i] = 0;
-	srand(time(NULL) ^ (long)this);
-	__myId = rand() % 1000000;
-	__baseId = __myId;
+	for (int i = 0; i <= WIN_LEVEL; i++)
+	{
+		__activeLeaderForLevel[i] = -1;
+		__lastOfferTick[i] = 999;
+	}
+	srand(static_cast<unsigned int>(time(NULL) ^ (getpid() << 16) ^ (long)this));
+	__myId = rand() % 900000 + 100000;
+	initStates();
 }
 
 Strategy::Strategy(const Strategy &copy)
 {
+	initStates();
 	*this = copy;
 }
 
@@ -36,27 +44,165 @@ Strategy &Strategy::operator=(const Strategy &assign)
 		__vision = assign.__vision;
 		__teamName = assign.__teamName;
 		__myId = assign.__myId;
-		__baseId = assign.__baseId;
-		__lastBaseDirection = assign.__lastBaseDirection;
+		__forked = assign.__forked;
+		__targetLeaderId = assign.__targetLeaderId;
+		__targetLeaderDirection = assign.__targetLeaderDirection;
+		__targetLeaderLevel = assign.__targetLeaderLevel;
+		__leaderHeartbeat = assign.__leaderHeartbeat;
 		__broadcastTimer = assign.__broadcastTimer;
-		__phase = assign.__phase;
+		__gatherTimeout = assign.__gatherTimeout;
+		__gatherWaitTicks = assign.__gatherWaitTicks;
+		__messenger = assign.__messenger;
+		__currentState = __stateSolo;
 	}
 	return *this;
 }
 
 Strategy::~Strategy()
 {
+	cleanupStates();
 }
+
+void Strategy::initStates()
+{
+	__stateSolo = new StateSolo();
+	__stateSurvive = new StateSurvive();
+	__stateForage = new StateForage();
+	__stateLeaderGather = new StateLeaderGather();
+	__stateJoinLeader = new StateJoinLeader();
+	__stateIncanting = new StateIncanting();
+	__currentState = __stateSolo;
+}
+
+void Strategy::cleanupStates()
+{
+	delete __stateSolo; __stateSolo = NULL;
+	delete __stateSurvive; __stateSurvive = NULL;
+	delete __stateForage; __stateForage = NULL;
+	delete __stateLeaderGather; __stateLeaderGather = NULL;
+	delete __stateJoinLeader; __stateJoinLeader = NULL;
+	delete __stateIncanting; __stateIncanting = NULL;
+}
+
+void Strategy::transitionTo(IState *newState)
+{
+	if (newState)
+		__currentState = newState;
+}
+
+IState* Strategy::getStateSolo() const { return __stateSolo; }
+IState* Strategy::getStateSurvive() const { return __stateSurvive; }
+IState* Strategy::getStateForage() const { return __stateForage; }
+IState* Strategy::getStateLeaderGather() const { return __stateLeaderGather; }
+IState* Strategy::getStateJoinLeader() const { return __stateJoinLeader; }
+IState* Strategy::getStateIncanting() const { return __stateIncanting; }
+IState* Strategy::getCurrentState() const { return __currentState; }
 
 void Strategy::setTeamName(const String &team)
 {
 	__teamName = team;
+	__messenger.setTeam(team);
 }
 
-int Strategy::getLevel() const
+int Strategy::getLevel() const { return __level; }
+int Strategy::getMyId() const { return __myId; }
+const int* Strategy::getInventory() const { return __inventory; }
+const std::vector<t_tile_content>& Strategy::getVision() const { return __vision; }
+bool Strategy::hasVision() const { return __hasVision; }
+bool Strategy::isForked() const { return __forked; }
+void Strategy::setForked(bool f) { __forked = f; }
+int Strategy::getTeamSizeEstimate() const
 {
-	return __level;
+	return 1 + static_cast<int>(__knownTeammates.size()) + __totalTeamEggs;
 }
+
+bool Strategy::canLayEgg() const
+{
+	// Strict hard cap of 8 team members total!
+	if (getTeamSizeEstimate() >= 8)
+		return false;
+	if (__eggLaidAtThisLevel)
+		return false;
+	return true;
+}
+
+void Strategy::recordEggLaid()
+{
+	__eggsLaidCount++;
+	__totalTeamEggs++;
+	__eggLaidAtThisLevel = true;
+}
+
+int Strategy::getEggsLaidCount() const { return __eggsLaidCount; }
+void Strategy::addKnownTeammate(int id) { if (id != __myId) __knownTeammates.insert(id); }
+
+bool Strategy::hasActiveLeaderForLevel(int level) const
+{
+	if (level < 1 || level > WIN_LEVEL) return false;
+	return (__activeLeaderForLevel[level] != -1 && __lastOfferTick[level] < 40);
+}
+
+int Strategy::getActiveLeaderForLevel(int level) const
+{
+	if (level < 1 || level > WIN_LEVEL) return -1;
+	return __activeLeaderForLevel[level];
+}
+
+void Strategy::setActiveLeaderForLevel(int level, int leaderId)
+{
+	if (level >= 1 && level <= WIN_LEVEL)
+	{
+		__activeLeaderForLevel[level] = leaderId;
+		__lastOfferTick[level] = 0;
+	}
+}
+int Strategy::getConfirmedFollowersCount() const
+{
+	int count = 0;
+	for (std::map<int, int>::const_iterator it = __confirmedFollowersTick.begin(); it != __confirmedFollowersTick.end(); ++it)
+	{
+		if (it->second < 15)
+			count++;
+	}
+	return count;
+}
+
+void Strategy::addConfirmedFollower(int id) { __confirmedFollowersTick[id] = 0; }
+void Strategy::clearConfirmedFollowers() { __confirmedFollowersTick.clear(); }
+int Strategy::getTargetLeaderId() const { return __targetLeaderId; }
+void Strategy::setTargetLeaderId(int id) { __targetLeaderId = id; }
+int Strategy::getTargetLeaderDirection() const { return __targetLeaderDirection; }
+void Strategy::setTargetLeaderDirection(int dir) { __targetLeaderDirection = dir; }
+int Strategy::getLeaderHeartbeat() const { return __leaderHeartbeat; }
+void Strategy::resetLeaderHeartbeat() { __leaderHeartbeat = 0; }
+int Strategy::incrementLeaderHeartbeat() { return ++__leaderHeartbeat; }
+int Strategy::incrementBroadcastTimer() { return ++__broadcastTimer; }
+void Strategy::resetBroadcastTimer() { __broadcastTimer = 0; }
+int Strategy::getGatherTimeout() const { return __gatherTimeout; }
+void Strategy::resetGatherTimeout() { __gatherTimeout = 0; }
+int Strategy::incrementGatherTimeout() { return ++__gatherTimeout; }
+int Strategy::getGatherWaitTicks() const { return __gatherWaitTicks; }
+void Strategy::resetGatherWaitTicks() { __gatherWaitTicks = 0; }
+int Strategy::incrementGatherWaitTicks() { return ++__gatherWaitTicks; }
+int Strategy::getConsecutiveTurns() const { return __consecutiveTurns; }
+void Strategy::incrementConsecutiveTurns() { __consecutiveTurns++; }
+void Strategy::resetConsecutiveTurns() { __consecutiveTurns = 0; }
+String Strategy::getQueuedCommand() const
+{
+	return __queuedCommands.empty() ? "" : __queuedCommands.front();
+}
+void Strategy::setQueuedCommand(const String &cmd)
+{
+	__queuedCommands.clear();
+	if (!cmd.empty())
+		__queuedCommands.push_back(cmd);
+}
+void Strategy::queueCommand(const String &cmd)
+{
+	if (!cmd.empty())
+		__queuedCommands.push_back(cmd);
+}
+BroadcastMessenger& Strategy::getMessenger() { return __messenger; }
 
 void Strategy::applyVision(const String &rawLine)
 {
@@ -80,205 +226,215 @@ void Strategy::applyInventory(const String &rawLine)
 
 void Strategy::applyLevel(int level)
 {
-	__level = level;
-	mzu::info("level up: now level " + mzu::intToString(level));
+	if (level > __level)
+	{
+		__level = level;
+		mzu::info("LEVEL UP! Now level " + mzu::intToString(level));
+		transitionTo(__stateForage);
+		__targetLeaderId = -1;
+		__targetLeaderDirection = -1;
+		__targetLeaderLevel = -1;
+		__leaderHeartbeat = 0;
+		__gatherWaitTicks = 0;
+		__forked = false; // Allow reproducing if stuck at a future level!
+		clearConfirmedFollowers();
+	}
 }
 
 void Strategy::applyPrendResult(e_resource resource, bool ok)
 {
 	if (!ok) { invalidateVision(); return; }
-	__inventory[resource]++;
-	if (__hasVision && !__vision.empty() && __vision[0].resources[resource] > 0)
-		__vision[0].resources[resource]--;
+	if (resource >= 0 && resource < RESOURCE_COUNT)
+	{
+		__inventory[resource]++;
+		if (__hasVision && !__vision.empty() && __vision[0].resources[resource] > 0)
+			__vision[0].resources[resource]--;
+	}
 }
 
 void Strategy::applyPoseResult(e_resource resource, bool ok)
 {
 	if (!ok) return;
-	if (__inventory[resource] > 0) __inventory[resource]--;
-	if (__hasVision && !__vision.empty()) __vision[0].resources[resource]++;
+	if (resource >= 0 && resource < RESOURCE_COUNT)
+	{
+		if (__inventory[resource] > 0)
+			__inventory[resource]--;
+		if (__hasVision && !__vision.empty())
+			__vision[0].resources[resource]++;
+	}
 }
 
 void Strategy::applyBroadcast(int direction, const String &text)
 {
-	t_svec tokens = mzu::splitBySpaces(text);
-	if (tokens.size() >= 2 && tokens[0] == __teamName)
+	s_parsed_msg msg;
+	if (!__messenger.parse(text, msg))
+		return;
+
+	addKnownTeammate(msg.senderId);
+
+	if (msg.cmd == MSG_EGG)
 	{
-		int id = mzu::stringToInt(tokens[1]);
-		if (id > __baseId)
+		__totalTeamEggs++;
+		mzu::info("Teammate " + mzu::intToString(msg.senderId) + " laid an egg. Team size estimate: " + mzu::intToString(getTeamSizeEstimate()));
+		return;
+	}
+
+	if (msg.cmd == MSG_HERE)
+	{
+		if (direction == 0 && msg.targetLevel == __level && msg.leaderId == __myId)
 		{
-			__baseId = id;
-			__lastBaseDirection = direction;
+			addConfirmedFollower(msg.senderId);
+			mzu::info("Follower " + mzu::intToString(msg.senderId) + " confirmed on tile! Total confirmed: " + mzu::intToString(getConfirmedFollowersCount() + 1));
 		}
-		else if (id == __baseId)
+		return;
+	}
+
+	if (msg.targetLevel != __level)
+		return;
+
+	if (msg.cmd == MSG_OFFER)
+	{
+		setActiveLeaderForLevel(msg.targetLevel, msg.senderId);
+		if (__currentState == __stateForage && msg.slotsNeeded > 0)
 		{
-			__lastBaseDirection = direction;
+			bool hasFoodSafe = (__inventory[NOURRITURE] >= 6);
+			if (hasFoodSafe)
+			{
+				transitionTo(__stateJoinLeader);
+				__targetLeaderId = msg.senderId;
+				__targetLeaderDirection = direction;
+				__targetLeaderLevel = msg.targetLevel;
+				__leaderHeartbeat = 0;
+				mzu::info("Joining Leader " + mzu::intToString(msg.senderId) + " for Lvl " + mzu::intToString(__level) + " (dir=" + mzu::intToString(direction) + ")");
+			}
+		}
+		else if (__currentState == __stateJoinLeader)
+		{
+			if (__targetLeaderId == msg.senderId)
+			{
+				if (msg.slotsNeeded == 0 && direction != 0 && __targetLeaderDirection != 0)
+				{
+					mzu::info("Leader slots full and I am not on tile. Returning to forage.");
+					transitionTo(__stateForage);
+					__targetLeaderId = -1;
+					__targetLeaderDirection = -1;
+					return;
+				}
+				__targetLeaderDirection = direction;
+				__leaderHeartbeat = 0;
+			}
+			else if (msg.senderId > __targetLeaderId && msg.slotsNeeded > 0)
+			{
+				mzu::info("Switching to higher ID Leader " + mzu::intToString(msg.senderId));
+				__targetLeaderId = msg.senderId;
+				__targetLeaderDirection = direction;
+				__targetLeaderLevel = msg.targetLevel;
+				__leaderHeartbeat = 0;
+			}
+		}
+		else if (__currentState == __stateLeaderGather && msg.senderId > __myId && msg.slotsNeeded > 0)
+		{
+			mzu::info("Yielding leadership to higher ID " + mzu::intToString(msg.senderId));
+			transitionTo(__stateJoinLeader);
+			__targetLeaderId = msg.senderId;
+			__targetLeaderDirection = direction;
+			__targetLeaderLevel = msg.targetLevel;
+			__leaderHeartbeat = 0;
 		}
 	}
-}
-
-bool Strategy::tileHasEnough(const t_tile_content &tile, const s_elevation_req &req) const
-{
-	for (size_t i = 0; i < STONE_COUNT; i++)
+	else if (msg.cmd == MSG_FULL || msg.cmd == MSG_INCANT)
 	{
-		if (tile.resources[STONES[i]] < Elevation::requiredAmount(req, STONES[i]))
-			return false;
+		if (__targetLeaderId == msg.senderId)
+		{
+			if (direction == 0 || __targetLeaderDirection == 0)
+			{
+				mzu::info("Leader announced ritual ready; standing by on tile for elevation en cours.");
+			}
+			else if (__currentState == __stateJoinLeader)
+			{
+				mzu::info("Leader announced FULL but I am not on tile. Returning to forage.");
+				transitionTo(__stateForage);
+				__targetLeaderId = -1;
+				__targetLeaderDirection = -1;
+			}
+		}
 	}
-	return true;
-}
-
-String Strategy::stepToward(size_t tileIndex) const
-{
-	int idx = static_cast<int>(tileIndex);
-	int ring = static_cast<int>(std::sqrt(static_cast<double>(idx)));
-	while (ring * ring > idx) ring--;
-	while ((ring + 1) * (ring + 1) <= idx) ring++;
-	int side = (idx - ring * ring) - ring;
-
-	if (side < 0) return "gauche";
-	if (side > 0) return "droite";
-	return "avance";
-}
-
-String Strategy::stepDirection(int direction) const
-{
-	if (direction == 1) return "avance";
-	if (direction == 2 || direction == 3 || direction == 4) return "gauche";
-	if (direction == 5) return "gauche"; // Turn around
-	if (direction == 6 || direction == 7 || direction == 8) return "droite";
-	return "avance";
-}
-
-String Strategy::wander() const
-{
-	if (rand() % 6 == 0) return (rand() % 2 == 0) ? "droite" : "gauche";
-	return "avance";
+	else if (msg.cmd == MSG_ABORT)
+	{
+		if (__targetLeaderId == msg.senderId)
+		{
+			transitionTo(__stateForage);
+			__targetLeaderId = -1;
+			__targetLeaderDirection = -1;
+		}
+	}
 }
 
 String Strategy::decideNextCommand()
 {
-	if (!__hasVision) return "voir";
+	for (int i = 0; i <= WIN_LEVEL; i++)
+		__lastOfferTick[i]++;
+	for (std::map<int, int>::iterator it = __confirmedFollowersTick.begin(); it != __confirmedFollowersTick.end(); ++it)
+		it->second++;
+
+	if (!__queuedCommands.empty())
+	{
+		String next = __queuedCommands.front();
+		__queuedCommands.erase(__queuedCommands.begin());
+		return next;
+	}
+
+	if (!__hasVision)
+		return "voir";
+
 	if (!__hasInventory || __ticksSinceInventory >= 20)
 	{
-		if (__hasInventory) __ticksSinceInventory = 0;
+		if (__hasInventory)
+			__ticksSinceInventory = 0;
 		return "inventaire";
 	}
 	__ticksSinceInventory++;
 
-	if (__level >= WIN_LEVEL) return wander();
+	if (__level >= WIN_LEVEL)
+		return SoundNavigator::wander(this);
 
-	// Broadcast periodically
-	if (++__broadcastTimer >= 3)
+	// Critical survival check
+	if (__inventory[NOURRITURE] < 9 && __currentState != __stateIncanting)
+		transitionTo(__stateSurvive);
+
+	// Delegate directly to the current state!
+	if (__currentState)
 	{
-		__broadcastTimer = 0;
-		return "broadcast " + __teamName + " " + mzu::intToString(__myId);
-	}
-
-	const t_tile_content &here = __vision[0];
-
-	// Survival override
-	if (__inventory[NOURRITURE] < 10 && here.resources[NOURRITURE] > 0)
-		return "prend " + Protocol::resourceName(NOURRITURE);
-
-	// Phase management
-	if (__phase == 0 && __inventory[NOURRITURE] >= 35)
-		__phase = 1;
-	else if (__phase == 1 && __inventory[NOURRITURE] < 15)
-		__phase = 0;
-
-	if (__phase == 0)
-	{
-		// FORAGE phase: pick up food and stones
-		if (here.resources[NOURRITURE] > 0)
-			return "prend " + Protocol::resourceName(NOURRITURE);
-		for (size_t i = 0; i < STONE_COUNT; i++)
+		String cmd = __currentState->execute(this);
+		if (cmd == "droite" || cmd == "gauche")
 		{
-			if (here.resources[STONES[i]] > 0)
-				return "prend " + Protocol::resourceName(STONES[i]);
-		}
-		// Move to nearest food if visible
-		for (size_t i = 1; i < __vision.size(); i++)
-		{
-			if (__vision[i].resources[NOURRITURE] > 0)
-				return stepToward(i);
-		}
-		return wander();
-	}
-	else
-	{
-		// GROUP phase
-		bool isBase = (__myId == __baseId);
-
-		if (isBase)
-		{
-			// Base behavior: check incantation
-			const s_elevation_req &req = Elevation::getRequirement(__level);
-			if (here.players >= req.players_needed)
+			__consecutiveAdvances = 0;
+			incrementConsecutiveTurns();
+			if (getConsecutiveTurns() >= 3)
 			{
-				if (tileHasEnough(here, req))
-					return "incantation";
+				resetConsecutiveTurns();
+				return "avance"; // Force a forward step to break turn oscillation
 			}
-			
-			// Drop all stones on the ground
-			for (size_t i = 0; i < STONE_COUNT; i++)
+		}
+		else if (cmd == "avance")
+		{
+			resetConsecutiveTurns();
+			__consecutiveAdvances++;
+			// Avoid moving in a straight line forever:
+			// After 3-4 forward moves in FORAGE, alternate with a turn to sweep the wide vision cone!
+			if (__currentState == __stateForage && __consecutiveAdvances >= (3 + (rand() % 2)))
 			{
-				if (__inventory[STONES[i]] > 0)
-					return "pose " + Protocol::resourceName(STONES[i]);
+				__consecutiveAdvances = 0;
+				setQueuedCommand("avance");
+				return (rand() % 2 == 0) ? "droite" : "gauche";
 			}
-			
-			// Stay alive and take dropped food from workers
-			if (here.resources[NOURRITURE] > 0 && __inventory[NOURRITURE] < 80)
-				return "prend " + Protocol::resourceName(NOURRITURE);
-
-			return "voir"; // Just wait
 		}
 		else
 		{
-			// Worker behavior: go to base
-			if (__lastBaseDirection > 0)
-			{
-				String cmd = stepDirection(__lastBaseDirection);
-				if (cmd == "gauche")
-				{
-					__lastBaseDirection -= 2;
-					if (__lastBaseDirection <= 0) __lastBaseDirection += 8;
-				}
-				else if (cmd == "droite")
-				{
-					__lastBaseDirection += 2;
-					if (__lastBaseDirection > 8) __lastBaseDirection -= 8;
-				}
-				else if (cmd == "avance")
-				{
-					// If we advance, we shouldn't necessarily keep advancing blindly forever
-					// Invalidate it so we wait for the next broadcast, which is very frequent (every 3 actions)
-					__lastBaseDirection = -1;
-				}
-				return cmd;
-			}
-			else if (__lastBaseDirection == 0)
-			{
-				// At base: drop all stones
-				for (size_t i = 0; i < STONE_COUNT; i++)
-				{
-					if (__inventory[STONES[i]] > 0)
-						return "pose " + Protocol::resourceName(STONES[i]);
-				}
-				
-				// Drop excess food to feed base
-				if (__inventory[NOURRITURE] > 25)
-				{
-					return "pose " + Protocol::resourceName(NOURRITURE);
-				}
-				
-				// Just wait at base for incantation
-				return "voir";
-			}
-			else
-			{
-				// No base known yet, just wait or wander?
-				return wander();
-			}
+			resetConsecutiveTurns();
 		}
+		return cmd;
 	}
+
+	return "voir";
 }

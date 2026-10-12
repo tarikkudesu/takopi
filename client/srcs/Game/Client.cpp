@@ -89,6 +89,8 @@ void Client::run()
 			else
 				handlePlayingLine(line);
 		}
+		if (__connection.hasPendingOutput() && !__connection.writeSocket())
+			break;
 	}
 }
 
@@ -194,11 +196,15 @@ void Client::handlePlayingLine(const String &line)
 	if (Protocol::parseDeplacement(line, direction))
 	{
 		mzu::info("kicked, came from direction " + mzu::intToString(direction));
+		__strategy.invalidateVision();
 		return;
 	}
 	if (Protocol::isElevationEnCours(line))
 	{
 		mzu::info("incantation started");
+		__incantationPending = true;
+		__hasPending = false;
+		__strategy.transitionTo(__strategy.getStateIncanting());
 		return;
 	}
 	if (Protocol::parseNiveauActuel(line, level))
@@ -207,17 +213,26 @@ void Client::handlePlayingLine(const String &line)
 		 * whoever triggered it, so this can arrive with no incantation of
 		 * our own in flight. */
 		__strategy.applyLevel(level);
-		if (__incantationPending)
-		{
-			__incantationPending = false;
-			sendNextCommand();
-		}
+		__incantationPending = false;
+		__hasPending = false;
+		sendNextCommand();
 		return;
 	}
 	if (__incantationPending)
 	{
 		mzu::info("incantation failed: " + line);
 		__incantationPending = false;
+		__hasPending = false;
+		__strategy.transitionTo(__strategy.getStateForage());
+		sendNextCommand();
+		return;
+	}
+
+	if (line == "ko" && __strategy.getCurrentState() == __strategy.getStateIncanting())
+	{
+		mzu::info("follower received ko during incantation; returning to forage");
+		__strategy.transitionTo(__strategy.getStateForage());
+		__hasPending = false;
 		sendNextCommand();
 		return;
 	}
@@ -248,6 +263,7 @@ void Client::handleGenericReply(const String &line)
 		case CMD_AVANCE:
 		case CMD_DROITE:
 		case CMD_GAUCHE:
+		case CMD_EXPULSE:
 			__strategy.invalidateVision();
 			break;
 		case CMD_CONNECT_NBR:
