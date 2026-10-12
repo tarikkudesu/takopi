@@ -34,8 +34,8 @@ typedef std::vector<String> t_svec;
 
 #define SELECT_TIMEOUT					1000
 #define MAX_EVENTS						1024
-#define READ_SIZE						1024
-#define MAX_MESSAGE_SIZE				1024
+#define READ_SIZE						8192
+#define MAX_MESSAGE_SIZE				65536
 #define MAX_ADMIN_AUTH_FAILURES			3
 
 #define DEFAULT_HOST					"0.0.0.0"

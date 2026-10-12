@@ -149,6 +149,30 @@ void World::populateResources()
 	}
 }
 
+void World::spawnResources()
+{
+	for (int r = 0; r < RESOURCE_COUNT; r++)
+	{
+		Resource res = static_cast<Resource>(r);
+		int targetCount = static_cast<int>(resourceDensity(res) * __width * __height);
+		if (targetCount < 1)
+			targetCount = 1;
+		int currentCount = 0;
+		for (int y = 0; y < __height; y++)
+		{
+			for (int x = 0; x < __width; x++)
+				currentCount += __map[y][x].getResource(res);
+		}
+		while (currentCount < targetCount)
+		{
+			int rx = rand() % __width;
+			int ry = rand() % __height;
+			__map[ry][rx].addResource(res, 1);
+			currentCount++;
+		}
+	}
+}
+
 /*************************************************************************
  *                         FIELD OF VIEW                                 *
  *************************************************************************/

@@ -30,7 +30,9 @@ class Game
 		std::map<int, int>						__teamSlots;
 		std::map<int, IncantationContext>		__incantations;
 		unsigned long							__nextGuiEventSequence;
+		long									__lastSpawnTick;
 
+		bool									isPlayerInIncantation(int playerId) const;
 		void									checkVictory();
 		void									processFood(long currentTick);
 		void									processEggs(long currentTick);
