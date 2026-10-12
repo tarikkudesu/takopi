@@ -251,7 +251,7 @@ String Protocole::resourceTaken(int playerId, Resource resource)
 
 String Protocole::playerBroadcast(int playerId, const String &message)
 {
-	return verb(PROTOCOL_PBC) + " #" + mzu::intToString(playerId) + " " + message + NEWLINE;
+	return verb(PROTOCOL_PBC) + " #" + mzu::intToString(playerId) + "," + message + NEWLINE;
 }
 
 String Protocole::playerExpelled(int playerId)

@@ -410,7 +410,7 @@ void Core::proccessSelectEvent(int sd, fd_set &readSet, fd_set &writeSet, int &r
 			retV--;
 		}
 	}
-	else if (FD_ISSET(sd, &writeSet))
+	if (FD_ISSET(sd, &writeSet))
 	{
 		writeDataToSocket(sd);
 		retV--;
@@ -589,11 +589,11 @@ void Core::mainLoop()
 	Core::up = true;
 	try
 	{
-		struct timeval tv;
-		tv.tv_usec = SELECT_TIMEOUT;
-		tv.tv_sec = 0;
 		while (Core::up && Core::hasGameServer())
 		{
+			struct timeval tv;
+			tv.tv_sec = 0;
+			tv.tv_usec = SELECT_TIMEOUT;
 			int maxFd = Core::buildSets(readSet, writeSet);
 			retV = select(maxFd + 1, &readSet, &writeSet, NULL, &tv);
 			if (retV < 0)
@@ -602,10 +602,8 @@ void Core::mainLoop()
 					continue;
 				throw std::runtime_error("select syscall failed");
 			}
-			for (int sd = 0; sd <= maxFd && retV > 0; sd++)
+			for (int sd = 0; sd <= maxFd; sd++)
 			{
-				if (Core::__criticalOverload == true)
-					retV = maxFd + 1;
 				Core::proccessSelectEvent(sd, readSet, writeSet, retV);
 			}
 			Core::mainProcess();

@@ -44,6 +44,7 @@ void Game::init(int width, int height, const t_svec &teams, int clientsPerTeam, 
 	__activeCommands.clear();
 	__pendingCommands.clear();
 	__nextGuiEventSequence = 1;
+	__lastSpawnTick = 0;
 	__timeUnit = timeUnit;
 	__tickOffset = 0;
 	__teams = teams;
@@ -106,6 +107,11 @@ void Game::tick()
 	processFood(currentTick);
 	processEggs(currentTick);
 	processCommands(currentTick);
+	if (currentTick - __lastSpawnTick >= 20)
+	{
+		__world.spawnResources();
+		__lastSpawnTick = currentTick;
+	}
 	checkVictory();
 }
 
@@ -148,6 +154,19 @@ void Game::processEggs(long currentTick)
 	}
 }
 
+bool Game::isPlayerInIncantation(int playerId) const
+{
+	for (std::map<int, IncantationContext>::const_iterator it = __incantations.begin(); it != __incantations.end(); ++it)
+	{
+		for (size_t i = 0; i < it->second.playerIds.size(); i++)
+		{
+			if (it->second.playerIds[i] == playerId)
+				return true;
+		}
+	}
+	return false;
+}
+
 void Game::processCommands(long currentTick)
 {
 	std::vector<int> completedPlayers;
@@ -174,7 +193,7 @@ void Game::processCommands(long currentTick)
 	for (std::map<int, Player *>::iterator it = __players.begin(); it != __players.end(); ++it)
 	{
 		int pid = it->first;
-		if (!it->second->isAlive())
+		if (!it->second->isAlive() || isPlayerInIncantation(pid))
 			continue;
 		if (__activeCommands.find(pid) != __activeCommands.end())
 			continue;
@@ -207,6 +226,19 @@ void Game::activateCommand(int playerId, const String &rawCmd, long currentTick)
 		Player *player = getPlayer(playerId);
 		if (!player)
 			return;
+		if (isPlayerInIncantation(playerId))
+		{
+			addNotification(playerId, KO);
+			return;
+		}
+		for (std::map<int, IncantationContext>::const_iterator it = __incantations.begin(); it != __incantations.end(); ++it)
+		{
+			if (it->second.x == player->getX() && it->second.y == player->getY())
+			{
+				addNotification(playerId, KO);
+				return;
+			}
+		}
 		Tile &tile = __world.tileAt(player->getX(), player->getY());
 		int sameLvl = countSameLevelPlayers(playerId);
 		if (!Elevation::canElevate(player->getLevel(), tile, sameLvl))
@@ -227,7 +259,16 @@ void Game::activateCommand(int playerId, const String &rawCmd, long currentTick)
 		}
 		__incantations[playerId] = context;
 		publishGuiEvent(Protocole::incantationStart(context));
-		addNotification(playerId, "elevation en cours" NEWLINE);
+		for (size_t i = 0; i < context.playerIds.size(); i++)
+		{
+			int partId = context.playerIds[i];
+			addNotification(partId, "elevation en cours" NEWLINE);
+			if (partId != playerId)
+			{
+				__activeCommands.erase(partId);
+				__pendingCommands.erase(partId);
+			}
+		}
 	}
 	else if (type == CMD_FORK)
 		publishGuiEvent(Protocole::forkStart(playerId));
@@ -416,7 +457,18 @@ String Game::executeIncantation(int playerId)
 	if (!valid || !Elevation::canElevate(context.level, tile, static_cast<int>(context.playerIds.size())))
 	{
 		publishGuiEvent(Protocole::incantationEnd(context.x, context.y, false));
-		__incantations.erase(stored);
+		for (size_t i = 0; i < context.playerIds.size(); i++)
+		{
+			if (context.playerIds[i] != playerId)
+				addNotification(context.playerIds[i], KO);
+		}
+		for (std::map<int, IncantationContext>::iterator it = __incantations.begin(); it != __incantations.end(); )
+		{
+			if (it->second.x == context.x && it->second.y == context.y)
+				__incantations.erase(it++);
+			else
+				++it;
+		}
 		return KO;
 	}
 	Elevation::consumeStones(context.level, tile);
@@ -434,7 +486,13 @@ String Game::executeIncantation(int playerId)
 		}
 	}
 	publishGuiEvent(Protocole::tile(*this, context.x, context.y));
-	__incantations.erase(stored);
+	for (std::map<int, IncantationContext>::iterator it = __incantations.begin(); it != __incantations.end(); )
+	{
+		if (it->second.x == context.x && it->second.y == context.y)
+			__incantations.erase(it++);
+		else
+			++it;
+	}
 	return "niveau actuel : " + mzu::intToString(newLevel) + NEWLINE;
 }
 
@@ -580,6 +638,7 @@ unsigned long Game::getLastGuiEventSequence() const
 
 void Game::publishGuiEvent(const String &payload)
 {
+	mzu::debug(payload);
 	if (payload.empty())
 		return;
 	GuiEvent event;
@@ -793,20 +852,16 @@ void Game::checkVictory()
 
 	for (size_t team = 0; team < __teams.size(); team++)
 	{
-		int count = 0;
-		bool allMaxLevel = true;
-		bool playerAlive = false;
+		int maxLevelCount = 0;
 		for (std::map<int, Player *>::iterator it = __players.begin(); it != __players.end(); it++)
 		{
 			Player *player = it->second;
 			if (!player->isAlive() || player->getTeamIndex() != static_cast<int>(team))
 				continue;
-			playerAlive = true;
-			count++;
-			if (player->getLevel() != WIN_LEVEL)
-				allMaxLevel = false;
+			if (player->getLevel() >= WIN_LEVEL)
+				maxLevelCount++;
 		}
-		if (count < WIN_PLAYERS || !allMaxLevel || !playerAlive)
+		if (maxLevelCount < WIN_PLAYERS)
 			continue;
 		
 		__state = GAME_ENDING;

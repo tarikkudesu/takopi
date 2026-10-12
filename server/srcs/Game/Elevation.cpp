@@ -15,7 +15,9 @@ bool Elevation::canElevate(int currentLevel, const Tile &tile, int sameLevelCoun
 	if (currentLevel < 1 || currentLevel > 7)
 		return false;
 	const ElevationReq &req = __requirements[currentLevel - 1];
-	if (sameLevelCount < req.players_needed)
+	if (sameLevelCount != req.players_needed)
+		return false;
+	if (tile.getPlayerIds().size() != static_cast<size_t>(req.players_needed))
 		return false;
 	if (tile.getResource(LINEMATE) < req.linemate)
 		return false;
