@@ -10,7 +10,7 @@ Strategy::Strategy() : __level(1), __hasInventory(false), __hasVision(false),
 						__forked(false), __eggsLaidCount(0), __targetLeaderId(-1),
 						__targetLeaderDirection(-1), __targetLeaderLevel(-1),
 						__leaderHeartbeat(0), __broadcastTimer(0), __gatherTimeout(0),
-						__gatherWaitTicks(0), __consecutiveTurns(0), __consecutiveAdvances(0), __totalTeamEggs(0),
+						__gatherWaitTicks(0), __gatherCooldown(0), __consecutiveTurns(0), __consecutiveAdvances(0), __totalTeamEggs(0),
 						__eggLaidAtThisLevel(false)
 {
 	for (int i = 0; i < RESOURCE_COUNT; i++)
@@ -116,9 +116,14 @@ int Strategy::getTeamSizeEstimate() const
 	return 1 + static_cast<int>(__knownTeammates.size()) + __totalTeamEggs;
 }
 
+int Strategy::getTotalTeamEggs() const { return __totalTeamEggs; }
+bool Strategy::hasEggLaidAtThisLevel() const { return __eggLaidAtThisLevel; }
+
 bool Strategy::canLayEgg() const
 {
-	// Strict hard cap of 8 team members total!
+	// Strict hard cap of 8 team members total! Initial team is 6, so max 2 eggs allowed!
+	if (__totalTeamEggs >= 2)
+		return false;
 	if (getTeamSizeEstimate() >= 8)
 		return false;
 	if (__eggLaidAtThisLevel)
@@ -139,7 +144,7 @@ void Strategy::addKnownTeammate(int id) { if (id != __myId) __knownTeammates.ins
 bool Strategy::hasActiveLeaderForLevel(int level) const
 {
 	if (level < 1 || level > WIN_LEVEL) return false;
-	return (__activeLeaderForLevel[level] != -1 && __lastOfferTick[level] < 40);
+	return (__activeLeaderForLevel[level] != -1 && __lastOfferTick[level] < 60);
 }
 
 int Strategy::getActiveLeaderForLevel(int level) const
@@ -161,7 +166,7 @@ int Strategy::getConfirmedFollowersCount() const
 	int count = 0;
 	for (std::map<int, int>::const_iterator it = __confirmedFollowersTick.begin(); it != __confirmedFollowersTick.end(); ++it)
 	{
-		if (it->second < 15)
+		if (it->second < 40)
 			count++;
 	}
 	return count;
@@ -187,6 +192,8 @@ int Strategy::incrementGatherWaitTicks() { return ++__gatherWaitTicks; }
 int Strategy::getConsecutiveTurns() const { return __consecutiveTurns; }
 void Strategy::incrementConsecutiveTurns() { __consecutiveTurns++; }
 void Strategy::resetConsecutiveTurns() { __consecutiveTurns = 0; }
+int Strategy::getGatherCooldown() const { return __gatherCooldown; }
+void Strategy::setGatherCooldown(int cd) { __gatherCooldown = cd; }
 String Strategy::getQueuedCommand() const
 {
 	return __queuedCommands.empty() ? "" : __queuedCommands.front();
@@ -228,6 +235,8 @@ void Strategy::applyLevel(int level)
 {
 	if (level > __level)
 	{
+		if (__level >= 1 && __level <= WIN_LEVEL)
+			__activeLeaderForLevel[__level] = -1;
 		__level = level;
 		mzu::info("LEVEL UP! Now level " + mzu::intToString(level));
 		transitionTo(__stateForage);
@@ -298,13 +307,29 @@ void Strategy::applyBroadcast(int direction, const String &text)
 		if (__currentState == __stateForage && msg.slotsNeeded > 0)
 		{
 			bool hasFoodSafe = (__inventory[NOURRITURE] >= 6);
-			if (hasFoodSafe)
+			// If stones are missing on leader tile, only join if we carry at least one of the needed stones!
+			bool canHelp = true;
+			bool stonesNeeded = false;
+			bool iHaveNeeded = false;
+			for (int s = 0; s < RESOURCE_COUNT; s++)
+			{
+				if (msg.missingStones[s] > 0)
+				{
+					stonesNeeded = true;
+					if (__inventory[s] > 0)
+						iHaveNeeded = true;
+				}
+			}
+			if (stonesNeeded && !iHaveNeeded)
+				canHelp = false;
+			if (hasFoodSafe && canHelp)
 			{
 				transitionTo(__stateJoinLeader);
 				__targetLeaderId = msg.senderId;
 				__targetLeaderDirection = direction;
 				__targetLeaderLevel = msg.targetLevel;
 				__leaderHeartbeat = 0;
+				__gatherWaitTicks = 0;
 				mzu::info("Joining Leader " + mzu::intToString(msg.senderId) + " for Lvl " + mzu::intToString(__level) + " (dir=" + mzu::intToString(direction) + ")");
 			}
 		}
@@ -312,27 +337,21 @@ void Strategy::applyBroadcast(int direction, const String &text)
 		{
 			if (__targetLeaderId == msg.senderId)
 			{
-				if (msg.slotsNeeded == 0 && direction != 0 && __targetLeaderDirection != 0)
-				{
-					mzu::info("Leader slots full and I am not on tile. Returning to forage.");
-					transitionTo(__stateForage);
-					__targetLeaderId = -1;
-					__targetLeaderDirection = -1;
-					return;
-				}
 				__targetLeaderDirection = direction;
 				__leaderHeartbeat = 0;
 			}
-			else if (msg.senderId > __targetLeaderId && msg.slotsNeeded > 0)
+			else if (msg.slotsNeeded > 0 && (__targetLeaderId == -1 || __leaderHeartbeat > 25))
 			{
-				mzu::info("Switching to higher ID Leader " + mzu::intToString(msg.senderId));
+				mzu::info("Switching to active Leader " + mzu::intToString(msg.senderId) + " for Lvl " + mzu::intToString(__level));
 				__targetLeaderId = msg.senderId;
 				__targetLeaderDirection = direction;
 				__targetLeaderLevel = msg.targetLevel;
 				__leaderHeartbeat = 0;
+				__gatherWaitTicks = 0;
 			}
 		}
-		else if (__currentState == __stateLeaderGather && msg.senderId > __myId && msg.slotsNeeded > 0)
+		else if (__currentState == __stateLeaderGather && msg.targetLevel >= 4 &&
+		         getConfirmedFollowersCount() == 0 && msg.senderId > __myId && msg.slotsNeeded > 0)
 		{
 			mzu::info("Yielding leadership to higher ID " + mzu::intToString(msg.senderId));
 			transitionTo(__stateJoinLeader);
@@ -340,6 +359,7 @@ void Strategy::applyBroadcast(int direction, const String &text)
 			__targetLeaderDirection = direction;
 			__targetLeaderLevel = msg.targetLevel;
 			__leaderHeartbeat = 0;
+			__gatherWaitTicks = 0;
 		}
 	}
 	else if (msg.cmd == MSG_FULL || msg.cmd == MSG_INCANT)
@@ -350,22 +370,26 @@ void Strategy::applyBroadcast(int direction, const String &text)
 			{
 				mzu::info("Leader announced ritual ready; standing by on tile for elevation en cours.");
 			}
-			else if (__currentState == __stateJoinLeader)
+			else
 			{
-				mzu::info("Leader announced FULL but I am not on tile. Returning to forage.");
-				transitionTo(__stateForage);
-				__targetLeaderId = -1;
-				__targetLeaderDirection = -1;
+				mzu::info("Leader announced ritual ready; continuing toward leader tile (dir=" + mzu::intToString(direction) + ").");
+				__targetLeaderDirection = direction;
+				__leaderHeartbeat = 0;
 			}
 		}
 	}
 	else if (msg.cmd == MSG_ABORT)
 	{
+		if (msg.targetLevel >= 1 && msg.targetLevel <= WIN_LEVEL && __activeLeaderForLevel[msg.targetLevel] == msg.senderId)
+		{
+			__activeLeaderForLevel[msg.targetLevel] = -1;
+		}
 		if (__targetLeaderId == msg.senderId)
 		{
 			transitionTo(__stateForage);
 			__targetLeaderId = -1;
 			__targetLeaderDirection = -1;
+			__gatherWaitTicks = 0;
 		}
 	}
 }
@@ -376,6 +400,8 @@ String Strategy::decideNextCommand()
 		__lastOfferTick[i]++;
 	for (std::map<int, int>::iterator it = __confirmedFollowersTick.begin(); it != __confirmedFollowersTick.end(); ++it)
 		it->second++;
+	if (__gatherCooldown > 0)
+		__gatherCooldown--;
 
 	if (!__queuedCommands.empty())
 	{
@@ -387,7 +413,7 @@ String Strategy::decideNextCommand()
 	if (!__hasVision)
 		return "voir";
 
-	if (!__hasInventory || __ticksSinceInventory >= 20)
+	if (!__hasInventory || __ticksSinceInventory >= 60)
 	{
 		if (__hasInventory)
 			__ticksSinceInventory = 0;
@@ -420,14 +446,6 @@ String Strategy::decideNextCommand()
 		{
 			resetConsecutiveTurns();
 			__consecutiveAdvances++;
-			// Avoid moving in a straight line forever:
-			// After 3-4 forward moves in FORAGE, alternate with a turn to sweep the wide vision cone!
-			if (__currentState == __stateForage && __consecutiveAdvances >= (3 + (rand() % 2)))
-			{
-				__consecutiveAdvances = 0;
-				setQueuedCommand("avance");
-				return (rand() % 2 == 0) ? "droite" : "gauche";
-			}
 		}
 		else
 		{

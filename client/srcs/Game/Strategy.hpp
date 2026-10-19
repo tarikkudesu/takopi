@@ -40,6 +40,7 @@ class Strategy
 		int								__broadcastTimer;
 		int								__gatherTimeout;
 		int								__gatherWaitTicks;
+		int								__gatherCooldown;
 		int								__consecutiveTurns;
 		int								__consecutiveAdvances;
 		int								__totalTeamEggs;
@@ -100,6 +101,8 @@ class Strategy
 		bool							isForked() const;
 		void							setForked( bool f );
 		int								getTeamSizeEstimate() const;
+		int								getTotalTeamEggs() const;
+		bool							hasEggLaidAtThisLevel() const;
 		bool							canLayEgg() const;
 		void							recordEggLaid();
 		int								getEggsLaidCount() const;
@@ -128,6 +131,8 @@ class Strategy
 		int								getConsecutiveTurns() const;
 		void							incrementConsecutiveTurns();
 		void							resetConsecutiveTurns();
+		int								getGatherCooldown() const;
+		void							setGatherCooldown( int cd );
 		String							getQueuedCommand() const;
 		void							setQueuedCommand( const String &cmd );
 		void							queueCommand( const String &cmd );

@@ -53,24 +53,37 @@ String SoundNavigator::stepTowardVisionTile(size_t tileIndex, Strategy *ctx)
 		return "avance";
 
 	// Vision indexing in Zappy FOV:
-	// Level 1:
-	// [1, 2, 3]  (ring 1: 1=left, 2=front, 3=right)
-	// Level 2:
-	// [1, 2, 3]  (ring 1)
-	// [4, 5, 6, 7, 8] (ring 2: 4=leftmost, 6=front, 8=rightmost)
-	// General rule for ring R:
-	// Ring starts at R^2, front tile is R^2 + R.
+	// Ring R starts at R^2, front tile is R^2 + R.
 	int ring = static_cast<int>(std::sqrt(static_cast<double>(idx)));
 	while (ring * ring > idx) ring--;
 	while ((ring + 1) * (ring + 1) <= idx) ring++;
 
 	int frontIdx = ring * ring + ring;
 
-	// If the tile is directly ahead, march forward!
-	if (idx == frontIdx)
+	// In ring 1: [1=left, 2=front, 3=right]
+	if (ring == 1)
+	{
+		if (idx == 1)
+		{
+			if (ctx) ctx->setQueuedCommand("avance");
+			return "gauche";
+		}
+		if (idx == 3)
+		{
+			if (ctx) ctx->setQueuedCommand("avance");
+			return "droite";
+		}
+		return "avance";
+	}
+
+	// For rings >= 2:
+	// If the tile is in the forward corridor, march straight ahead!
+	// This directly closes the distance into inner rings without wasting turns!
+	int offset = std::abs(idx - frontIdx);
+	if (offset <= ring / 2)
 		return "avance";
 
-	// Always queue "avance" after turning so the bot never oscillates on the same tile!
+	// Otherwise, step towards the side:
 	if (idx < frontIdx)
 	{
 		if (ctx) ctx->setQueuedCommand("avance");
@@ -85,7 +98,7 @@ String SoundNavigator::stepTowardVisionTile(size_t tileIndex, Strategy *ctx)
 
 String SoundNavigator::wander(Strategy *ctx)
 {
-	int r = rand() % 3;
+	int r = rand() % 5;
 	if (r == 0)
 	{
 		if (ctx) ctx->setQueuedCommand("avance");

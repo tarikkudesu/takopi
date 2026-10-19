@@ -15,7 +15,7 @@
 # ==============================================================================
 CXX				= g++
 CXXFLAGS		= -Wall -Wextra -Werror -std=c++11 -g -O0 -MMD -MP
-CXXFLAGS_GFX	= -Wall -Wextra -std=c++17 -O2 -MMD -MP -Izappy_gfx/src
+CXXFLAGS_GFX	= -Wall -Wextra -std=c++17 -O2 -MMD -MP -Izappy_gfx/src -isystem server/raylib
 
 CC				= gcc
 CFLAGS			= -O2 -Wall
@@ -26,13 +26,13 @@ SERVER_INCLUDES	= -Iserver/srcs -Iserver/raylib -Iserver
 CLIENT_LDFLAGS	=
 SERVER_LDFLAGS	= -lssl -lcrypto
 RAYLIB_LDFLAGS	= -lGL -lm -lpthread -ldl -lrt -lX11
+GFX_LDFLAGS		= server/raylib/libraylib.a $(RAYLIB_LDFLAGS)
 
 # ==============================================================================
 #                               TARGET NAMES
 # ==============================================================================
 SERVER_NAME		= server/server
 CLIENT_NAME		= client/client
-GUI_TEST_NAME	= gui-test/zappy_gui
 GFX_NAME		= zappy_gfx/gfx
 
 OBJ_DIR			= objs
@@ -131,7 +131,7 @@ GFX_DEPS		:= $(GFX_OBJS:.o=.d)
 # ==============================================================================
 #                                   RULES
 # ==============================================================================
-all: $(SERVER_NAME) $(CLIENT_NAME) $(GUI_TEST_NAME)
+all: $(SERVER_NAME) $(CLIENT_NAME) $(GFX_NAME)
 
 # 1. Server Rule
 server: $(SERVER_NAME)
@@ -162,21 +162,12 @@ $(CLIENT_NAME): $(CLIENT_OBJS)
 	@$(CXX) $(CXXFLAGS) $(CLIENT_OBJS) -o $(CLIENT_NAME) $(CLIENT_LDFLAGS)
 	@echo "Successfully compiled client: $(CLIENT_NAME)"
 
-# 3. GUI Test Client Rule (gui-test/zappy_gui)
-gui: $(GUI_TEST_NAME)
-
-$(GUI_TEST_NAME): gui-test/zappy_gui.c server/raylib/libraylib.a
-	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) -o $(GUI_TEST_NAME) gui-test/zappy_gui.c \
-		-Iserver/raylib server/raylib/libraylib.a $(RAYLIB_LDFLAGS)
-	@echo "Successfully compiled GUI test client: $(GUI_TEST_NAME)"
-
-# 4. GFX 3D Client Rule (zappy_gfx/gfx)
+# 3. GFX 3D Client Rule (zappy_gfx/gfx)
 gfx: $(GFX_NAME)
 
-$(GFX_NAME): $(GFX_OBJS)
+$(GFX_NAME): $(GFX_OBJS) server/raylib/libraylib.a
 	@mkdir -p $(dir $@)
-	@$(CXX) $(GFX_OBJS) -o $(GFX_NAME) $(RAYLIB_LDFLAGS)
+	@$(CXX) $(GFX_OBJS) -o $(GFX_NAME) $(GFX_LDFLAGS)
 	@echo "Successfully compiled GFX client: $(GFX_NAME)"
 
 $(OBJ_DIR)/zappy_gfx/%.o: zappy_gfx/%.cpp
@@ -187,7 +178,7 @@ $(OBJ_DIR)/zappy_gfx/%.o: zappy_gfx/%.cpp
 -include $(GFX_DEPS)
 
 # Helper Rules
-bonus: all gfx
+bonus: all
 
 connect:
 	@ncat --ssl --ssl-verify --ssl-trustfile certs/server.crt localhost 9001
@@ -199,11 +190,11 @@ clean:
 	@echo "Cleaned all object files."
 
 fclean: clean
-	@rm -rf $(SERVER_NAME) server/zappy $(CLIENT_NAME) $(GUI_TEST_NAME) $(GFX_NAME)
+	@rm -rf $(SERVER_NAME) server/zappy $(CLIENT_NAME) $(GFX_NAME)
 	@rm -rf certs server/certs logs
 	@rm -f *.log server/*.log client/*.log
 	@echo "Cleaned all executables, certificates, and log files."
 
 re: fclean all
 
-.PHONY: all server client gui gfx bonus certs connect clean fclean re
+.PHONY: all server client gfx bonus certs connect clean fclean re

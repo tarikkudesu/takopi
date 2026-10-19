@@ -197,13 +197,14 @@ void Client::handlePlayingLine(const String &line)
 	{
 		mzu::info("kicked, came from direction " + mzu::intToString(direction));
 		__strategy.invalidateVision();
+		__strategy.setTargetLeaderDirection(direction);
+		__strategy.resetGatherWaitTicks();
 		return;
 	}
 	if (Protocol::isElevationEnCours(line))
 	{
 		mzu::info("incantation started");
 		__incantationPending = true;
-		__hasPending = false;
 		__strategy.transitionTo(__strategy.getStateIncanting());
 		return;
 	}
@@ -224,6 +225,8 @@ void Client::handlePlayingLine(const String &line)
 		__incantationPending = false;
 		__hasPending = false;
 		__strategy.transitionTo(__strategy.getStateForage());
+		__strategy.setTargetLeaderId(-1);
+		__strategy.setTargetLeaderDirection(-1);
 		sendNextCommand();
 		return;
 	}
@@ -232,6 +235,8 @@ void Client::handlePlayingLine(const String &line)
 	{
 		mzu::info("follower received ko during incantation; returning to forage");
 		__strategy.transitionTo(__strategy.getStateForage());
+		__strategy.setTargetLeaderId(-1);
+		__strategy.setTargetLeaderDirection(-1);
 		__hasPending = false;
 		sendNextCommand();
 		return;
@@ -239,6 +244,24 @@ void Client::handlePlayingLine(const String &line)
 
 	if (!__hasPending)
 		return;
+
+	// Desynchronization guard: match expected reply types
+	if (__pending.type == CMD_VOIR && (line == "ok" || line == "ko"))
+		return;
+	if ((__pending.type == CMD_AVANCE || __pending.type == CMD_DROITE ||
+	     __pending.type == CMD_GAUCHE || __pending.type == CMD_PREND ||
+	     __pending.type == CMD_POSE || __pending.type == CMD_EXPULSE ||
+	     __pending.type == CMD_BROADCAST || __pending.type == CMD_FORK) &&
+	    !line.empty() && line[0] == '{')
+	{
+		if (line.find("nourriture") != String::npos && line.find("linemate") != String::npos &&
+		    line.find(",") != String::npos && line.find("player") == String::npos)
+			__strategy.applyInventory(line);
+		else
+			__strategy.applyVision(line);
+		return;
+	}
+
 	__hasPending = false;
 	handleGenericReply(line);
 	sendNextCommand();
