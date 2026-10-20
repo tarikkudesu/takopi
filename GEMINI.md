@@ -65,6 +65,24 @@ Zappy is composed of three main binaries built from the root `Makefile`:
   - *Problem*: In [Strategy.cpp](file:///home/ooulcaid/Desktop/zappy/client/srcs/Game/Strategy.cpp), checking if followers carried needed stones was restricted to `msg.targetLevel <= 3`. For Levels 4, 5, 6, 7, followers with empty inventories abandoned foraging to join leaders who were also missing those stones, convening 4 bots with 0 mendiane on the ritual tile.
   - *Fix*: Made missing-stone verification universal across all levels. Followers only join a leader missing stones if they carry at least one of those needed stones. Teammates without the required stones continue foraging until they find them.
 
+### 7. Enforcing >75% Stones Prerequisite for Leaders & Multi-bot Squad Enrollment
+- **Strict >75% Stone Threshold for Leadership**:
+  - *Problem*: Leaders declared leadership with loose stone tolerances (e.g. only 54% of stones at Level 7 or 57% at Level 5), summoning followers to ritual tiles when nearly half the stones were missing, leading to squad lockups.
+  - *Fix*: In [ElevationManager.cpp](file:///home/ooulcaid/Desktop/zappy/client/srcs/Game/ElevationManager.cpp), `hasEnoughToLead` now strictly enforces `stoneRatio > 0.75` (more than 75% of total required stones for that level) along with mandatory rare stones (e.g. 100% thystame for Level 7, $\ge 2$ mendiane for Level 5, sibur/phiras for Levels 3, 4, 6).
+- **Explicit Squad Enrollment (`JOIN` / Enrolled IDs)**:
+  - *Problem*: When a leader broadcast `OFFER`, all available followers rushed to the leader at once because `slotsNeeded` remained unchanged until someone stepped onto the tile. This caused 5-6 bots to crowd a 2-player or 4-player ritual tile, causing the server to reject the incantation.
+  - *Fix*: Followers now send `JOIN` upon receiving `OFFER`. The leader accepts up to `players_needed - 1` followers in `__enrolledFollowers`, broadcasts enrolled IDs in `OFFER`, and sets `slotsNeeded = targetPlayers - 1 - enrolledFollowers.size()`. Followers abort back to `StateForage` if `slotsNeeded == 0` and they are not enrolled.
+- **Universal Missing-Stone Filter & Tile Priming**:
+  - *Problem*: Followers without needed stones rushed to leaders who were also missing those stones.
+  - *Fix*: If ritual stones are missing on the leader tile, only followers carrying at least one of those missing stones can join. If stones on tile are complete, any teammate can join to satisfy the player quota.
+- **Immediate Step-Off for Overcrowded / Unenrolled Bots**:
+  - *Problem*: Passing bots or extra followers lingered on occupied leader tiles, blocking the server's exact-player-count incantation check.
+  - *Fix*: Foraging bots on occupied leader tiles immediately step away (`avance`). Any follower on the tile that is not enrolled or where `here.players > targetPlayers` steps off immediately to forage.
+
+- **Two-Team Simulation & Scaled Map (12x12)**:
+  - Scaled server map from 10x10 to **12x12** in [zappy.conf](file:///home/ooulcaid/Desktop/zappy/server/zappy.conf) (+2 tiles in width and height).
+  - Updated [run_zappy.sh](file:///home/ooulcaid/Desktop/zappy/run_zappy.sh) to dynamically parse and launch AI clients for both teams (`TeamRed` and `TeamBlue`), each starting with 6 bots and dynamically scaling to 8 bots as eggs hatch via a team-aware supervisor.
+
 ---
 
 ## Build & Run

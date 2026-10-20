@@ -24,6 +24,7 @@ struct s_parsed_msg
 	int         leaderId;
 	int         slotsNeeded;
 	int         missingStones[RESOURCE_COUNT];
+	std::vector<int> enrolledIds;
 	bool        valid;
 };
 
@@ -44,7 +45,7 @@ class BroadcastMessenger
 		int             getSecretHash() const;
 
 		// Message builders
-		String          buildOffer( int myId, int level, const int missingStones[RESOURCE_COUNT], int slotsNeeded ) const;
+		String          buildOffer( int myId, int level, const int missingStones[RESOURCE_COUNT], int slotsNeeded, const std::vector<int> &enrolledIds = std::vector<int>() ) const;
 		String          buildJoin( int myId, int level, int leaderId ) const;
 		String          buildHere( int myId, int level, int leaderId ) const;
 		String          buildFull( int myId, int level ) const;

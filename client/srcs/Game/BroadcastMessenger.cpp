@@ -36,12 +36,14 @@ int BroadcastMessenger::getSecretHash() const
 	return __secretHash;
 }
 
-String BroadcastMessenger::buildOffer(int myId, int level, const int missingStones[RESOURCE_COUNT], int slotsNeeded) const
+String BroadcastMessenger::buildOffer(int myId, int level, const int missingStones[RESOURCE_COUNT], int slotsNeeded, const std::vector<int> &enrolledIds) const
 {
 	String msg = "ZAP " + mzu::intToString(__secretHash) + " " + mzu::intToString(myId) + " OFFER "
 				+ mzu::intToString(level) + " " + mzu::intToString(slotsNeeded);
 	for (int i = 1; i < RESOURCE_COUNT; i++)
 		msg += " " + mzu::intToString(missingStones[i]);
+	for (size_t i = 0; i < enrolledIds.size(); i++)
+		msg += " " + mzu::intToString(enrolledIds[i]);
 	return msg;
 }
 
@@ -86,6 +88,7 @@ bool BroadcastMessenger::parse(const String &rawText, s_parsed_msg &outMsg) cons
 	outMsg.cmd = MSG_NONE;
 	for (int i = 0; i < RESOURCE_COUNT; i++)
 		outMsg.missingStones[i] = 0;
+	outMsg.enrolledIds.clear();
 
 	t_svec tokens = mzu::splitBySpaces(rawText);
 	if (tokens.size() < 5)
@@ -109,6 +112,8 @@ bool BroadcastMessenger::parse(const String &rawText, s_parsed_msg &outMsg) cons
 			outMsg.slotsNeeded = static_cast<int>(mzu::stringToInt(tokens[5]));
 		for (int i = 1; i < RESOURCE_COUNT && (5 + i) < static_cast<int>(tokens.size()); i++)
 			outMsg.missingStones[i] = static_cast<int>(mzu::stringToInt(tokens[5 + i]));
+		for (size_t i = 5 + RESOURCE_COUNT; i < tokens.size(); i++)
+			outMsg.enrolledIds.push_back(static_cast<int>(mzu::stringToInt(tokens[i])));
 		outMsg.valid = true;
 		return true;
 	}

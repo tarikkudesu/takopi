@@ -31,6 +31,8 @@ class Strategy
 
 		// Confirmed teammates on tile for incantation (id -> ticks since last HERE)
 		std::map<int, int>				__confirmedFollowersTick;
+		std::vector<int>				__enrolledFollowers;
+		bool							__isEnrolled;
 
 		// Coordination fields
 		int								__targetLeaderId;
@@ -113,6 +115,12 @@ class Strategy
 		int								getConfirmedFollowersCount() const;
 		void							addConfirmedFollower( int id );
 		void							clearConfirmedFollowers();
+		const std::vector<int>&			getEnrolledFollowers() const;
+		bool							enrollFollower( int id, int maxFollowers );
+		void							clearEnrolledFollowers();
+		void							pruneUnconfirmedEnrolled();
+		bool							isEnrolled() const;
+		void							setEnrolled( bool e );
 		int								getTargetLeaderId() const;
 		void							setTargetLeaderId( int id );
 		int								getTargetLeaderDirection() const;

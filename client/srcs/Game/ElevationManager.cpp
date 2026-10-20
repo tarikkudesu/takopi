@@ -85,28 +85,23 @@ bool ElevationManager::hasEnoughToLead(int currentLevel, const int inventory[RES
 			have = needed;
 		totalPresent += have;
 	}
-	int tolerance = 0;
-	if (currentLevel == 3)
-		tolerance = 1;
-	else if (currentLevel == 4)
-		tolerance = 2;
-	else if (currentLevel >= 5 && currentLevel <= 6)
-		tolerance = 3;
-	else if (currentLevel == 7)
-		tolerance = 5;
+	if (totalNeeded <= 0)
+		return false;
 
-	if (totalPresent < totalNeeded - tolerance)
+	// The leader MUST possess more than 75% of the total required elevation stones for this level!
+	double stoneRatio = static_cast<double>(totalPresent) / static_cast<double>(totalNeeded);
+	if (stoneRatio <= 0.75)
 		return false;
 
 	// Critical stone requirement guards:
-	// A leader MUST possess at least one of the rare/key stones for that level!
-	if (currentLevel == 3 && inventory[SIBUR] < 1 && inventory[PHIRAS] < 1)
+	// A leader MUST possess the key/rare stones for that level!
+	if (currentLevel == 3 && (inventory[SIBUR] < 1 || inventory[PHIRAS] < 1))
 		return false;
-	if (currentLevel == 4 && inventory[SIBUR] < 1 && inventory[PHIRAS] < 1)
+	if (currentLevel == 4 && (inventory[SIBUR] < 1 || inventory[PHIRAS] < 1))
 		return false;
-	if (currentLevel == 5 && inventory[MENDIANE] < 1)
+	if (currentLevel == 5 && inventory[MENDIANE] < 2)
 		return false;
-	if (currentLevel == 6 && inventory[SIBUR] < 1)
+	if (currentLevel == 6 && (inventory[SIBUR] < 2 || inventory[PHIRAS] < 1))
 		return false;
 	if (currentLevel == 7 && inventory[THYSTAME] < 1)
 		return false;

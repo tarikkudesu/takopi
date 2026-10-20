@@ -7,7 +7,7 @@
 
 Strategy::Strategy() : __level(1), __hasInventory(false), __hasVision(false),
 						__ticksSinceInventory(999), __teamName(""),
-						__forked(false), __eggsLaidCount(0), __targetLeaderId(-1),
+						__forked(false), __eggsLaidCount(0), __isEnrolled(false), __targetLeaderId(-1),
 						__targetLeaderDirection(-1), __targetLeaderLevel(-1),
 						__leaderHeartbeat(0), __broadcastTimer(0), __gatherTimeout(0),
 						__gatherWaitTicks(0), __gatherCooldown(0), __consecutiveTurns(0), __consecutiveAdvances(0), __totalTeamEggs(0),
@@ -45,6 +45,8 @@ Strategy &Strategy::operator=(const Strategy &assign)
 		__teamName = assign.__teamName;
 		__myId = assign.__myId;
 		__forked = assign.__forked;
+		__isEnrolled = assign.__isEnrolled;
+		__enrolledFollowers = assign.__enrolledFollowers;
 		__targetLeaderId = assign.__targetLeaderId;
 		__targetLeaderDirection = assign.__targetLeaderDirection;
 		__targetLeaderLevel = assign.__targetLeaderLevel;
@@ -172,8 +174,54 @@ int Strategy::getConfirmedFollowersCount() const
 	return count;
 }
 
-void Strategy::addConfirmedFollower(int id) { __confirmedFollowersTick[id] = 0; }
+void Strategy::addConfirmedFollower(int id)
+{
+	__confirmedFollowersTick[id] = 0;
+	bool found = false;
+	for (size_t i = 0; i < __enrolledFollowers.size(); i++)
+	{
+		if (__enrolledFollowers[i] == id) { found = true; break; }
+	}
+	if (!found)
+		__enrolledFollowers.push_back(id);
+}
+
 void Strategy::clearConfirmedFollowers() { __confirmedFollowersTick.clear(); }
+
+const std::vector<int>& Strategy::getEnrolledFollowers() const { return __enrolledFollowers; }
+
+bool Strategy::enrollFollower(int id, int maxFollowers)
+{
+	for (size_t i = 0; i < __enrolledFollowers.size(); i++)
+	{
+		if (__enrolledFollowers[i] == id)
+			return true;
+	}
+	if (static_cast<int>(__enrolledFollowers.size()) < maxFollowers)
+	{
+		__enrolledFollowers.push_back(id);
+		return true;
+	}
+	return false;
+}
+
+void Strategy::clearEnrolledFollowers() { __enrolledFollowers.clear(); }
+
+void Strategy::pruneUnconfirmedEnrolled()
+{
+	std::vector<int> active;
+	for (size_t i = 0; i < __enrolledFollowers.size(); i++)
+	{
+		int id = __enrolledFollowers[i];
+		std::map<int, int>::iterator it = __confirmedFollowersTick.find(id);
+		if (it != __confirmedFollowersTick.end() && it->second < 40)
+			active.push_back(id);
+	}
+	__enrolledFollowers = active;
+}
+
+bool Strategy::isEnrolled() const { return __isEnrolled; }
+void Strategy::setEnrolled(bool e) { __isEnrolled = e; }
 int Strategy::getTargetLeaderId() const { return __targetLeaderId; }
 void Strategy::setTargetLeaderId(int id) { __targetLeaderId = id; }
 int Strategy::getTargetLeaderDirection() const { return __targetLeaderDirection; }
@@ -246,6 +294,8 @@ void Strategy::applyLevel(int level)
 		__leaderHeartbeat = 0;
 		__gatherWaitTicks = 0;
 		__forked = false; // Allow reproducing if stuck at a future level!
+		__isEnrolled = false;
+		clearEnrolledFollowers();
 		clearConfirmedFollowers();
 	}
 }
@@ -288,6 +338,20 @@ void Strategy::applyBroadcast(int direction, const String &text)
 		return;
 	}
 
+	if (msg.cmd == MSG_JOIN)
+	{
+		if (__currentState == __stateLeaderGather && msg.targetLevel == __level && msg.leaderId == __myId)
+		{
+			int targetPlayers = Elevation::getRequirement(__level).players_needed;
+			int neededFollowers = targetPlayers - 1;
+			if (enrollFollower(msg.senderId, neededFollowers))
+			{
+				mzu::info("Enrolled follower " + mzu::intToString(msg.senderId) + " for Level " + mzu::intToString(__level) + " (" + mzu::intToString(__enrolledFollowers.size()) + "/" + mzu::intToString(neededFollowers) + ")");
+			}
+		}
+		return;
+	}
+
 	if (msg.cmd == MSG_HERE)
 	{
 		if (direction == 0 && msg.targetLevel == __level && msg.leaderId == __myId)
@@ -307,21 +371,21 @@ void Strategy::applyBroadcast(int direction, const String &text)
 		if (__currentState == __stateForage && msg.slotsNeeded > 0)
 		{
 			bool hasFoodSafe = (__inventory[NOURRITURE] >= 6);
-			// If stones are missing on leader tile, only join if we carry at least one of the needed stones!
-			bool canHelp = true;
-			bool stonesNeeded = false;
-			bool iHaveNeeded = false;
-			for (int s = 0; s < RESOURCE_COUNT; s++)
+			// Missing stones filter:
+			// If stones are missing on tile, only join if carrying at least one of the needed stones!
+			// If stones on tile are already complete, any teammate can join to fill player quota.
+			bool stonesMissing = false;
+			bool canContribute = false;
+			for (int s = 1; s < RESOURCE_COUNT; s++)
 			{
 				if (msg.missingStones[s] > 0)
 				{
-					stonesNeeded = true;
+					stonesMissing = true;
 					if (__inventory[s] > 0)
-						iHaveNeeded = true;
+						canContribute = true;
 				}
 			}
-			if (stonesNeeded && !iHaveNeeded)
-				canHelp = false;
+			bool canHelp = !stonesMissing || canContribute;
 			if (hasFoodSafe && canHelp)
 			{
 				transitionTo(__stateJoinLeader);
@@ -330,6 +394,8 @@ void Strategy::applyBroadcast(int direction, const String &text)
 				__targetLeaderLevel = msg.targetLevel;
 				__leaderHeartbeat = 0;
 				__gatherWaitTicks = 0;
+				__isEnrolled = false;
+				queueCommand("broadcast " + __messenger.buildJoin(__myId, __level, __targetLeaderId));
 				mzu::info("Joining Leader " + mzu::intToString(msg.senderId) + " for Lvl " + mzu::intToString(__level) + " (dir=" + mzu::intToString(direction) + ")");
 			}
 		}
@@ -337,8 +403,40 @@ void Strategy::applyBroadcast(int direction, const String &text)
 		{
 			if (__targetLeaderId == msg.senderId)
 			{
-				__targetLeaderDirection = direction;
-				__leaderHeartbeat = 0;
+				bool enrolled = false;
+				for (size_t i = 0; i < msg.enrolledIds.size(); i++)
+				{
+					if (msg.enrolledIds[i] == __myId)
+					{
+						enrolled = true;
+						break;
+					}
+				}
+				if (enrolled)
+				{
+					__isEnrolled = true;
+					__targetLeaderDirection = direction;
+					__leaderHeartbeat = 0;
+				}
+				else
+				{
+					if (msg.slotsNeeded == 0)
+					{
+						mzu::info("Squad for Leader " + mzu::intToString(__targetLeaderId) + " is full and I am not enrolled. Returning to FORAGE.");
+						transitionTo(__stateForage);
+						__targetLeaderId = -1;
+						__targetLeaderDirection = -1;
+						__gatherWaitTicks = 0;
+						__isEnrolled = false;
+					}
+					else
+					{
+						__targetLeaderDirection = direction;
+						__leaderHeartbeat = 0;
+						if (!__isEnrolled)
+							queueCommand("broadcast " + __messenger.buildJoin(__myId, __level, __targetLeaderId));
+					}
+				}
 			}
 			else if (msg.slotsNeeded > 0 && (__targetLeaderId == -1 || __leaderHeartbeat > 25))
 			{
@@ -348,10 +446,13 @@ void Strategy::applyBroadcast(int direction, const String &text)
 				__targetLeaderLevel = msg.targetLevel;
 				__leaderHeartbeat = 0;
 				__gatherWaitTicks = 0;
+				__isEnrolled = false;
+				queueCommand("broadcast " + __messenger.buildJoin(__myId, __level, __targetLeaderId));
 			}
 		}
-		else if (__currentState == __stateLeaderGather && msg.targetLevel >= 4 &&
-		         getConfirmedFollowersCount() == 0 && msg.senderId > __myId && msg.slotsNeeded > 0)
+		else if (__currentState == __stateLeaderGather &&
+		         (msg.senderId > __myId) &&
+		         (direction == 0 || getConfirmedFollowersCount() == 0))
 		{
 			mzu::info("Yielding leadership to higher ID " + mzu::intToString(msg.senderId));
 			transitionTo(__stateJoinLeader);
@@ -360,22 +461,26 @@ void Strategy::applyBroadcast(int direction, const String &text)
 			__targetLeaderLevel = msg.targetLevel;
 			__leaderHeartbeat = 0;
 			__gatherWaitTicks = 0;
+			__isEnrolled = false;
+			clearEnrolledFollowers();
+			queueCommand("broadcast " + __messenger.buildJoin(__myId, __level, __targetLeaderId));
 		}
 	}
 	else if (msg.cmd == MSG_FULL || msg.cmd == MSG_INCANT)
 	{
 		if (__targetLeaderId == msg.senderId)
 		{
-			if (direction == 0 || __targetLeaderDirection == 0)
+			if (direction == 0)
 			{
 				mzu::info("Leader announced ritual ready; standing by on tile for elevation en cours.");
+				__targetLeaderDirection = 0;
 			}
 			else
 			{
 				mzu::info("Leader announced ritual ready; continuing toward leader tile (dir=" + mzu::intToString(direction) + ").");
 				__targetLeaderDirection = direction;
-				__leaderHeartbeat = 0;
 			}
+			__leaderHeartbeat = 0;
 		}
 	}
 	else if (msg.cmd == MSG_ABORT)
@@ -386,10 +491,12 @@ void Strategy::applyBroadcast(int direction, const String &text)
 		}
 		if (__targetLeaderId == msg.senderId)
 		{
+			mzu::info("Leader aborted gather. Returning to FORAGE.");
 			transitionTo(__stateForage);
 			__targetLeaderId = -1;
 			__targetLeaderDirection = -1;
 			__gatherWaitTicks = 0;
+			__isEnrolled = false;
 		}
 	}
 }
@@ -446,6 +553,8 @@ String Strategy::decideNextCommand()
 		{
 			resetConsecutiveTurns();
 			__consecutiveAdvances++;
+			if (__targetLeaderDirection == 0)
+				__targetLeaderDirection = -1;
 		}
 		else
 		{

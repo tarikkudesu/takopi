@@ -119,11 +119,17 @@ String StateForage::execute(Strategy *ctx)
 	const t_tile_content &here = vision[0];
 	const int *inv = ctx->getInventory();
 
-	// 1. Pick up food if available and needed
+	// 1. If this is an occupied tile with an active leader or complete ritual, step away to not disturb it
+	bool isTileIncantationReady = ElevationManager::isTileResourceComplete(ctx->getLevel(), here);
+	bool leaderActive = ctx->hasActiveLeaderForLevel(ctx->getLevel());
+	if (here.players > 1 && (leaderActive || isTileIncantationReady))
+		return "avance";
+
+	// 2. Pick up food if available and needed
 	if (here.resources[NOURRITURE] > 0 && inv[NOURRITURE] < 45)
 		return "prend " + Protocol::resourceName(NOURRITURE);
 
-	// 2. Proactively lay early eggs to reach target team size of 8 as fast as possible!
+	// 3. Proactively lay early eggs to reach target team size of 8 as fast as possible!
 	if (ctx->canLayEgg() && inv[NOURRITURE] >= 14)
 	{
 		ctx->recordEggLaid();
@@ -132,13 +138,8 @@ String StateForage::execute(Strategy *ctx)
 		return "fork";
 	}
 
-	// 3. Pick up stones unless this is an active leader's ritual tile
-	bool isTileIncantationReady = ElevationManager::isTileResourceComplete(ctx->getLevel(), here);
-	bool leaderActive = ctx->hasActiveLeaderForLevel(ctx->getLevel());
-	int activeLeaderId = ctx->getActiveLeaderForLevel(ctx->getLevel());
-	bool isLeaderTile = (leaderActive && activeLeaderId != ctx->getMyId() && ctx->getTargetLeaderDirection() == 0);
-
-	if (!isLeaderTile && !isTileIncantationReady)
+	// 4. Pick up stones ONLY if we are alone on tile and it's not an incantation-ready tile
+	if (here.players <= 1 && !isTileIncantationReady)
 	{
 		for (size_t i = 0; i < STONE_COUNT; i++)
 		{
@@ -147,7 +148,7 @@ String StateForage::execute(Strategy *ctx)
 		}
 	}
 
-	// 4. Assume leadership ONLY if no leader is currently active for our level and cooldown expired
+	// 5. Assume leadership ONLY if no leader is currently active for our level and cooldown expired
 	if (inv[NOURRITURE] >= 10 && !leaderActive && ctx->getGatherCooldown() == 0)
 	{
 		bool hasStones = ElevationManager::hasAllElevationStones(ctx->getLevel(), inv);
@@ -159,6 +160,7 @@ String StateForage::execute(Strategy *ctx)
 			ctx->transitionTo(ctx->getStateLeaderGather());
 			ctx->setActiveLeaderForLevel(ctx->getLevel(), ctx->getMyId());
 			ctx->clearConfirmedFollowers();
+			ctx->clearEnrolledFollowers();
 			ctx->resetGatherTimeout();
 			ctx->resetGatherWaitTicks();
 			ctx->resetBroadcastTimer();
@@ -166,10 +168,6 @@ String StateForage::execute(Strategy *ctx)
 			return "voir";
 		}
 	}
-
-	// 5. If this is an active ritual tile or a complete tile, step away to not disturb it
-	if (here.players > 1 && (isLeaderTile || isTileIncantationReady))
-		return "avance";
 
 	// 6. Food priority if low
 	if (inv[NOURRITURE] < 12)
@@ -233,6 +231,7 @@ String StateLeaderGather::execute(Strategy *ctx)
 		mzu::info("Low food while leading gather, aborting to forage");
 		ctx->transitionTo(ctx->getStateForage());
 		ctx->setActiveLeaderForLevel(ctx->getLevel(), -1);
+		ctx->clearEnrolledFollowers();
 		return "broadcast " + ctx->getMessenger().buildAbort(ctx->getMyId(), ctx->getLevel());
 	}
 
@@ -249,7 +248,7 @@ String StateLeaderGather::execute(Strategy *ctx)
 	int targetPlayers = Elevation::getRequirement(ctx->getLevel()).players_needed;
 	int neededFollowers = targetPlayers - 1;
 	bool followersConfirmed = (neededFollowers <= 0) || (ctx->getConfirmedFollowersCount() >= neededFollowers);
-	bool playersComplete = (here.players == targetPlayers) && followersConfirmed;
+	bool playersComplete = (here.players == targetPlayers) && (followersConfirmed || ctx->getGatherWaitTicks() > 10);
 
 	if (stonesComplete && playersComplete)
 	{
@@ -257,6 +256,12 @@ String StateLeaderGather::execute(Strategy *ctx)
 		ctx->transitionTo(ctx->getStateIncanting());
 		ctx->setQueuedCommand("incantation");
 		return "broadcast " + ctx->getMessenger().buildFull(ctx->getMyId(), ctx->getLevel());
+	}
+
+	// Periodic pruning of unconfirmed enrolled followers
+	if (ctx->getGatherWaitTicks() > 30 && ctx->getGatherWaitTicks() % 15 == 0)
+	{
+		ctx->pruneUnconfirmedEnrolled();
 	}
 
 	// If all players are on tile, but stones are NOT complete after 40 ticks:
@@ -269,6 +274,7 @@ String StateLeaderGather::execute(Strategy *ctx)
 		ctx->setGatherCooldown(60);
 		ctx->transitionTo(ctx->getStateForage());
 		ctx->setActiveLeaderForLevel(ctx->getLevel(), -1);
+		ctx->clearEnrolledFollowers();
 		return "broadcast " + ctx->getMessenger().buildAbort(ctx->getMyId(), ctx->getLevel());
 	}
 
@@ -281,11 +287,12 @@ String StateLeaderGather::execute(Strategy *ctx)
 		ctx->setGatherCooldown(60);
 		ctx->transitionTo(ctx->getStateForage());
 		ctx->setActiveLeaderForLevel(ctx->getLevel(), -1);
+		ctx->clearEnrolledFollowers();
 		return "broadcast " + ctx->getMessenger().buildAbort(ctx->getMyId(), ctx->getLevel());
 	}
 
 	// 5. Broadcast OFFER to guide teammates to this tile
-	int slotsNeeded = targetPlayers - here.players;
+	int slotsNeeded = targetPlayers - 1 - static_cast<int>(ctx->getEnrolledFollowers().size());
 	if (slotsNeeded < 0) slotsNeeded = 0;
 
 	// If missing teammates to elevate and nobody has arrived after waiting, lay AT MOST 1 egg if team size < 8!
@@ -300,7 +307,7 @@ String StateLeaderGather::execute(Strategy *ctx)
 	if (ctx->incrementBroadcastTimer() >= 2)
 	{
 		ctx->resetBroadcastTimer();
-		return "broadcast " + ctx->getMessenger().buildOffer(ctx->getMyId(), ctx->getLevel(), missing, slotsNeeded);
+		return "broadcast " + ctx->getMessenger().buildOffer(ctx->getMyId(), ctx->getLevel(), missing, slotsNeeded, ctx->getEnrolledFollowers());
 	}
 
 	return "voir";
@@ -318,6 +325,7 @@ String StateJoinLeader::execute(Strategy *ctx)
 		ctx->transitionTo(ctx->getStateForage());
 		ctx->setTargetLeaderId(-1);
 		ctx->setTargetLeaderDirection(-1);
+		ctx->setEnrolled(false);
 		return "voir";
 	}
 
@@ -328,7 +336,7 @@ String StateJoinLeader::execute(Strategy *ctx)
 		ctx->setTargetLeaderDirection(-1);
 		return SoundNavigator::stepSoundDirection(dir, ctx);
 	}
-	else if (dir == 0 || ctx->getTargetLeaderDirection() == 0)
+	else if (dir == 0)
 	{
 		const std::vector<t_tile_content> &vision = ctx->getVision();
 		if (vision.empty())
@@ -338,13 +346,25 @@ String StateJoinLeader::execute(Strategy *ctx)
 		const int *inv = ctx->getInventory();
 		int targetPlayers = Elevation::getRequirement(ctx->getLevel()).players_needed;
 
-		// If we just arrived on the tile and it's already full: we are extra, step off!
-		if (here.players > targetPlayers && ctx->getGatherWaitTicks() == 0)
+		// If on tile but not enrolled in squad, step off!
+		if (!ctx->isEnrolled() && ctx->getGatherWaitTicks() > 2)
 		{
-			mzu::info("Leader tile already full on arrival (" + mzu::intToString(here.players) + " > " + mzu::intToString(targetPlayers) + "); stepping off!");
+			mzu::info("On tile but not enrolled in squad! Stepping off to FORAGE.");
 			ctx->transitionTo(ctx->getStateForage());
 			ctx->setTargetLeaderId(-1);
 			ctx->setTargetLeaderDirection(-1);
+			ctx->setEnrolled(false);
+			return "avance";
+		}
+
+		// If tile is overcrowded, step off immediately!
+		if (here.players > targetPlayers && ctx->getGatherWaitTicks() > 1)
+		{
+			mzu::info("Leader tile overcrowded (" + mzu::intToString(here.players) + " > " + mzu::intToString(targetPlayers) + "); stepping off!");
+			ctx->transitionTo(ctx->getStateForage());
+			ctx->setTargetLeaderId(-1);
+			ctx->setTargetLeaderDirection(-1);
+			ctx->setEnrolled(false);
 			return "avance";
 		}
 
@@ -358,6 +378,7 @@ String StateJoinLeader::execute(Strategy *ctx)
 			ctx->transitionTo(ctx->getStateForage());
 			ctx->setTargetLeaderId(-1);
 			ctx->setTargetLeaderDirection(-1);
+			ctx->setEnrolled(false);
 			return "avance";
 		}
 
@@ -385,7 +406,8 @@ String StateJoinLeader::execute(Strategy *ctx)
 			ctx->transitionTo(ctx->getStateForage());
 			ctx->setTargetLeaderId(-1);
 			ctx->setTargetLeaderDirection(-1);
-			return "voir";
+			ctx->setEnrolled(false);
+			return "avance";
 		}
 
 		// If resources are complete or being gathered, stay on tile waiting for incantation

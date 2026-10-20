@@ -19,13 +19,15 @@ LOG_DIR="$ROOT_DIR/logs"
 GAME_PORT=$(awk '/game *\{/,/\}/ { if ($1 == "port") { gsub(/;/, "", $2); print $2 } }' "$CONF_FILE")
 GUI_PORT=$(awk '/gui *\{/,/\}/ { if ($1 == "port") { gsub(/;/, "", $2); print $2 } }' "$CONF_FILE")
 INITIAL_CLIENTS=$(awk '/game *\{/,/\}/ { if ($1 == "clients_per_team") { gsub(/;/, "", $2); print $2 } }' "$CONF_FILE")
-DEFAULT_TEAM=$(awk '/game *\{/,/\}/ { if ($1 == "teams") { gsub(/;/, "", $2); print $2 } }' "$CONF_FILE")
+TEAMS=($(awk '/game *\{/,/\}/ { if ($1 == "teams") { for (i=2; i<=NF; i++) { gsub(/;/, "", $i); if ($i != "") print $i } } }' "$CONF_FILE"))
+if [ ${#TEAMS[@]} -eq 0 ]; then
+    TEAMS=("TeamRed" "TeamBlue")
+fi
 
 GAME_PORT=${GAME_PORT:-9000}
 GUI_PORT=${GUI_PORT:-9002}
 INITIAL_CLIENTS=${INITIAL_CLIENTS:-6}
-TEAM_NAME=${1:-${DEFAULT_TEAM:-TeamRed}}
-TARGET_MAX_AI=${2:-8}
+TARGET_MAX_AI=${1:-8}
 
 SERVER_PID=""
 GFX_PID=""
@@ -91,37 +93,80 @@ echo "[+] Starting 3D GFX GUI client ($GFX_BIN) on port $GUI_PORT..."
 "$GFX_BIN" -p "$GUI_PORT" -h 127.0.0.1 > "$LOG_DIR/gfx.log" 2>&1 &
 GFX_PID=$!
 
-echo "[+] Starting $INITIAL_CLIENTS initial AI clients for team '$TEAM_NAME' (target max: $TARGET_MAX_AI)..."
-for ((i = 1; i <= INITIAL_CLIENTS; i++)); do
-    BOT_LOG="$LOG_DIR/ai_bot_${i}.log"
-    echo "    -> Launching AI bot #$i (log: $BOT_LOG)"
-    "$CLIENT_BIN" -n "$TEAM_NAME" -p "$GAME_PORT" -h 127.0.0.1 > "$BOT_LOG" 2>&1 &
-    AI_PIDS+=($!)
-    sleep 0.2
+for team in "${TEAMS[@]}"; do
+    echo "[+] Starting $INITIAL_CLIENTS initial AI clients for team '$team' (target max: $TARGET_MAX_AI)..."
+    for ((i = 1; i <= INITIAL_CLIENTS; i++)); do
+        BOT_LOG="$LOG_DIR/ai_${team}_bot_${i}.log"
+        echo "    -> Launching AI bot #$i for $team (log: $BOT_LOG)"
+        "$CLIENT_BIN" -n "$team" -p "$GAME_PORT" -h 127.0.0.1 > "$BOT_LOG" 2>&1 &
+        AI_PIDS+=($!)
+        sleep 0.15
+    done
 done
 
 # Background supervisor to automatically spawn new AI clients when eggs hatch
 spawn_supervisor() {
     set +e
-    local spawned=$INITIAL_CLIENTS
-    local last_hatched=0
+    declare -A spawned_counts
+    for team in "${TEAMS[@]}"; do
+        spawned_counts["$team"]=$INITIAL_CLIENTS
+    done
 
-    while (( spawned < TARGET_MAX_AI )); do
-        local current_hatched=0
-        if [[ -f "$ROOT_DIR/zappy.log" ]]; then
-            current_hatched=$(grep -c "hatched" "$ROOT_DIR/zappy.log" 2>/dev/null) || current_hatched=0
-        elif [[ -f "$LOG_DIR/server.log" ]]; then
-            current_hatched=$(grep -c "hatched" "$LOG_DIR/server.log" 2>/dev/null) || current_hatched=0
-        fi
+    declare -A player_team
+    declare -A egg_team
+    local processed_lines=0
 
-        while (( current_hatched > last_hatched && spawned < TARGET_MAX_AI )); do
-            last_hatched=$((last_hatched + 1))
-            spawned=$((spawned + 1))
-            local bot_log="$LOG_DIR/ai_bot_${spawned}.log"
-            echo "    [+] Egg hatched! Launching AI bot #$spawned for team '$TEAM_NAME' (log: $bot_log)"
-            "$CLIENT_BIN" -n "$TEAM_NAME" -p "$GAME_PORT" -h 127.0.0.1 < /dev/null > "$bot_log" 2>&1 &
-            sleep 0.1
+    while true; do
+        local all_maxed=true
+        for team in "${TEAMS[@]}"; do
+            if (( spawned_counts["$team"] < TARGET_MAX_AI )); then
+                all_maxed=false
+                break
+            fi
         done
+        $all_maxed && break
+
+        if [[ -f "$ROOT_DIR/zappy.log" ]]; then
+            local total_lines=$(wc -l < "$ROOT_DIR/zappy.log" 2>/dev/null || echo 0)
+            if (( total_lines > processed_lines )); then
+                while IFS= read -r line; do
+                    if [[ "$line" =~ pnw\ #([0-9]+)\ [0-9]+\ [0-9]+\ [0-9]+\ [0-9]+\ ([A-Za-z0-9_-]+) ]]; then
+                        local pid="${BASH_REMATCH[1]}"
+                        local pteam="${BASH_REMATCH[2]}"
+                        player_team["$pid"]="$pteam"
+                    elif [[ "$line" =~ enw\ #([0-9]+)\ #([0-9]+) ]]; then
+                        local eid="${BASH_REMATCH[1]}"
+                        local parent_pid="${BASH_REMATCH[2]}"
+                        local eteam="${player_team[$parent_pid]}"
+                        if [[ -n "$eteam" ]]; then
+                            egg_team["$eid"]="$eteam"
+                        fi
+                    elif [[ "$line" =~ egg\ ([0-9]+)\ hatched ]]; then
+                        local eid="${BASH_REMATCH[1]}"
+                        local target_team="${egg_team[$eid]}"
+                        if [[ -z "$target_team" ]]; then
+                            target_team="${TEAMS[0]}"
+                            for t in "${TEAMS[@]}"; do
+                                if (( spawned_counts["$t"] < spawned_counts["$target_team"] )); then
+                                    target_team="$t"
+                                fi
+                            done
+                        fi
+
+                        if (( spawned_counts["$target_team"] < TARGET_MAX_AI )); then
+                            spawned_counts["$target_team"]=$(( spawned_counts["$target_team"] + 1 ))
+                            local num=${spawned_counts["$target_team"]}
+                            local bot_log="$LOG_DIR/ai_${target_team}_bot_${num}.log"
+                            echo "    [+] Egg hatched! Launching AI bot #$num for team '$target_team' (log: $bot_log)"
+                            "$CLIENT_BIN" -n "$target_team" -p "$GAME_PORT" -h 127.0.0.1 < /dev/null > "$bot_log" 2>&1 &
+                            AI_PIDS+=($!)
+                            sleep 0.1
+                        fi
+                    fi
+                done < <(tail -n +$((processed_lines + 1)) "$ROOT_DIR/zappy.log" 2>/dev/null)
+                processed_lines=$total_lines
+            fi
+        fi
         sleep 0.3
     done
 }
@@ -133,7 +178,7 @@ echo ""
 echo "[✓] All 3 projects are running!"
 echo "    - Server PID   : $SERVER_PID (logs -> $LOG_DIR/server.log)"
 echo "    - GFX GUI PID  : $GFX_PID (logs -> $LOG_DIR/gfx.log)"
-echo "    - Team         : $TEAM_NAME ($INITIAL_CLIENTS initial -> up to $TARGET_MAX_AI bots)"
+echo "    - Teams        : ${TEAMS[*]} ($INITIAL_CLIENTS initial -> up to $TARGET_MAX_AI bots each)"
 echo ""
 echo "Press Ctrl+C or close the 3D GFX window to stop everything."
 
