@@ -36,8 +36,11 @@ const Color kSkyBot = {84, 116, 160, 255};
 
 float frand(float a, float b) { return a + (b - a) * (GetRandomValue(0, 10000) / 10000.0f); }
 
-float hashf(unsigned a) {
-    a ^= a << 13; a *= 0x9E3779B1u; a ^= a >> 15; a *= 0x85EBCA6Bu; a ^= a >> 13;
+float hashf(unsigned a) 
+{
+    a ^= a << 13; a *= 0x9E3779B1u;
+    a ^= a >> 15; a *= 0x85EBCA6Bu;
+    a ^= a >> 13;
     return (a & 0xFFFF) / 65535.0f;
 }
 
@@ -713,7 +716,8 @@ void Renderer::drawResource(int type, Vector3 p, float t, float scale, unsigned 
     rlPopMatrix();
 }
 
-void Renderer::drawGround() {
+void Renderer::drawGround() 
+{
     int W = state_.width(), H = state_.height();
     float cx = (W - 1) * 0.5f * kTileSize, cz = (H - 1) * 0.5f * kTileSize;
     DrawPlane({cx, -0.7f, cz}, {4000, 4000}, Color{34, 52, 72, 255});

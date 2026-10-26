@@ -9,7 +9,8 @@ std::vector<Message> Parser::feed(const std::string& bytes) {
 
     std::vector<Message> out;
     size_t start = 0;
-    while (true) {
+    while (true)
+    {
         size_t nl = buffer_.find('\n', start);
         if (nl == std::string::npos) break;
         std::string line = buffer_.substr(start, nl - start);
@@ -40,4 +41,4 @@ Message Parser::parseLine(std::string line) {
     return msg;
 }
 
-} // namespace zappy
+}

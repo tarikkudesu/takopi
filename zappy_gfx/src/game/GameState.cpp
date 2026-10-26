@@ -7,8 +7,10 @@ namespace zappy {
 
 namespace {
 
-float wrapf(float v, float m) {
-    if (m <= 0) return v;
+float wrapf(float v, float m) 
+{
+    if (m <= 0) 
+        return v;
     float r = std::fmod(v, m);
     return r < 0 ? r + m : r;
 }
@@ -40,27 +42,38 @@ void GameState::reset() {
     events_.clear();
 }
 
-void GameState::setMapSize(int width, int height) {
-    if (width <= 0 || height <= 0) return;
+void GameState::setMapSize(int width, int height) 
+{
+    if (width <= 0 || height <= 0) 
+        return;
     width_ = width;
     height_ = height;
     tiles_.assign(static_cast<size_t>(width) * static_cast<size_t>(height), Tile{});
 }
 
-void GameState::setTileContent(int x, int y, const std::array<int, kResourceCount>& res) {
-    if (!hasMap() || x < 0 || y < 0 || x >= width_ || y >= height_) return;
+void GameState::setTileContent(int x, int y, const std::array<int, kResourceCount>& res) 
+{
+    if (!hasMap() || x < 0 || y < 0 || x >= width_ || y >= height_) 
+        return ;
     tiles_[static_cast<size_t>(y) * width_ + x].resources = res;
 }
 
-const Tile* GameState::tileAt(int x, int y) const {
-    if (!hasMap() || x < 0 || y < 0 || x >= width_ || y >= height_) return nullptr;
+const Tile* GameState::tileAt(int x, int y) const 
+{
+    if (!hasMap() || x < 0 || y < 0 || x >= width_ || y >= height_) 
+    return nullptr;
     return &tiles_[static_cast<size_t>(y) * width_ + x];
 }
 
-int GameState::teamIndex(const std::string& name, bool createIfMissing) {
+int GameState::teamIndex(const std::string& name, bool createIfMissing) 
+{
     for (size_t i = 0; i < teams_.size(); i++)
-        if (teams_[i].name == name) return static_cast<int>(i);
-    if (!createIfMissing || teams_.size() >= static_cast<size_t>(kMaxTeams)) return -1;
+    {
+        if (teams_[i].name == name) 
+            return static_cast<int>(i);
+    }
+    if (!createIfMissing || teams_.size() >= static_cast<size_t>(kMaxTeams)) 
+        return -1;
     Team t;
     t.name = name;
     t.colorIndex = static_cast<int>(teams_.size());
@@ -68,19 +81,23 @@ int GameState::teamIndex(const std::string& name, bool createIfMissing) {
     return static_cast<int>(teams_.size()) - 1;
 }
 
-Player* GameState::findPlayer(int id) {
+Player* GameState::findPlayer(int id) 
+{
     for (auto& p : players_) if (p.id == id) return &p;
     return nullptr;
 }
 
-const Player* GameState::findPlayer(int id) const {
+const Player* GameState::findPlayer(int id) const 
+{
     for (const auto& p : players_) if (p.id == id) return &p;
     return nullptr;
 }
 
-Player& GameState::playerJoin(int id, int x, int y, int orientation, int level, int team) {
+Player& GameState::playerJoin(int id, int x, int y, int orientation, int level, int team) 
+{
     Player* existing = findPlayer(id);
-    if (!existing) {
+    if (!existing) 
+    {
         players_.push_back(Player{});
         existing = &players_.back();
     }
@@ -100,7 +117,8 @@ Player& GameState::playerJoin(int id, int x, int y, int orientation, int level, 
     return p;
 }
 
-void GameState::moveTowards(Player& p, int x, int y) {
+void GameState::moveTowards(Player& p, int x, int y) 
+{
     float cx = wrapf(p.fx, static_cast<float>(width_));
     float cz = wrapf(p.fz, static_cast<float>(height_));
     float dx = x - cx, dz = y - cz;
@@ -114,22 +132,28 @@ void GameState::moveTowards(Player& p, int x, int y) {
     p.y = y;
 }
 
-void GameState::playerMove(int id, int x, int y, int orientation) {
+void GameState::playerMove(int id, int x, int y, int orientation) 
+{
     Player* p = findPlayer(id);
-    if (!p) return;
-    if (x != p->x || y != p->y) moveTowards(*p, x, y);
+    if (!p) 
+        return;
+    if (x != p->x || y != p->y) 
+        moveTowards(*p, x, y);
     p->orientation = orientation;
     p->goalYaw = orientationYaw(orientation);
 }
 
-void GameState::playerSetLevel(int id, int level) {
-    if (Player* p = findPlayer(id)) p->level = level;
+void GameState::playerSetLevel(int id, int level) 
+{
+    if (Player* p = findPlayer(id)) 
+        p->level = level;
 }
 
 void GameState::playerSetInventory(int id, int x, int y, const std::array<int, kResourceCount>& inv) {
     Player* p = findPlayer(id);
     if (!p) return;
-    if (x != p->x || y != p->y) moveTowards(*p, x, y);
+    if (x != p->x || y != p->y) 
+        moveTowards(*p, x, y);
     p->inventory = inv;
     p->hasInventory = true;
 }

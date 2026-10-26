@@ -7,7 +7,7 @@ namespace zappy {
 constexpr float kTileSize = 2.0f;
 
 // Number of resource kinds: food, linemate, deraumere, sibur, mendiane,
-// phiras, thystame (RFC 4242).
+// phiras, thystame 
 constexpr int kResourceCount = 7;
 
 constexpr int kMaxTeams = 32;
@@ -20,4 +20,4 @@ constexpr float kEggAnimTime = 0.6f;
 // so the client must periodically re-ask for the whole map with "mct".
 constexpr float kMapRefreshInterval = 3.0f;
 
-} // namespace zappy
+}
