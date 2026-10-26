@@ -4,32 +4,41 @@
 
 namespace zappy {
 
-namespace {
+namespace
+{
 
-int toInt(const std::string& s) { return s.empty() ? 0 : std::atoi(s.c_str()); }
+int toInt(const std::string& s) 
+{
+     return s.empty() ? 0 : std::atoi(s.c_str()); 
+}
 
-// Returns the text of `raw` after skipping `tokensToSkip` whitespace-
-// separated tokens, preserving the original spacing of what remains (used
-// to recover a broadcast/server message without losing embedded spaces).
-std::string textAfterTokens(const std::string& raw, int tokensToSkip) {
+std::string textAfterTokens(const std::string& raw, int tokensToSkip) 
+{
     size_t pos = 0;
-    for (int i = 0; i < tokensToSkip && pos != std::string::npos; i++) {
-        while (pos < raw.size() && raw[pos] == ' ') pos++;
+    for (int i = 0; i < tokensToSkip && pos != std::string::npos; i++) 
+    {
+        while (pos < raw.size() && raw[pos] == ' ') 
+            pos++;
         pos = raw.find(' ', pos);
     }
-    if (pos == std::string::npos) return {};
-    while (pos < raw.size() && raw[pos] == ' ') pos++;
+    if (pos == std::string::npos) 
+        return {};
+    while (pos < raw.size() && raw[pos] == ' ') 
+        pos++;
     return raw.substr(pos);
 }
 
-} // namespace
+}
 
-int MessageHandler::parsePlayerId(const std::string& token) {
+int MessageHandler::parsePlayerId(const std::string& token) 
+{
     return toInt(!token.empty() && token[0] == '#' ? token.substr(1) : token);
 }
 
-void MessageHandler::handle(const Message& m) {
-    if (!welcomed_ && (m.command == "WELCOME" || m.command == "BIENVENUE")) {
+void MessageHandler::handle(const Message& m) 
+{
+    if (!welcomed_ && (m.command == "WELCOME" || m.command == "BIENVENUE")) 
+    {
         net_.send("GRAPHIC\n");
         welcomed_ = true;
         return;
@@ -61,26 +70,36 @@ void MessageHandler::handle(const Message& m) {
     else if (m.command == "sbp") state_.reportProtocolError("Server: bad parameters");
 }
 
-void MessageHandler::onMsz(const Message& m) {
-    if (m.args.size() < 2) return;
+void MessageHandler::onMsz(const Message& m) 
+{
+    if (m.args.size() < 2) 
+        return;
     int w = toInt(m.args[0]), h = toInt(m.args[1]);
-    if (w > 0 && h > 0 && w <= 2000 && h <= 2000) state_.setMapSize(w, h);
+    if (w > 0 && h > 0 && w <= 2000 && h <= 2000) 
+        state_.setMapSize(w, h);
 }
 
-void MessageHandler::onBct(const Message& m) {
-    if (m.args.size() < 9) return;
+void MessageHandler::onBct(const Message& m) 
+{
+    if (m.args.size() < 9) 
+        return;
     std::array<int, kResourceCount> res{};
-    for (int i = 0; i < kResourceCount; i++) res[i] = toInt(m.args[2 + i]);
+    for (int i = 0; i < kResourceCount; i++) 
+        res[i] = toInt(m.args[2 + i]);
     state_.setTileContent(toInt(m.args[0]), toInt(m.args[1]), res);
 }
 
-void MessageHandler::onTna(const Message& m) {
-    if (m.args.empty()) return;
+void MessageHandler::onTna(const Message& m) 
+{
+    if (m.args.empty()) 
+        return;
     state_.teamIndex(m.args[0], true);
 }
 
-void MessageHandler::onPnw(const Message& m) {
-    if (m.args.size() < 6) return;
+void MessageHandler::onPnw(const Message& m) 
+{
+    if (m.args.size() < 6) 
+        return;
     int id = parsePlayerId(m.args[0]);
     int x = toInt(m.args[1]), y = toInt(m.args[2]);
     int o = toInt(m.args[3]), lvl = toInt(m.args[4]);
@@ -88,13 +107,17 @@ void MessageHandler::onPnw(const Message& m) {
     state_.playerJoin(id, x, y, o, lvl, team);
 }
 
-void MessageHandler::onPpo(const Message& m) {
-    if (m.args.size() < 4) return;
+void MessageHandler::onPpo(const Message& m) 
+{
+    if (m.args.size() < 4) 
+        return;
     state_.playerMove(parsePlayerId(m.args[0]), toInt(m.args[1]), toInt(m.args[2]), toInt(m.args[3]));
 }
 
-void MessageHandler::onPlv(const Message& m) {
-    if (m.args.size() < 2) return;
+void MessageHandler::onPlv(const Message& m) 
+{
+    if (m.args.size() < 2) 
+        return;
     state_.playerSetLevel(parsePlayerId(m.args[0]), toInt(m.args[1]));
 }
 
@@ -150,24 +173,29 @@ void MessageHandler::onEnw(const Message& m) {
     state_.eggLaid(parsePlayerId(m.args[0]), parsePlayerId(m.args[1]), toInt(m.args[2]), toInt(m.args[3]));
 }
 
-void MessageHandler::onEggEnd(const Message& m, int kind) {
-    if (m.args.empty()) return;
+void MessageHandler::onEggEnd(const Message& m, int kind) 
+{
+    if (m.args.empty()) 
+        return;
     int id = parsePlayerId(m.args[0]);
     if      (kind == 0) state_.eggHatchStart(id);
     else if (kind == 1) state_.eggConnected(id);
     else                state_.eggDied(id);
 }
 
-void MessageHandler::onSgt(const Message& m) {
+void MessageHandler::onSgt(const Message& m) 
+{
     if (!m.args.empty()) state_.setTimeUnit(toInt(m.args[0]));
 }
 
-void MessageHandler::onSeg(const Message& m) {
+void MessageHandler::onSeg(const Message& m) 
+{
     if (!m.args.empty()) state_.setGameOver(m.args[0]);
 }
 
-void MessageHandler::onSmg(const Message& m) {
+void MessageHandler::onSmg(const Message& m) 
+{
     state_.reportServerMessage(textAfterTokens(m.raw, 1));
 }
 
-} // namespace zappy
+}
