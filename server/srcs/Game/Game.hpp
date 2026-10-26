@@ -29,14 +29,15 @@ class Game
 		std::vector<GuiEvent>					__guiEvents;
 		std::map<int, int>						__teamSlots;
 		std::map<int, IncantationContext>		__incantations;
+		unsigned long							__lastSpawnTick;
 		unsigned long							__nextGuiEventSequence;
-		long									__lastSpawnTick;
 
 		bool									isPlayerInIncantation(int playerId) const;
 		void									checkVictory();
 		void									processFood(long currentTick);
 		void									processEggs(long currentTick);
 		void									processCommands(long currentTick);
+		void									processResources(long currentTick);
 		void									activateCommand(int playerId, const String &rawCmd, long currentTick);
 
 		void									publishGuiEvent(const String &payload);

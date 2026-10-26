@@ -18,6 +18,7 @@ class ServerManager
 		void						setUpServers();
 		void						setUpServer(size_t start);
 		void						validateServerCardinality();
+		void						overrideargs(const t_args &overrides);
 		String						checkOuterscope(String outerScope);
 
 		ServerManager() = delete;
@@ -25,7 +26,7 @@ class ServerManager
 		ServerManager	&operator=( const ServerManager &assign ) = delete;
 
 	public:
-		bool						setUpZappy();
+		bool						runzappy(const t_args &overrides);
 
 		ServerManager( const String &configutation_file );
 		~ServerManager();

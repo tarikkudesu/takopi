@@ -30,6 +30,7 @@ class ServerGame : public Server
 		Game								*getGame();
 
 		void								proccessToken( t_svec &tokens );
+		void								overrideargs( const t_args &overrides );
 
 		ServerGame( String line );
 		~ServerGame();

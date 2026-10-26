@@ -11,8 +11,6 @@ void signalHandler(int signal)
 
 int main(int ac, char **av)
 {
-	if (ac == 1)
-		exit(EXIT_FAILURE);
 	signal(SIGINT, signalHandler);
 	signal(SIGPIPE, signalHandler);
 
@@ -22,9 +20,9 @@ int main(int ac, char **av)
 
 	bool success = false;
 	{
-		mzu::logs(args);
+		t_args overrides = mzu::argparse(args);
 		ServerManager manager(*(args.end() - 1));
-		success = manager.setUpZappy();
+		success = manager.runzappy(overrides);
 		mzu::close();
 	}
 	return success ? EXIT_SUCCESS : EXIT_FAILURE;

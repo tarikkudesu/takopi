@@ -37,12 +37,12 @@ class Core
 		static void					acceptNewConnection( int sd );
 		static void					proccessSelectEvent( int sd, fd_set &readSet, fd_set &writeSet, int &retV );
 		static int					buildSets( fd_set &readSet, fd_set &writeSet );
-
+		
 		Core() = delete;
 		Core( const Core &copy ) = delete;
 		Core	&operator=( const Core &assign ) = delete;
 		~Core() = delete;
-
+		
 	public:
 		static void					logServers();
 		static bool					hasGameServer();

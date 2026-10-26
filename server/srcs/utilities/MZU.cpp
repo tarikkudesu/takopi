@@ -11,39 +11,98 @@ std::ofstream mzu::__logFile;
  *											   LOGS 											*
  ************************************************************************************************/
 
-void mzu::logs(const t_svec &args)
+t_args mzu::argparse(const t_svec &args)
 {
-	mzu::__logFile.open("zappy.log", std::ios::out | std::ios::trunc);
-	if (!mzu::__logFile.is_open())
+	if (!RESPAWN_TIME)
 	{
-		std::cerr << "error: couldn't open zappy.log" << std::endl;
+		mzu::terr("respawn time interval must not be 0");
+		mzu::close();
 		exit(EXIT_FAILURE);
-	}
-	mzu::__logFile << std::unitbuf;
-	for (t_svec::const_iterator it = args.begin(); it != args.end(); it++)
-	{
-		if (*it == "debug")
-			mzu::__debug = true;
-		else if (*it == "info")
-			mzu::__info = true;
-		else if (*it == "warn")
-			mzu::__warn = true;
-		else if (*it == "error")
-			mzu::__error = true;
-		else if (*it == "fatal")
-			mzu::__fatal = true;
-		else if (*it == "all")
-		{
-			mzu::__info = true;
-			mzu::__warn = true;
-			mzu::__error = true;
-			mzu::__fatal = true;
-			mzu::__debug = true;
-		}
 	}
 	if (READ_SIZE < 1024)
 	{
 		mzu::terr("read size less then 1024 is not recommended");
+		mzu::close();
+		exit(EXIT_FAILURE);
+	}
+	mzu::__logFile.open("zappy.log", std::ios::out | std::ios::trunc);
+	if (!mzu::__logFile.is_open())
+	{
+		mzu::terr("couldn't open zappy.log");
+		exit(EXIT_FAILURE);
+	}
+	if (args.size() == 0)
+	{
+		mzu::terr("no arguments provided");
+		mzu::close();
+		exit(EXIT_FAILURE);
+	}
+	mzu::__logFile << std::unitbuf;
+	try
+	{
+		t_args res;
+		size_t i = 0;
+	
+		if (args.size() == 0)
+			throw std::invalid_argument("no arguments provided");
+
+		while (i < args.size() - 1)
+		{
+			const String &flag = args[i];
+	
+			if (flag == "debug" || flag == "info" || flag == "warn" || flag == "error" || flag == "fatal" || flag == "all")
+			{
+				if (flag == "debug" || flag == "all")
+					mzu::__debug = true;
+				if (flag == "info" || flag == "all")
+					mzu::__info = true;
+				if (flag == "warn" || flag == "all")
+					mzu::__warn = true;
+				if (flag == "error" || flag == "all")
+					mzu::__error = true;
+				if (flag == "fatal" || flag == "all")
+					mzu::__fatal = true;
+				++i;
+				continue;
+			}
+	
+			if (flag == "-n")
+			{
+				t_svec teams;
+				if (res.count("teams"))
+					throw std::invalid_argument("duplicate option: -n");
+				for (++i; i < args.size() - 1 && args[i][0] != '-'; ++i)
+					teams.push_back(args[i]);
+				if (teams.empty())
+					throw std::invalid_argument("-n requires at least one team");
+				res["teams"] = teams;
+				continue;
+			}
+	
+			String key;
+			if (flag == "-p")      		key = "port";
+			else if (flag == "-x") 		key = "width";
+			else if (flag == "-y") 		key = "height";
+			else if (flag == "-c") 		key = "clients_per_team";
+			else if (flag == "-t") 		key = "time";
+			else
+				throw std::invalid_argument("unknown option: " + flag);
+	
+			if (res.count(key))
+				throw std::invalid_argument("duplicate option: " + flag);
+			if (i + 1 >= args.size() - 1)
+				throw std::invalid_argument("missing value for " + flag);
+	
+			const String &val = args[i + 1];
+			res[key] = t_svec(1, val);
+			i += 2;
+		}
+		return res;
+	}
+	catch(const std::exception& e)
+	{
+		mzu::terr(e.what());
+		mzu::close();
 		exit(EXIT_FAILURE);
 	}
 }
@@ -83,7 +142,7 @@ void mzu::running(String __log_message)
 }
 void mzu::terr(const String &__error_message)
 {
-	mzu::writeLog("ERROR", __error_message);
+	std::cerr << mzu::logDate() << " [ERROR] " << __error_message << std::endl;
 }
 /*************************************************************************************************
  *											 UTILITIES											 *

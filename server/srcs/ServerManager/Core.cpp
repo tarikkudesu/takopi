@@ -415,7 +415,7 @@ void Core::proccessSelectEvent(int sd, fd_set &readSet, fd_set &writeSet, int &r
 		writeDataToSocket(sd);
 		retV--;
 	}
-	else if (Core::__criticalOverload == true)
+	if (Core::__criticalOverload == true)
 	{
 		mzu::fatal("critcal server overload");
 		if (!Core::isServerSocket(sd))

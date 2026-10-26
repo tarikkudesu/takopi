@@ -23,6 +23,7 @@
 
 typedef std::string String;
 typedef std::vector<String> t_svec;
+typedef std::map<String, t_svec> t_args;
 
 #define RED								"\033[1;31m"
 #define BLUE							"\033[1;34m"
@@ -32,6 +33,7 @@ typedef std::vector<String> t_svec;
 #define YELLOW							"\033[1;33m"
 #define MAGENTA							"\033[1;35m"
 
+#define RESPAWN_TIME					1000
 #define SELECT_TIMEOUT					1000
 #define MAX_EVENTS						1024
 #define READ_SIZE						8192

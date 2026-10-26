@@ -145,6 +145,24 @@ void ServerGame::proccessToken(t_svec &tokens)
  *							GAME INITIALIZATION								*
  ****************************************************************************/
 
+void	ServerGame::overrideargs( const t_args &overrides )
+{
+	t_args::const_iterator it;
+
+	if ((it = overrides.find("port")) != overrides.end())
+		setPort(static_cast<int>(mzu::stringToInt(it->second[0])));
+	if ((it = overrides.find("width")) != overrides.end())
+		__width = static_cast<int>(mzu::stringToInt(it->second[0]));
+	if ((it = overrides.find("height")) != overrides.end())
+		__height = static_cast<int>(mzu::stringToInt(it->second[0]));
+	if ((it = overrides.find("clients_per_team")) != overrides.end())
+		__clientsPerTeam = static_cast<int>(mzu::stringToInt(it->second[0]));
+	if ((it = overrides.find("time")) != overrides.end())
+		__timeUnit = static_cast<int>(mzu::stringToInt(it->second[0]));
+	if ((it = overrides.find("teams")) != overrides.end())
+		__teams = it->second;
+}
+
 void ServerGame::furtherSetup()
 {
 	if (__game)

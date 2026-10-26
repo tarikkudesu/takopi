@@ -44,8 +44,8 @@ void Game::init(int width, int height, const t_svec &teams, int clientsPerTeam, 
 	__activeCommands.clear();
 	__pendingCommands.clear();
 	__nextGuiEventSequence = 1;
-	__lastSpawnTick = 0;
 	__timeUnit = timeUnit;
+	__lastSpawnTick = 0;
 	__tickOffset = 0;
 	__teams = teams;
 	__state = GAME_RUNNING;
@@ -104,15 +104,20 @@ void Game::tick()
 	if (__state != GAME_RUNNING)
 		return;
 	long currentTick = getCurrentTick();
+	processResources(currentTick);
 	processFood(currentTick);
 	processEggs(currentTick);
 	processCommands(currentTick);
-	if (currentTick - __lastSpawnTick >= 20)
+	checkVictory();
+}
+
+void Game::processResources(long currentTick)
+{
+	if (currentTick - __lastSpawnTick >= RESPAWN_TIME)
 	{
-		__world.spawnResources();
+		__world.populateResources();
 		__lastSpawnTick = currentTick;
 	}
-	checkVictory();
 }
 
 void Game::processFood(long currentTick)

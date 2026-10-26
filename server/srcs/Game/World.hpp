@@ -23,7 +23,6 @@ class World
 		int										wrapX(int x) const;
 		int										wrapY(int y) const;
 		void									populateResources();
-		void									spawnResources();
 		Tile									&tileAt(int x, int y);
 		const Tile								&tileAt(int x, int y) const;
 		void									init(int width, int height);

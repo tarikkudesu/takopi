@@ -212,7 +212,20 @@ void ServerManager::initServers()
  *                             SERVER LAUNCHER                           *
  *************************************************************************/
 
-bool ServerManager::setUpZappy()
+void ServerManager::overrideargs(const t_args &overrides)
+{
+	for (t_serVect::iterator it = __serverTemplates.begin(); it != __serverTemplates.end(); it++)
+	{
+		if ((*it)->getType() == GAME)
+		{
+			ServerGame	*server = dynamic_cast<ServerGame *>(*it);
+			if (server)
+				server->overrideargs(overrides);
+		}
+	}
+}
+
+bool ServerManager::runzappy(const t_args &overrides)
 {
 	try
 	{
@@ -222,6 +235,7 @@ bool ServerManager::setUpZappy()
 		checkBraces();
 		setUpServers();
 		validateServerCardinality();
+		overrideargs(overrides);
 		initServers();
 		Core::logServers();
 		Core::mainLoop();

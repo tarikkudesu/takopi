@@ -14,7 +14,7 @@ class Server
 		int								__sd;
 		int								__port;
 		String							__host;
-		
+
 	protected:
 		Type							__type;
 		bool							__portSet;
