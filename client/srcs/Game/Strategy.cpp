@@ -123,7 +123,7 @@ bool Strategy::hasEggLaidAtThisLevel() const { return __eggLaidAtThisLevel; }
 
 bool Strategy::canLayEgg() const
 {
-	// Strict hard cap of 8 team members total! Initial team is 6, so max 2 eggs allowed!
+	// Cap team size at 8 (starts with 6 bots, max 2 eggs)
 	if (__totalTeamEggs >= 2)
 		return false;
 	if (getTeamSizeEstimate() >= 8)
@@ -293,7 +293,7 @@ void Strategy::applyLevel(int level)
 		__targetLeaderLevel = -1;
 		__leaderHeartbeat = 0;
 		__gatherWaitTicks = 0;
-		__forked = false; // Allow reproducing if stuck at a future level!
+		__forked = false;
 		__isEnrolled = false;
 		clearEnrolledFollowers();
 		clearConfirmedFollowers();
@@ -371,9 +371,7 @@ void Strategy::applyBroadcast(int direction, const String &text)
 		if (__currentState == __stateForage && msg.slotsNeeded > 0)
 		{
 			bool hasFoodSafe = (__inventory[NOURRITURE] >= 6);
-			// Missing stones filter:
-			// If stones are missing on tile, only join if carrying at least one of the needed stones!
-			// If stones on tile are already complete, any teammate can join to fill player quota.
+			// Join if carrying any missing stone, or if stones are already satisfied
 			bool stonesMissing = false;
 			bool canContribute = false;
 			for (int s = 1; s < RESOURCE_COUNT; s++)
@@ -531,11 +529,11 @@ String Strategy::decideNextCommand()
 	if (__level >= WIN_LEVEL)
 		return SoundNavigator::wander(this);
 
-	// Critical survival check
+	// Low food safety
 	if (__inventory[NOURRITURE] < 9 && __currentState != __stateIncanting)
 		transitionTo(__stateSurvive);
 
-	// Delegate directly to the current state!
+	// Delegate to current state
 	if (__currentState)
 	{
 		String cmd = __currentState->execute(this);
@@ -546,7 +544,7 @@ String Strategy::decideNextCommand()
 			if (getConsecutiveTurns() >= 3)
 			{
 				resetConsecutiveTurns();
-				return "avance"; // Force a forward step to break turn oscillation
+				return "avance"; // Break turn oscillation
 			}
 		}
 		else if (cmd == "avance")

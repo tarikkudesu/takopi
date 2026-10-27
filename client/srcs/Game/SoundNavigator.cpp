@@ -76,9 +76,7 @@ String SoundNavigator::stepTowardVisionTile(size_t tileIndex, Strategy *ctx)
 		return "avance";
 	}
 
-	// For rings >= 2:
-	// If the tile is in the forward corridor, march straight ahead!
-	// This directly closes the distance into inner rings without wasting turns!
+	// For rings >= 2, advance directly if tile is in the forward corridor
 	int offset = std::abs(idx - frontIdx);
 	if (offset <= ring / 2)
 		return "avance";

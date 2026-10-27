@@ -88,13 +88,12 @@ bool ElevationManager::hasEnoughToLead(int currentLevel, const int inventory[RES
 	if (totalNeeded <= 0)
 		return false;
 
-	// The leader MUST possess more than 75% of the total required elevation stones for this level!
+	// Only lead if holding at least 75% of the total required stones
 	double stoneRatio = static_cast<double>(totalPresent) / static_cast<double>(totalNeeded);
 	if (stoneRatio <= 0.75)
 		return false;
 
-	// Critical stone requirement guards:
-	// A leader MUST possess the key/rare stones for that level!
+	// Rare stone prerequisites per level
 	if (currentLevel == 3 && (inventory[SIBUR] < 1 || inventory[PHIRAS] < 1))
 		return false;
 	if (currentLevel == 4 && (inventory[SIBUR] < 1 || inventory[PHIRAS] < 1))
