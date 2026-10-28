@@ -6,9 +6,8 @@
 
 namespace zappy {
 
-// A player, both its protocol-reported state (x, y, orientation, level,
-// inventory) and the extra animation state GameState::update uses to make
-// it glide smoothly between tiles instead of teleporting.
+// A player contains protocol state plus the interpolation state used while
+// moving between map tiles.
 struct Player {
     int id = -1;
     int team = -1;
@@ -18,20 +17,12 @@ struct Player {
     std::array<int, kResourceCount> inventory{};
     bool hasInventory = false;
 
-    // Logical render position (fx,fz) glides toward the goal (gx,gz) each
-    // frame; both are in tile units and may run outside [0,width) while
-    // crossing the map's wrap-around edge, unwrapped lazily by the renderer.
+    // Positions are in tile units and may temporarily run outside the map
+    // while crossing a wrap-around edge.
     float fx = 0, fz = 0;
     float gx = 0, gz = 0;
-    float ox = 0, oz = 0;      // small offset when several players share a tile
-    float yaw = 0, goalYaw = 0;
-    float spawnT = 0;          // 0..1 spawn-in animation
-    float dyingT = 0;          // >0 while playing the death animation
-    float animPhase = 0;       // walk-cycle phase
-    float shakeT = 0;          // expulsion shake
-    float layT = 0;            // fork/lay pulse
-    float broadcastT = 0;      // talking pulse
-    bool moving = false;
+    float ox = 0, oz = 0;      // offset when several players share a tile
+    float dyingT = 0;          // removal grace period after a death event
     bool incanting = false;
 
     float scale() const { return 0.95f + 0.055f * level; }

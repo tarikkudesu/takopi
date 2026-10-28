@@ -31,25 +31,6 @@ const Color kTeamPalette[] = {
 };
 constexpr int kPaletteSize = static_cast<int>(sizeof(kTeamPalette) / sizeof(kTeamPalette[0]));
 
-const Color kSkyTop = {22, 32, 64, 255};
-const Color kSkyBot = {84, 116, 160, 255};
-
-float frand(float a, float b) { return a + (b - a) * (GetRandomValue(0, 10000) / 10000.0f); }
-
-float hashf(unsigned a) 
-{
-    a ^= a << 13; a *= 0x9E3779B1u;
-    a ^= a >> 15; a *= 0x85EBCA6Bu;
-    a ^= a >> 13;
-    return (a & 0xFFFF) / 65535.0f;
-}
-
-float easeOutBack(float x) {
-    const float c1 = 1.70158f, c3 = c1 + 1.0f;
-    x = Clamp(x, 0, 1) - 1.0f;
-    return 1.0f + c3 * x * x * x + c1 * x * x;
-}
-
 Color mixColor(Color a, Color b, float t) {
     return Color{
         static_cast<unsigned char>(a.r + (b.r - a.r) * t),
@@ -84,41 +65,6 @@ void drawTextCentered(int cx, int y, int size, Color c, const char* fmt, ...) {
     DrawText(buf, cx - w / 2, y, size, c);
 }
 
-const char* VS_SRC =
-    "#version 330\n"
-    "in vec3 vertexPosition;\n"
-    "in vec2 vertexTexCoord;\n"
-    "in vec4 vertexColor;\n"
-    "uniform mat4 mvp;\n"
-    "out vec3 fragPos;\n"
-    "out vec4 fragColor;\n"
-    "void main(){\n"
-    "  fragPos = vertexPosition;\n"
-    "  fragColor = vertexColor;\n"
-    "  gl_Position = mvp*vec4(vertexPosition,1.0);\n"
-    "}\n";
-const char* FS_SRC =
-    "#version 330\n"
-    "in vec3 fragPos;\n"
-    "in vec4 fragColor;\n"
-    "uniform vec3 camPos;\n"
-    "uniform vec3 fogColor;\n"
-    "out vec4 finalColor;\n"
-    "void main(){\n"
-    "  vec3 n = normalize(cross(dFdx(fragPos), dFdy(fragPos)));\n"
-    "  vec3 v = normalize(camPos - fragPos);\n"
-    "  if (dot(n, v) < 0.0) n = -n;\n"
-    "  vec3 L = normalize(vec3(0.45, 1.0, 0.35));\n"
-    "  float diff = max(dot(n, L), 0.0);\n"
-    "  float rim = pow(1.0 - max(dot(n, v), 0.0), 3.0) * 0.12;\n"
-    "  vec3 light = vec3(0.40, 0.44, 0.54) + vec3(1.0, 0.96, 0.86) * diff * 0.78 + rim;\n"
-    "  vec3 col = fragColor.rgb * light;\n"
-    "  float d = length(camPos - fragPos);\n"
-    "  float f = clamp((d - 70.0) / 260.0, 0.0, 1.0);\n"
-    "  col = mix(col, fogColor, f * f);\n"
-    "  finalColor = vec4(col, fragColor.a);\n"
-    "}\n";
-
 } // namespace
 
 // ------------------------------------------------------------------ lifecycle
@@ -132,15 +78,6 @@ bool Renderer::init(int width, int height, const char* title) {
     SetTargetFPS(60);
     SetWindowMinSize(800, 500);
 
-    shader_ = LoadShaderFromMemory(VS_SRC, FS_SRC);
-    useShader_ = shader_.id != rlGetShaderIdDefault() && shader_.id != 0;
-    if (useShader_) {
-        locCamPos_ = GetShaderLocation(shader_, "camPos");
-        locFogColor_ = GetShaderLocation(shader_, "fogColor");
-        float fog[3] = {kSkyBot.r / 255.0f, kSkyBot.g / 255.0f, kSkyBot.b / 255.0f};
-        SetShaderValue(shader_, locFogColor_, fog, SHADER_UNIFORM_VEC3);
-    }
-
     resetCamera();
     loadSounds();
     return true;
@@ -148,7 +85,6 @@ bool Renderer::init(int width, int height, const char* title) {
 
 void Renderer::shutdown() {
     unloadSounds();
-    if (useShader_) UnloadShader(shader_);
     CloseWindow();
 }
 
@@ -156,13 +92,10 @@ bool Renderer::shouldClose() const { return WindowShouldClose(); }
 
 void Renderer::beginFrame() {
     BeginDrawing();
-    ClearBackground(kSkyBot);
-    DrawRectangleGradientV(0, 0, GetScreenWidth(), GetScreenHeight(), kSkyTop, kSkyBot);
+    ClearBackground(Color{84, 116, 160, 255});
 }
 
 void Renderer::endFrame() { EndDrawing(); }
-
-void Renderer::takeScreenshot(const char* path) { TakeScreenshot(path); }
 
 // -------------------------------------------------------------------- helpers
 
@@ -179,24 +112,6 @@ void Renderer::resetCamera() {
     cameraPitch_ = 0.95f;
     cameraDist_ = cameraDistGoal_ = Clamp(std::max(w, h) * kTileSize * 1.05f, 14, 300);
     follow_ = false;
-}
-
-void Renderer::spawnBurst(Vector3 pos, Color color, int count, float speed, float up, float life, float size) {
-    for (int i = 0; i < count; i++) {
-        float a = frand(0, 2 * kPi), r = frand(0.3f, 1.0f) * speed;
-        Particle p;
-        p.pos = pos;
-        p.vel = {std::cos(a) * r, frand(0.3f, 1.0f) * up, std::sin(a) * r};
-        p.color = color;
-        p.life = p.maxLife = life * frand(0.6f, 1.0f);
-        p.size = size * frand(0.7f, 1.3f);
-        p.gravity = 6.0f;
-        particles_.push_back(p);
-    }
-}
-
-void Renderer::spawnRing(Vector3 pos, Color color, float r0, float r1, float duration) {
-    rings_.push_back({pos, color, 0, duration, r0, r1});
 }
 
 void Renderer::log(Color color, const std::string& text) {
@@ -237,44 +152,23 @@ void Renderer::changeFrequency(int direction) {
     net_.send("sst " + std::to_string(f) + "\n");
 }
 
-// -------------------------------------------------------------------- audio
-//
-// Every sound here is synthesized in memory, not loaded from disk, so there
-// is no asset file that can go missing or need copying in the Makefile.
-
-Sound Renderer::makeMelody(const std::vector<std::pair<float, float>>& notes, float volume) {
+Sound Renderer::makeTone(float freqHz, float durationSec, float volume) {
     constexpr int sampleRate = 44100;
-    int totalFrames = 0;
-    for (const auto& n : notes) totalFrames += static_cast<int>(n.second * sampleRate);
-    if (totalFrames <= 0) totalFrames = 1;
-
-    std::vector<short> samples(static_cast<size_t>(totalFrames), 0);
-    int offset = 0;
-    for (const auto& n : notes) {
-        float freq = n.first;
-        int frames = static_cast<int>(n.second * sampleRate);
-        for (int i = 0; i < frames && offset + i < totalFrames; i++) {
-            float t = static_cast<float>(i) / sampleRate;
-            // Half-sine envelope per note: fades in and out smoothly, so
-            // consecutive notes (and the loop point) never click/pop.
-            float env = std::sin(kPi * static_cast<float>(i) / frames);
-            float s = (freq > 0.0f) ? std::sin(2 * kPi * freq * t) * env * volume : 0.0f;
-            samples[static_cast<size_t>(offset + i)] = static_cast<short>(s * 32000);
-        }
-        offset += frames;
+    int frames = static_cast<int>(durationSec * sampleRate);
+    std::vector<short> samples(static_cast<size_t>(std::max(frames, 1)));
+    for (int i = 0; i < frames; i++) {
+        float t = static_cast<float>(i) / sampleRate;
+        float envelope = std::sin(kPi * static_cast<float>(i) / frames);
+        samples[static_cast<size_t>(i)] =
+            static_cast<short>(std::sin(2 * kPi * freqHz * t) * envelope * volume * 32000);
     }
-
     Wave wave{};
-    wave.frameCount = static_cast<unsigned int>(totalFrames);
+    wave.frameCount = static_cast<unsigned int>(samples.size());
     wave.sampleRate = sampleRate;
     wave.sampleSize = 16;
     wave.channels = 1;
     wave.data = samples.data();
-    return LoadSoundFromWave(wave);   // copies samples into raylib's own buffer
-}
-
-Sound Renderer::makeTone(float freqHz, float durationSec, float volume) {
-    return makeMelody({{freqHz, durationSec}}, volume);
+    return LoadSoundFromWave(wave);
 }
 
 void Renderer::loadSounds() {
@@ -282,28 +176,13 @@ void Renderer::loadSounds() {
     audioReady_ = IsAudioDeviceReady();
     if (!audioReady_) return;   // headless/no sound card: everything below is skipped at call sites
 
-    sndBroadcast_     = makeTone(880.0f, 0.18f, 0.5f);
-    sndJoin_          = makeTone(520.0f, 0.12f, 0.4f);
-    sndDeath_         = makeTone(140.0f, 0.35f, 0.5f);
-    sndIncantSuccess_ = makeMelody({{523.25f, 0.12f}, {659.25f, 0.12f}, {783.99f, 0.20f}}, 0.5f);   // C-E-G
-    sndIncantFail_    = makeTone(90.0f, 0.25f, 0.45f);
-    // Short original victory fanfare (not based on any existing composition).
-    sndVictory_       = makeMelody({{523.25f, 0.15f}, {523.25f, 0.15f}, {659.25f, 0.15f},
-                                    {783.99f, 0.30f}, {659.25f, 0.15f}, {987.77f, 0.45f}}, 0.55f);
-    // Soft looping ambient arpeggio for the exploration phase.
-    sndAmbientLoop_   = makeMelody({{261.63f, 0.6f}, {0, 0.2f}, {329.63f, 0.6f},
-                                    {0, 0.2f}, {392.00f, 0.6f}, {0, 0.4f}}, 0.16f);
+    sndBroadcast_ = makeTone(880.0f, 0.18f, 0.5f);
 }
 
 void Renderer::unloadSounds() {
     if (!audioReady_) return;
     UnloadSound(sndBroadcast_);
-    UnloadSound(sndJoin_);
-    UnloadSound(sndDeath_);
-    UnloadSound(sndIncantSuccess_);
-    UnloadSound(sndIncantFail_);
-    UnloadSound(sndVictory_);
-    UnloadSound(sndAmbientLoop_);
+    UnloadSound(sndBroadcast_);
     CloseAudioDevice();
     audioReady_ = false;
 }
@@ -349,19 +228,12 @@ void Renderer::processEvents(const std::vector<GameEvent>& events) {
         case GameEventKind::PlayerJoined: {
             const Team* t = ev.teamIndex >= 0 && ev.teamIndex < static_cast<int>(state_.teams().size())
                                 ? &state_.teams()[ev.teamIndex] : nullptr;
-            spawnBurst({c.x, 0.2f, c.z}, team, 16, 2.0f, 4.0f, 0.9f, 0.12f);
-            spawnRing(c, team, 0.2f, 1.4f, 0.7f);
             log(team, "Player #" + std::to_string(ev.id1) + " joined team " + (t ? t->name : "?"));
-            if (audioReady_) PlaySound(sndJoin_);
             break;
         }
         case GameEventKind::PlayerExpelled:
-            spawnRing({c.x, 0, c.z}, Color{255, 90, 60, 255}, 0.3f, 2.2f, 0.5f);
-            spawnBurst({c.x, 0.8f, c.z}, Color{255, 140, 80, 255}, 10, 3.0f, 2.0f, 0.6f, 0.1f);
             break;
         case GameEventKind::PlayerBroadcast:
-            spawnRing(c, team, 0.4f, 9.0f, 1.6f);
-            spawnRing(c, team, 0.2f, 6.0f, 1.2f);
             log(team, "#" + std::to_string(ev.id1) + " says: " + truncated(ev.text, 90));
             if (audioReady_) {
                 // Quieter the farther the broadcast tile is from where the
@@ -376,57 +248,34 @@ void Renderer::processEvents(const std::vector<GameEvent>& events) {
             break;
         case GameEventKind::IncantationEnded:
             if (ev.value) {
-                spawnBurst({c.x, 0.3f, c.z}, Color{255, 230, 110, 255}, 70, 3.5f, 9.0f, 1.6f, 0.13f);
-                spawnBurst({c.x, 0.3f, c.z}, Color{120, 255, 160, 255}, 40, 2.5f, 7.0f, 1.4f, 0.11f);
-                spawnRing(c, Color{255, 230, 110, 255}, 0.3f, 4.0f, 1.0f);
                 log(Color{130, 255, 150, 255}, "Incantation at (" + std::to_string(ev.x) + "," +
                     std::to_string(ev.y) + ") SUCCEEDED");
-                if (audioReady_) PlaySound(sndIncantSuccess_);
             } else {
-                spawnBurst({c.x, 0.3f, c.z}, Color{255, 70, 70, 255}, 40, 2.5f, 3.0f, 1.2f, 0.12f);
-                spawnRing(c, Color{255, 70, 70, 255}, 0.3f, 2.5f, 0.8f);
                 log(Color{255, 110, 110, 255}, "Incantation at (" + std::to_string(ev.x) + "," +
                     std::to_string(ev.y) + ") FAILED");
-                if (audioReady_) PlaySound(sndIncantFail_);
             }
             break;
         case GameEventKind::PlayerFork:
-            spawnRing(c, Color{255, 255, 220, 255}, 0.2f, 1.2f, 0.6f);
             break;
         case GameEventKind::ResourceTaken:
-            for (int i = 0; i < 6; i++)
-                particles_.push_back({
-                    {c.x + frand(-.3f, .3f), 0.2f, c.z + frand(-.3f, .3f)},
-                    {0, frand(2.0f, 3.5f), 0}, kResColor[ev.value], 0.7f, 0.7f, 0.14f, 0.0f});
             break;
         case GameEventKind::ResourceDropped:
-            for (int i = 0; i < 6; i++)
-                particles_.push_back({
-                    {c.x + frand(-.3f, .3f), 1.6f, c.z + frand(-.3f, .3f)},
-                    {frand(-.5f, .5f), 0.5f, frand(-.5f, .5f)}, kResColor[ev.value], 0.8f, 0.8f, 0.14f, 6.0f});
             break;
         case GameEventKind::PlayerDied: {
             const Team* t = ev.teamIndex >= 0 && ev.teamIndex < static_cast<int>(state_.teams().size())
                                 ? &state_.teams()[ev.teamIndex] : nullptr;
-            spawnBurst({c.x, 0.8f, c.z}, Color{255, 60, 60, 255}, 30, 2.5f, 5.0f, 1.2f, 0.13f);
-            spawnRing(c, Color{255, 60, 60, 255}, 0.3f, 2.5f, 0.9f);
             log(Color{255, 120, 120, 255}, "Player #" + std::to_string(ev.id1) + " (" +
                 (t ? t->name : "?") + ") died of hunger");
             if (ev.id1 == selectedPlayer_) clearSelection();
-            if (audioReady_) PlaySound(sndDeath_);
             break;
         }
         case GameEventKind::EggLaid:
-            spawnBurst({c.x, 0.3f, c.z}, Color{255, 255, 230, 255}, 8, 1.5f, 3.0f, 0.7f, 0.1f);
             break;
         case GameEventKind::EggHatched:
-            spawnBurst({c.x, 0.4f, c.z}, Color{255, 240, 150, 255}, 10, 1.5f, 3.0f, 0.7f, 0.1f);
             break;
         case GameEventKind::EggEnded:
             if (ev.value == 1) {
-                spawnBurst({c.x, 0.4f, c.z}, Color{140, 255, 170, 255}, 22, 2.2f, 4.0f, 0.9f, 0.11f);
             } else {
-                spawnBurst({c.x, 0.4f, c.z}, Color{110, 130, 90, 255}, 16, 1.8f, 2.5f, 0.9f, 0.11f);
                 log(Color{170, 170, 140, 255}, "Egg #" + std::to_string(ev.id1) + " rotted");
             }
             break;
@@ -488,106 +337,20 @@ void Renderer::update(float dt) {
         }
     }
 
-    // Continuous incantation sparkles.
-    for (const auto& inc : state_.incantations()) {
-        Vector3 c = tileCenter(static_cast<float>(inc.x), static_cast<float>(inc.y));
-        int sparks = static_cast<int>(dt * 40.0f) + (GetRandomValue(0, 100) < 40 ? 1 : 0);
-        for (int k = 0; k < sparks; k++) {
-            float a = frand(0, 2 * kPi), r = frand(0.2f, 1.2f);
-            particles_.push_back({
-                {c.x + std::cos(a) * r, 0.1f, c.z + std::sin(a) * r},
-                {0, frand(1.5f, 4.0f), 0}, Color{255, 225, 120, 255}, 1.2f, 1.2f, 0.09f, 0.0f});
-        }
-    }
-
-    // Background music: a soft ambient loop while exploring, restarted
-    // manually each time it finishes (Sound has no native seamless-loop
-    // flag; the half-sine envelope on every note keeps restarts click-free).
-    // It stops the moment the game ends, replaced by a one-shot fanfare.
-    if (audioReady_ && musicEnabled_ && state_.hasMap() && !state_.isGameOver()) {
-        if (!IsSoundPlaying(sndAmbientLoop_)) PlaySound(sndAmbientLoop_);
-    }
-    if (state_.isGameOver() && !previousGameOver_) {
-        if (audioReady_) {
-            StopSound(sndAmbientLoop_);
-            PlaySound(sndVictory_);
-        }
-    }
-    previousGameOver_ = state_.isGameOver();
-
-    // Fireworks once the game is over.
-    if (state_.isGameOver() && state_.hasMap()) {
-        fireworkTimer_ -= dt;
-        if (fireworkTimer_ <= 0) {
-            fireworkTimer_ = 0.18f;
-            Color fc = state_.winnerTeamIndex() >= 0 ? teamColor(state_.winnerTeamIndex()) : Color{255, 220, 100, 255};
-            if (GetRandomValue(0, 1))
-                fc = Color{static_cast<unsigned char>(GetRandomValue(120, 255)),
-                          static_cast<unsigned char>(GetRandomValue(120, 255)),
-                          static_cast<unsigned char>(GetRandomValue(120, 255)), 255};
-            Vector3 o = {frand(0, state_.width() * kTileSize), frand(6, 14), frand(0, state_.height() * kTileSize)};
-            for (int k = 0; k < 40; k++) {
-                float a = frand(0, 2 * kPi), b = frand(-1, 1), r = std::sqrt(1 - b * b) * 4.0f;
-                particles_.push_back({o, {std::cos(a) * r, b * 4.0f, std::sin(a) * r},
-                                      fc, 1.6f, 1.6f, 0.14f, 3.0f});
-            }
-        }
-    }
-
-    // Particle / ring decay.
-    for (size_t i = 0; i < particles_.size(); ) {
-        Particle& p = particles_[i];
-        p.life -= dt;
-        p.vel.y -= p.gravity * dt;
-        p.pos = Vector3Add(p.pos, Vector3Scale(p.vel, dt));
-        if (p.life <= 0 || (p.pos.y < 0 && p.gravity > 0)) {
-            particles_[i] = particles_.back();
-            particles_.pop_back();
-            continue;
-        }
-        i++;
-    }
-    for (size_t i = 0; i < rings_.size(); ) {
-        rings_[i].t += dt;
-        if (rings_[i].t >= rings_[i].duration) {
-            rings_[i] = rings_.back();
-            rings_.pop_back();
-            continue;
-        }
-        i++;
-    }
 }
 
 // ---------------------------------------------------------------------- input
 
-namespace {
-Rectangle minimapRect(const GameState& state) {
-    if (!state.hasMap()) return {0, 0, 0, 0};
-    float cell = std::min(200.0f / state.width(), 200.0f / state.height());
-    if (cell > 10) cell = 10;
-    float mw = cell * state.width(), mh = cell * state.height();
-    return {GetScreenWidth() - mw - 14, GetScreenHeight() - mh - 14, mw, mh};
-}
-} // namespace
-
 void Renderer::handleInput(float dt) {
     Vector2 mouse = GetMousePosition();
     bool overUi = isOverUi(mouse);
-    Rectangle mm = showMinimap_ ? minimapRect(state_) : Rectangle{0, 0, 0, 0};
-
-    if (IsKeyPressed(KEY_H)) showHelp_ = !showHelp_;
-    if (IsKeyPressed(KEY_M)) showMinimap_ = !showMinimap_;
     if (IsKeyPressed(KEY_L)) showLabels_ = !showLabels_;
     if (IsKeyPressed(KEY_F11)) ToggleFullscreen();
     if (IsKeyPressed(KEY_R)) resetCamera();
-    if (IsKeyPressed(KEY_ESCAPE)) { clearSelection(); showHelp_ = false; }
+    if (IsKeyPressed(KEY_ESCAPE)) clearSelection();
     if (IsKeyPressed(KEY_F) && selectedPlayer_ >= 0) follow_ = !follow_;
     if (IsKeyPressed(KEY_EQUAL) || IsKeyPressed(KEY_KP_ADD)) changeFrequency(+1);
     if (IsKeyPressed(KEY_MINUS) || IsKeyPressed(KEY_KP_SUBTRACT)) changeFrequency(-1);
-    if (IsKeyPressed(KEY_N)) {
-        musicEnabled_ = !musicEnabled_;
-        if (!musicEnabled_ && audioReady_) StopSound(sndAmbientLoop_);
-    }
 
     if (IsKeyPressed(KEY_TAB) && !state_.players().empty()) {
         const auto& players = state_.players();
@@ -631,20 +394,9 @@ void Renderer::handleInput(float dt) {
         cameraTarget_.z = Clamp(cameraTarget_.z, -kTileSize, state_.height() * kTileSize);
     }
 
-    if (showMinimap_ && mm.width > 0) {
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && CheckCollisionPointRec(mouse, mm)) minimapDrag_ = true;
-        if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) minimapDrag_ = false;
-        if (minimapDrag_) {
-            float cell = mm.width / state_.width();
-            cameraTarget_.x = Clamp((mouse.x - mm.x) / cell, 0, static_cast<float>(state_.width())) * kTileSize - kTileSize * 0.5f;
-            cameraTarget_.z = Clamp((mouse.y - mm.y) / cell, 0, static_cast<float>(state_.height())) * kTileSize - kTileSize * 0.5f;
-            follow_ = false;
-        }
-    }
-
     hoverTile_ = false;
     hoverPlayer_ = -1;
-    if (!state_.hasMap() || overUi || minimapDrag_) return;
+    if (!state_.hasMap() || overUi) return;
 
     Ray ray = GetMouseRay(mouse, camera_);
     if (std::fabs(ray.direction.y) > 1e-4f) {
@@ -680,40 +432,9 @@ void Renderer::handleInput(float dt) {
 
 // ------------------------------------------------------------------- 3D draw
 
-void Renderer::drawResource(int type, Vector3 p, float t, float scale, unsigned seed) const {
-    Color c = kResColor[type];
-    float s = scale;
-    float bob = 0.04f * std::sin(t * 2.0f + seed);
-    rlPushMatrix();
-    rlTranslatef(p.x, p.y + bob, p.z);
-    rlRotatef(t * 40.0f + seed * 37.0f, 0, 1, 0);
-    switch (type) {
-    case 0:  // food: apple
-        DrawSphereEx({0, 0.15f * s, 0}, 0.15f * s, 8, 8, c);
-        DrawCube({0, 0.32f * s, 0}, 0.03f * s, 0.08f * s, 0.03f * s, Color{90, 60, 30, 255});
-        break;
-    case 1:  // linemate: cube
-        DrawCube({0, 0.14f * s, 0}, 0.24f * s, 0.24f * s, 0.24f * s, c);
-        break;
-    case 2:  // deraumere: bipyramid
-        DrawCylinder({0, 0.2f * s, 0}, 0, 0.17f * s, 0.2f * s, 4, c);
-        DrawCylinder({0, 0.0f, 0}, 0.17f * s, 0, 0.2f * s, 4, c);
-        break;
-    case 3:  // sibur: hex prism
-        DrawCylinder({0, 0.02f, 0}, 0.13f * s, 0.13f * s, 0.3f * s, 6, c);
-        break;
-    case 4:  // mendiane: pyramid
-        DrawCylinder({0, 0.02f, 0}, 0.0f, 0.18f * s, 0.34f * s, 4, c);
-        break;
-    case 5:  // phiras: low-poly gem
-        DrawSphereEx({0, 0.16f * s, 0}, 0.16f * s, 4, 5, c);
-        break;
-    default: // thystame: tall double pyramid
-        DrawCylinder({0, 0.22f * s, 0}, 0, 0.13f * s, 0.26f * s, 5, c);
-        DrawCylinder({0, 0.0f, 0}, 0.13f * s, 0, 0.22f * s, 5, c);
-        break;
-    }
-    rlPopMatrix();
+void Renderer::drawResource(int type, Vector3 p, float scale) const {
+    const float size = 0.35f * scale;
+    DrawCube({p.x, p.y + size * 0.5f, p.z}, size, size, size, kResColor[type]);
 }
 
 void Renderer::drawGround() 
@@ -724,14 +445,10 @@ void Renderer::drawGround()
     DrawCube({cx, -0.22f, cz}, W * kTileSize + 0.3f, 0.3f, H * kTileSize + 0.3f, Color{78, 58, 44, 255});
 
     rlDisableBackfaceCulling();
-    // Tile gaps fade out when zoomed far away, to avoid a moire pattern.
-    const float h = kTileSize * 0.5f - 0.045f * Clamp((140.0f - cameraDist_) / 50.0f, 0.0f, 1.0f);
+    const float h = kTileSize * 0.5f - 0.045f;
     for (int y = 0; y < H; y++) {
         for (int x = 0; x < W; x++) {
             Color c = ((x + y) & 1) ? Color{88, 154, 92, 255} : Color{78, 142, 84, 255};
-            int j = static_cast<int>(hashf(static_cast<unsigned>(x) * 73856093u ^ static_cast<unsigned>(y) * 19349663u) * 10.0f);
-            c.g = static_cast<unsigned char>(c.g + j);
-            c.r = static_cast<unsigned char>(c.r + j / 2);
             float px = x * kTileSize, pz = y * kTileSize;
             rlCheckRenderBatchLimit(4);
             rlBegin(RL_QUADS);
@@ -745,244 +462,63 @@ void Renderer::drawGround()
 }
 
 void Renderer::drawResources() {
-    float t = static_cast<float>(GetTime());
-    float reach = std::max(30.0f, cameraDist_ * 1.1f);
-    int x0 = static_cast<int>(std::floor((cameraTarget_.x - reach) / kTileSize));
-    int x1 = static_cast<int>(std::ceil((cameraTarget_.x + reach) / kTileSize));
-    int y0 = static_cast<int>(std::floor((cameraTarget_.z - reach) / kTileSize));
-    int y1 = static_cast<int>(std::ceil((cameraTarget_.z + reach) / kTileSize));
-    x0 = std::max(x0, 0); y0 = std::max(y0, 0);
-    x1 = std::min(x1, state_.width() - 1); y1 = std::min(y1, state_.height() - 1);
-
-    rlDisableBackfaceCulling();
-    for (int y = y0; y <= y1; y++) {
-        for (int x = x0; x <= x1; x++) {
+    for (int y = 0; y < state_.height(); y++) {
+        for (int x = 0; x < state_.width(); x++) {
             const Tile* tile = state_.tileAt(x, y);
             if (!tile) continue;
             Vector3 c = tileCenter(static_cast<float>(x), static_cast<float>(y));
-            float dist = Vector3Distance(c, camera_.position);
-            if (dist > 150.0f) continue;
-            bool detail = dist < 42.0f;
             for (int r = 0; r < kResourceCount; r++) {
-                int q = tile->resources[r];
-                if (q <= 0) continue;
+                if (tile->resources[r] <= 0) continue;
                 float a = r * (2 * kPi / kResourceCount) + 0.4f;
-                Vector3 sp = {c.x + std::cos(a) * 0.62f, 0.0f, c.z + std::sin(a) * 0.62f};
-                if (!detail) {
-                    if (dist < 85.0f) {
-                        DrawCube({sp.x, 0.14f, sp.z}, 0.28f, 0.28f, 0.28f, kResColor[r]);
-                    } else {
-                        rlCheckRenderBatchLimit(4);
-                        rlBegin(RL_QUADS);
-                        rlColor4ub(kResColor[r].r, kResColor[r].g, kResColor[r].b, 255);
-                        rlVertex3f(sp.x - 0.16f, 0.04f, sp.z - 0.16f); rlVertex3f(sp.x - 0.16f, 0.04f, sp.z + 0.16f);
-                        rlVertex3f(sp.x + 0.16f, 0.04f, sp.z + 0.16f); rlVertex3f(sp.x + 0.16f, 0.04f, sp.z - 0.16f);
-                        rlEnd();
-                    }
-                    continue;
-                }
-                int cnt = q > 5 ? 5 : q;
-                float sc = q > 5 ? 1.2f : 1.0f;
-                for (int k = 0; k < cnt; k++) {
-                    unsigned sd = static_cast<unsigned>(x * 131 + y * 71 + r * 17 + k * 29);
-                    Vector3 pp = {sp.x + (hashf(sd) - 0.5f) * (cnt > 1 ? 0.42f : 0.0f), 0.0f,
-                                 sp.z + (hashf(sd + 91) - 0.5f) * (cnt > 1 ? 0.42f : 0.0f)};
-                    pp.y = (k >= 3) ? 0.16f : 0.0f;
-                    drawResource(r, pp, t, sc, sd);
-                }
+                drawResource(r, {c.x + std::cos(a) * 0.62f, 0.0f, c.z + std::sin(a) * 0.62f}, 1.0f);
             }
         }
     }
-    rlEnableBackfaceCulling();
 }
 
 void Renderer::drawPlayer(const Player& p) const {
-    float t = static_cast<float>(GetTime());
     Color tc = teamColor(p.team);
-    float s = p.scale() * easeOutBack(p.spawnT);
-    float dy = 0, spin = 0;
-    if (p.dyingT > 0) {
-        float u = p.dyingT / kDeathAnimTime;
-        s *= u;
-        dy = (1 - u) * 1.6f;
-        spin = (1 - u) * 720.0f;
-    }
-    if (state_.isGameOver() && p.team == state_.winnerTeamIndex())
-        dy += std::fabs(std::sin(t * 6.0f + p.id)) * 0.5f;
-    if (p.incanting) dy += 0.22f + 0.08f * std::sin(t * 4.0f + p.id);
-    float bob = p.moving ? std::fabs(std::sin(p.animPhase)) * 0.09f : 0.02f * std::sin(t * 2.0f + p.id);
-    float swing = p.moving ? std::sin(p.animPhase) * 38.0f : 0.0f;
-    float squash = p.layT > 0 ? 1.0f - 0.22f * std::sin(p.layT * kPi) : 1.0f;
-    float wob = p.shakeT > 0 ? std::sin(p.shakeT * 40.0f) * 25.0f : 0.0f;
-    float talk = p.broadcastT > 0 ? 0.05f * std::sin(p.broadcastT * 30.0f) : 0.0f;
+    float s = p.scale();
     Vector3 pos = playerWorldPos(p);
-
-    if (p.dyingT <= 0)
-        DrawCylinder({pos.x, 0.025f, pos.z}, 0.42f * s, 0.42f * s, 0.005f, 12, Color{0, 0, 0, 70});
-
-    Color dark = ColorBrightness(tc, -0.45f), light = ColorBrightness(tc, 0.45f);
-    Color skin = {246, 217, 178, 255};
-
-    rlPushMatrix();
-    rlTranslatef(pos.x, dy + bob, pos.z);
-    rlRotatef(-p.yaw + spin + wob, 0, 1, 0);
-    rlScalef(s, s * squash, s);
-    for (int side = -1; side <= 1; side += 2) {
-        rlPushMatrix();
-        rlTranslatef(side * 0.14f, 0.30f, 0);
-        rlRotatef(swing * side, 1, 0, 0);
-        DrawCube({0, -0.15f, 0}, 0.14f, 0.30f, 0.16f, dark);
-        rlPopMatrix();
-    }
-    DrawCylinder({0, 0.28f, 0}, 0.28f, 0.34f, 0.62f, 10, tc);
-    DrawCylinder({0, 0.50f, 0}, 0.325f, 0.325f, 0.07f, 10, light);
-    for (int side = -1; side <= 1; side += 2) {
-        rlPushMatrix();
-        rlTranslatef(side * 0.37f, 0.85f, 0);
-        rlRotatef(-swing * side, 1, 0, 0);
-        DrawCube({0, -0.2f, 0}, 0.10f, 0.40f, 0.12f, light);
-        rlPopMatrix();
-    }
-    DrawSphereEx({0, 1.08f, 0}, 0.27f, 8, 10, skin);
-    for (int side = -1; side <= 1; side += 2)
-        DrawCube({side * 0.10f, 1.12f, -0.245f}, 0.07f, 0.09f + talk, 0.05f, BLACK);
-    DrawCube({0, 1.03f, -0.27f}, 0.05f, 0.04f + talk * 2, 0.05f, Color{200, 90, 90, 255});
-    DrawCylinder({0, 1.30f, 0}, 0.0f, 0.21f, 0.26f, 8, tc);
-    rlPopMatrix();
-
-    for (int i = 0; i < p.level && p.dyingT <= 0; i++) {
-        float a = t * 2.2f + i * (2 * kPi / p.level);
-        Vector3 o = {pos.x + std::cos(a) * 0.34f * s, dy + bob + 1.72f * s, pos.z + std::sin(a) * 0.34f * s};
-        DrawSphereEx(o, 0.055f * s, 4, 4, Color{255, 210, 70, 255});
-    }
+    DrawCylinder({pos.x, 0.6f * s, pos.z}, 0.45f * s, 0.45f * s, 1.2f * s, 12, tc);
+    DrawSphere({pos.x, 1.45f * s, pos.z}, 0.35f * s, tc);
 }
 
 void Renderer::drawEgg(const Egg& e) const {
-    float t = static_cast<float>(GetTime());
     Color tc = teamColor(e.team);
-    float k = easeOutBack(e.age * 3.0f);
-    if (e.state != EggState::Alive) k *= Clamp(e.dyingT / kEggAnimTime, 0, 1);
-    float wob = e.hatched ? std::sin(t * 18.0f + e.id) * 9.0f : 0.0f;
     Color body = mixColor(Color{250, 245, 225, 255}, tc, 0.42f);
     if (e.hatched) body = mixColor(body, Color{255, 240, 140, 255}, 0.4f);
     if (e.state == EggState::Rotten) body = mixColor(body, Color{90, 100, 70, 255}, 0.7f);
 
     Vector3 c = tileCenter(static_cast<float>(e.x), static_cast<float>(e.y));
-    float a = hashf(static_cast<unsigned>(e.id) * 7u + 1u) * 2 * kPi;
-    float r = 0.35f + 0.45f * hashf(static_cast<unsigned>(e.id) * 13u + 5u);
+    float a = static_cast<float>((e.id * 37) % 360) * kPi / 180.0f;
+    float r = 0.35f + static_cast<float>((e.id * 17) % 45) / 100.0f;
     Vector3 pos = {c.x + std::cos(a) * r, 0, c.z + std::sin(a) * r};
 
-    DrawCylinder({pos.x, 0.025f, pos.z}, 0.3f * k, 0.3f * k, 0.005f, 10, Color{0, 0, 0, 70});
-    rlPushMatrix();
-    rlTranslatef(pos.x, 0.42f * k, pos.z);
-    rlRotatef(wob, 0, 0, 1);
-    rlScalef(0.32f * k, 0.42f * k, 0.32f * k);
-    DrawSphereEx({0, 0, 0}, 1.0f, 10, 10, body);
-    rlPopMatrix();
-
-    if (e.hatched && e.state == EggState::Alive) {
-        Vector3 b = {pos.x, 0.5f, pos.z + 0.31f};
-        DrawLine3D(b, {b.x + 0.06f, b.y + 0.08f, b.z}, Color{70, 50, 30, 255});
-        DrawLine3D({b.x + 0.06f, b.y + 0.08f, b.z}, {b.x - 0.04f, b.y + 0.16f, b.z}, Color{70, 50, 30, 255});
-    }
-}
-
-namespace {
-void quadFlat(float cx, float cz, float h, float y, Color c) {
-    rlCheckRenderBatchLimit(4);
-    rlBegin(RL_QUADS);
-    rlColor4ub(c.r, c.g, c.b, c.a);
-    rlVertex3f(cx - h, y, cz - h); rlVertex3f(cx - h, y, cz + h);
-    rlVertex3f(cx + h, y, cz + h); rlVertex3f(cx + h, y, cz - h);
-    rlEnd();
-}
-void tileOutline(int x, int y, Color c) {
-    float h = kTileSize * 0.5f - 0.02f, cx = x * kTileSize, cz = y * kTileSize;
-    for (int k = 0; k < 3; k++) {
-        float hh = h - k * 0.03f, yy = 0.03f + k * 0.005f;
-        Vector3 a = {cx - hh, yy, cz - hh}, b = {cx + hh, yy, cz - hh};
-        Vector3 d = {cx + hh, yy, cz + hh}, e = {cx - hh, yy, cz + hh};
-        DrawLine3D(a, b, c); DrawLine3D(b, d, c); DrawLine3D(d, e, c); DrawLine3D(e, a, c);
-    }
-}
-} // namespace
-
-void Renderer::drawEffects() {
-    float t = static_cast<float>(GetTime());
-    rlDisableBackfaceCulling();
-    BeginBlendMode(BLEND_ADDITIVE);
-
-    if (hoverTile_)
-        quadFlat(hoverTileX_ * kTileSize, hoverTileY_ * kTileSize, kTileSize * 0.5f - 0.045f, 0.02f, Color{70, 110, 255, 60});
-    if (selectedTile_) {
-        quadFlat(selectedTileX_ * kTileSize, selectedTileY_ * kTileSize, kTileSize * 0.5f - 0.045f, 0.022f, Color{255, 230, 90, 45});
-        tileOutline(selectedTileX_, selectedTileY_, Color{255, 230, 90, 255});
-    }
-
-    const Player* sp = selectedPlayer_ >= 0 ? state_.findPlayer(selectedPlayer_) : nullptr;
-    if (sp) {
-        Vector3 c = playerWorldPos(*sp);
-        float s = sp->scale(), pulse = 0.5f + 0.5f * std::sin(t * 5.0f);
-        for (int k = 0; k < 3; k++)
-            DrawCircle3D({c.x, 0.05f + k * 0.01f, c.z}, (0.55f + 0.05f * pulse + k * 0.03f) * s, {1, 0, 0}, 90, Color{255, 255, 120, 255});
-        DrawCylinder({c.x, (1.95f + 0.12f * std::sin(t * 4.0f)) * s, c.z}, 0.15f, 0.0f, 0.32f * s, 8, Color{255, 240, 90, 200});
-    } else if (hoverPlayer_ >= 0) {
-        if (const Player* hp = state_.findPlayer(hoverPlayer_)) {
-            Vector3 c = playerWorldPos(*hp);
-            DrawCircle3D({c.x, 0.05f, c.z}, 0.6f * hp->scale(), {1, 0, 0}, 90, Color{120, 200, 255, 255});
-        }
-    }
-
-    int i = 0;
-    for (const auto& inc : state_.incantations()) {
-        Vector3 c = tileCenter(static_cast<float>(inc.x), static_cast<float>(inc.y));
-        float pulse = 0.5f + 0.5f * std::sin(t * 4.0f + i);
-        float grow = Clamp(inc.elapsed * 2.0f, 0, 1);
-        for (int k = 0; k < 3; k++) {
-            DrawCircle3D({c.x, 0.06f + k * 0.01f, c.z}, (1.30f - k * 0.03f) * grow, {1, 0, 0}, 90, Color{255, 215, 100, 255});
-            DrawCircle3D({c.x, 0.08f + k * 0.01f, c.z}, (0.85f + 0.1f * pulse - k * 0.03f) * grow, {1, 0, 0}, 90, Color{255, 255, 255, 200});
-        }
-        int orbs = 5 + inc.level;
-        for (int k = 0; k < orbs; k++) {
-            float a = t * 1.6f + k * (2 * kPi / orbs);
-            DrawSphereEx({c.x + std::cos(a) * 1.15f, 0.15f + 0.12f * std::sin(t * 3.0f + k), c.z + std::sin(a) * 1.15f},
-                         0.07f, 4, 4, Color{255, 230, 130, 255});
-        }
-        DrawCylinderEx({c.x, 0, c.z}, {c.x, 10.0f * grow, c.z}, 0.85f, 0.35f, 14, Color{255, 225, 130, static_cast<unsigned char>(28 + 22 * pulse)});
-        DrawCylinderEx({c.x, 0, c.z}, {c.x, 10.0f * grow, c.z}, 0.40f, 0.15f, 10, Color{255, 255, 255, 60});
-        i++;
-    }
-
-    for (const auto& r : rings_) {
-        float u = r.t / r.duration;
-        float rad = r.r0 + (r.r1 - r.r0) * (1.0f - (1.0f - u) * (1.0f - u));
-        Color c = r.color;
-        c.a = static_cast<unsigned char>(255 * (1.0f - u));
-        for (int k = 0; k < 2; k++)
-            DrawCircle3D({r.pos.x, 0.07f + k * 0.01f, r.pos.z}, rad - k * 0.04f, {1, 0, 0}, 90, c);
-    }
-    for (const auto& p : particles_)
-        DrawCube(p.pos, p.size, p.size, p.size, Fade(p.color, Clamp(p.life / p.maxLife, 0, 1)));
-
-    EndBlendMode();
-    rlEnableBackfaceCulling();
+    DrawSphere({pos.x, 0.42f, pos.z}, 0.32f, body);
 }
 
 void Renderer::drawWorld() {
     rlSetClipPlanes(0.1, 3000.0);
     BeginMode3D(camera_);
-    if (useShader_) {
-        SetShaderValue(shader_, locCamPos_, &camera_.position, SHADER_UNIFORM_VEC3);
-        BeginShaderMode(shader_);
-    }
     if (state_.hasMap()) {
         drawGround();
         drawResources();
         for (const auto& e : state_.eggs()) drawEgg(e);
         for (const auto& p : state_.players()) drawPlayer(p);
+        if (selectedTile_ || hoverTile_) {
+            int x = selectedTile_ ? selectedTileX_ : hoverTileX_;
+            int y = selectedTile_ ? selectedTileY_ : hoverTileY_;
+            Color color = selectedTile_ ? YELLOW : SKYBLUE;
+            DrawCubeWires(tileCenter(static_cast<float>(x), static_cast<float>(y)),
+                          kTileSize, 0.05f, kTileSize, color);
+        }
+        if (const Player* p = selectedPlayer_ >= 0 ? state_.findPlayer(selectedPlayer_) : nullptr) {
+            Vector3 pos = playerWorldPos(*p);
+            DrawCylinderWires({pos.x, 0.03f, pos.z}, 0.55f * p->scale(), 0.55f * p->scale(),
+                              0.05f, 16, YELLOW);
+        }
     }
-    if (useShader_) EndShaderMode();
-    if (state_.hasMap()) drawEffects();
     EndMode3D();
 }
 
@@ -1112,77 +648,6 @@ void Renderer::drawSelectionPanel() {
     }
 }
 
-void Renderer::drawMinimap() {
-    if (!showMinimap_ || !state_.hasMap()) return;
-    Rectangle r = minimapRect(state_);
-    float cell = r.width / state_.width();
-
-    Rectangle border = {r.x - 4, r.y - 4, r.width + 8, r.height + 8};
-    DrawRectangleRec(border, Color{12, 16, 28, 205});
-    DrawRectangleLinesEx(border, 1, Color{90, 110, 150, 210});
-    uiRects_.push_back(border);
-
-    DrawRectangleRec(r, Color{40, 82, 50, 255});
-    for (const auto& inc : state_.incantations())
-        DrawRectangle(static_cast<int>(r.x + inc.x * cell - 2), static_cast<int>(r.y + inc.y * cell - 2),
-                      static_cast<int>(cell) + 4, static_cast<int>(cell) + 4,
-                      (static_cast<int>(GetTime() * 4) & 1) ? Color{255, 230, 100, 255} : Color{255, 140, 40, 255});
-    for (const auto& e : state_.eggs()) {
-        float cx = r.x + (e.x + 0.5f) * cell, cy = r.y + (e.y + 0.5f) * cell;
-        DrawCircle(static_cast<int>(cx), static_cast<int>(cy), std::max(1.5f, cell * 0.25f), Color{255, 250, 230, 255});
-    }
-    for (const auto& p : state_.players()) {
-        float ps = std::max(3.0f, cell * 0.6f);
-        float wx = std::fmod(p.fx, static_cast<float>(state_.width()));
-        if (wx < 0) wx += state_.width();
-        float wz = std::fmod(p.fz, static_cast<float>(state_.height()));
-        if (wz < 0) wz += state_.height();
-        DrawRectangle(static_cast<int>(r.x + (wx + 0.5f) * cell - ps / 2), static_cast<int>(r.y + (wz + 0.5f) * cell - ps / 2),
-                     static_cast<int>(ps), static_cast<int>(ps), teamColor(p.team));
-    }
-    if (selectedTile_)
-        DrawRectangleLinesEx({r.x + selectedTileX_ * cell, r.y + selectedTileY_ * cell, cell, cell}, 1, YELLOW);
-
-    float tx = r.x + (cameraTarget_.x / kTileSize + 0.5f) * cell, ty = r.y + (cameraTarget_.z / kTileSize + 0.5f) * cell;
-    DrawLine(static_cast<int>(tx) - 5, static_cast<int>(ty), static_cast<int>(tx) + 5, static_cast<int>(ty), WHITE);
-    DrawLine(static_cast<int>(tx), static_cast<int>(ty) - 5, static_cast<int>(tx), static_cast<int>(ty) + 5, WHITE);
-}
-
-void Renderer::drawHelp() {
-    if (!showHelp_) return;
-    int sw = GetScreenWidth(), sh = GetScreenHeight();
-    Rectangle r = {sw / 2.0f - 250, sh / 2.0f - 175, 500, 350};
-    DrawRectangleRec(r, Color{12, 16, 28, 205});
-    DrawRectangleLinesEx(r, 1, Color{90, 110, 150, 210});
-    uiRects_.push_back(r);
-
-    int x = static_cast<int>(r.x) + 20, y = static_cast<int>(r.y) + 14;
-    drawText(x, y, 20, Color{255, 210, 90, 255}, "Controls");
-    y += 32;
-    static const char* rows[][2] = {
-        {"Left click", "select a player / a tile"},
-        {"Right drag", "orbit the camera"},
-        {"Middle drag", "pan the camera"},
-        {"Mouse wheel", "zoom"},
-        {"W A S D / arrows", "move the camera (Shift = faster)"},
-        {"Q / E", "rotate the camera"},
-        {"R", "reset the camera"},
-        {"Tab / Shift+Tab", "cycle through players"},
-        {"F", "follow the selected player"},
-        {"+ / -", "change the server time unit (sst)"},
-        {"M / L", "toggle minimap / player labels"},
-        {"F11", "fullscreen"},
-        {"Esc", "clear selection / close this help"},
-        {"Minimap", "click or drag to jump around"},
-        {"N", "mute / unmute background music"},
-    };
-    for (auto& row : rows) {
-        drawText(x, y, 14, Color{255, 225, 140, 255}, "%s", row[0]);
-        drawText(x + 170, y, 14, RAYWHITE, "%s", row[1]);
-        y += 21;
-    }
-}
-
 void Renderer::drawOverlays() {
     int sw = GetScreenWidth(), sh = GetScreenHeight();
 
@@ -1225,9 +690,7 @@ void Renderer::drawHud() {
         drawText(sw - 90 - w, 10, 14, net_.isConnected() ? Color{110, 240, 130, 255} : Color{255, 110, 110, 255}, "%s", status.c_str());
     }
     if (audioReady_)
-        drawText(sw - 160, 10, 14, musicEnabled_ ? Color{140, 220, 170, 255} : Color{140, 150, 170, 255},
-                "N: %s", musicEnabled_ ? "music on" : "muted");
-    drawText(sw - 70, 10, 14, Color{170, 190, 220, 255}, "H: help");
+        drawText(sw - 160, 10, 14, Color{140, 220, 170, 255}, "broadcast audio");
 
     drawTeamsPanel();
     drawSelectionPanel();
@@ -1245,8 +708,6 @@ void Renderer::drawHud() {
         shown++;
     }
 
-    drawMinimap();
-    drawHelp();
     drawOverlays();
 }
 

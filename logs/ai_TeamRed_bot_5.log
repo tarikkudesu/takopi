@@ -1,0 +1,8 @@
+[1;34m[28/Oct/2026:11:28:55] [DEBUG] [1;0mConnection constructor
+[1;34m[28/Oct/2026:11:28:55] [DEBUG] [1;0mClient constructor
+[1;34m[28/Oct/2026:11:28:55][1;32m [INFO] [1;0mconnecting to 127.0.0.1:9000 as team "TeamRed"
+[1;34m[28/Oct/2026:11:28:55] [DEBUG] [1;0mreceived: "BIENVENUE"
+[1;34m[28/Oct/2026:11:28:55] [DEBUG] [1;0mreceived: "ko"
+[1;34m[28/Oct/2026:11:28:55][1;31m [FATAL] [1;0mteam "TeamRed" refused by the server (unknown team or no free slot)
+[1;34m[28/Oct/2026:11:28:55] [DEBUG] [1;0mClient destructor
+[1;34m[28/Oct/2026:11:28:55] [DEBUG] [1;0mConnection destructor

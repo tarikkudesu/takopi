@@ -15,15 +15,6 @@ float wrapf(float v, float m)
     return r < 0 ? r + m : r;
 }
 
-float angleDiff(float a, float b) {
-    float d = std::fmod(b - a, 360.0f);
-    if (d > 180.0f) d -= 360.0f;
-    if (d < -180.0f) d += 360.0f;
-    return d;
-}
-
-float orientationYaw(int o) { return (o >= 1 && o <= 4) ? (o - 1) * 90.0f : 0.0f; }
-
 constexpr float kPi = 3.14159265358979323846f;
 
 } // namespace
@@ -110,8 +101,6 @@ Player& GameState::playerJoin(int id, int x, int y, int orientation, int level, 
     p.level = level;
     p.fx = p.gx = static_cast<float>(x);
     p.fz = p.gz = static_cast<float>(y);
-    p.yaw = p.goalYaw = orientationYaw(orientation);
-    p.spawnT = 0;
     p.dyingT = 0;
     pushEvent({GameEventKind::PlayerJoined, id, -1, x, y, level, team, {}});
     return p;
@@ -140,7 +129,6 @@ void GameState::playerMove(int id, int x, int y, int orientation)
     if (x != p->x || y != p->y) 
         moveTowards(*p, x, y);
     p->orientation = orientation;
-    p->goalYaw = orientationYaw(orientation);
 }
 
 void GameState::playerSetLevel(int id, int level) 
@@ -160,21 +148,18 @@ void GameState::playerSetInventory(int id, int x, int y, const std::array<int, k
 
 void GameState::playerExpel(int id) {
     Player* p = findPlayer(id);
-    if (!p) return;
-    p->shakeT = 0.6f;
+    if (!p)     return;
     pushEvent({GameEventKind::PlayerExpelled, id, -1, p->x, p->y, 0, p->team, {}});
 }
 
 void GameState::playerBroadcast(int id, const std::string& text) {
     Player* p = findPlayer(id);
-    if (p) p->broadcastT = 1.0f;
     pushEvent({GameEventKind::PlayerBroadcast, id, -1, p ? p->x : 0, p ? p->y : 0, 0,
               p ? p->team : -1, text});
 }
 
 void GameState::playerFork(int id) {
     Player* p = findPlayer(id);
-    if (p) p->layT = 1.0f;
     pushEvent({GameEventKind::PlayerFork, id, -1, p ? p->x : 0, p ? p->y : 0, 0,
               p ? p->team : -1, {}});
 }
@@ -248,8 +233,8 @@ void GameState::incantationStart(int x, int y, int level, const std::vector<int>
     Incantation* found = nullptr;
     for (auto& inc : incantations_)
         if (inc.x == x && inc.y == y) found = &inc;
-    if (found) { found->level = level; found->elapsed = 0; }
-    else       incantations_.push_back({x, y, level, 0});
+    if (found) { found->level = level; }
+    else       incantations_.push_back({x, y, level});
 
     pushEvent({GameEventKind::IncantationStarted, -1, -1, x, y, level, -1, {}});
 }
@@ -294,22 +279,16 @@ void GameState::recomputeTeamStats() {
 }
 
 void GameState::update(float dt) {
-    // Players: glide toward their goal tile and settle their facing angle.
+    // Players glide toward their goal tile.
     const float speed = std::max(static_cast<float>(timeUnit_) / 7.0f, 1.0f) * 1.2f;
     for (size_t i = 0; i < players_.size(); ) {
         Player& p = players_[i];
-        if (p.spawnT < 1) p.spawnT = std::min(1.0f, p.spawnT + dt * 3.0f);
-
         float dx = p.gx - p.fx, dz = p.gz - p.fz;
         float d = std::sqrt(dx * dx + dz * dz);
         if (d > 0.001f) {
             float step = std::max(speed, d * 6.0f) * dt;
             if (step >= d) { p.fx = p.gx; p.fz = p.gz; }
             else { p.fx += dx / d * step; p.fz += dz / d * step; }
-            p.moving = true;
-            p.animPhase += dt * 11.0f;
-        } else {
-            p.moving = false;
         }
 
         if (width_ > 0 && height_ > 0) {
@@ -318,11 +297,6 @@ void GameState::update(float dt) {
             while (p.fz >= height_) { p.fz -= height_; p.gz -= height_; }
             while (p.fz < 0)        { p.fz += height_; p.gz += height_; }
         }
-
-        p.yaw += angleDiff(p.yaw, p.goalYaw) * std::min(1.0f, dt * 14.0f);
-        p.shakeT = std::max(0.0f, p.shakeT - dt);
-        p.layT = std::max(0.0f, p.layT - dt);
-        p.broadcastT = std::max(0.0f, p.broadcastT - dt);
 
         if (p.dyingT > 0) {
             p.dyingT -= dt;
@@ -370,8 +344,6 @@ void GameState::update(float dt) {
         }
         i++;
     }
-
-    for (auto& inc : incantations_) inc.elapsed += dt;
 
     recomputeTeamStats();
 }

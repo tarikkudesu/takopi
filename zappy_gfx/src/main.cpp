@@ -17,8 +17,7 @@ void printUsage(const char* prog) {
     std::printf(
         "USAGE: %s -p port [-h machine]\n"
         "\tport     is the port number of the Zappy server\n"
-        "\tmachine  is the hostname of the server (default: 127.0.0.1)\n"
-        "\t--screenshot FILE  save a screenshot after a few seconds and quit (debug)\n",
+        "\tmachine  is the hostname of the server (default: 127.0.0.1)\n",
         prog);
 }
 
@@ -27,9 +26,6 @@ void printUsage(const char* prog) {
 int main(int argc, char** argv) {
     std::string host = "127.0.0.1";
     int port = 0;
-    const char* screenshotFile = nullptr;
-    double screenshotDelay = 4.0;
-
     for (int i = 1; i < argc; i++) 
     {
         if (!std::strcmp(argv[i], "-help") || !std::strcmp(argv[i], "--help")) 
@@ -44,10 +40,6 @@ int main(int argc, char** argv) {
         else if (!std::strcmp(argv[i], "-h") && i + 1 < argc) 
         {
             host = argv[++i];
-        } 
-        else if (!std::strcmp(argv[i], "--screenshot") && i + 1 < argc) 
-        {
-            screenshotFile = argv[++i];
         } 
         else 
         {
@@ -81,7 +73,6 @@ int main(int argc, char** argv) {
     };
     tryConnect();
 
-    double shotAt = GetTime() + screenshotDelay;
     while (!renderer.shouldClose()) 
     {
         float dt = GetFrameTime();
@@ -117,11 +108,6 @@ int main(int argc, char** argv) {
         renderer.draw();
         renderer.endFrame();
 
-        if (screenshotFile && GetTime() > shotAt) 
-        {
-            renderer.takeScreenshot(screenshotFile);
-            break;
-        }
     }
 
     renderer.shutdown();

@@ -15,7 +15,11 @@
 # ==============================================================================
 CXX				= g++
 CXXFLAGS		= -Wall -Wextra -Werror -std=c++11 -g -O0 -MMD -MP
-CXXFLAGS_GFX	= -Wall -Wextra -std=c++17 -O2 -MMD -MP -Izappy_gfx/src -isystem server/raylib
+RAYLIB_DIR		?= /usr/local
+RAYLIB_INCLUDE	?= $(RAYLIB_DIR)/include
+RAYLIB_LIB		?= $(RAYLIB_DIR)/lib/libraylib.a
+
+CXXFLAGS_GFX	= -Wall -Wextra -std=c++17 -O2 -MMD -MP -Izappy_gfx/src -isystem $(RAYLIB_INCLUDE)
 
 CC				= gcc
 CFLAGS			= -O2 -Wall
@@ -26,7 +30,7 @@ SERVER_INCLUDES	= -Iserver/srcs -Iserver/raylib -Iserver
 CLIENT_LDFLAGS	=
 SERVER_LDFLAGS	= -lssl -lcrypto
 RAYLIB_LDFLAGS	= -lGL -lm -lpthread -ldl -lrt -lX11
-GFX_LDFLAGS		= server/raylib/libraylib.a $(RAYLIB_LDFLAGS)
+GFX_LDFLAGS		= $(RAYLIB_LIB) $(RAYLIB_LDFLAGS)
 
 # ==============================================================================
 #                               TARGET NAMES
@@ -165,7 +169,7 @@ $(CLIENT_NAME): $(CLIENT_OBJS)
 # 3. GFX 3D Client Rule (zappy_gfx/gfx)
 gfx: $(GFX_NAME)
 
-$(GFX_NAME): $(GFX_OBJS) server/raylib/libraylib.a
+$(GFX_NAME): $(GFX_OBJS) $(RAYLIB_LIB)
 	@mkdir -p $(dir $@)
 	@$(CXX) $(GFX_OBJS) -o $(GFX_NAME) $(GFX_LDFLAGS)
 	@echo "Successfully compiled GFX client: $(GFX_NAME)"

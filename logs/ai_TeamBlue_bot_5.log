@@ -1,0 +1,1451 @@
+[1;34m[28/Oct/2026:11:29:21] [DEBUG] [1;0mConnection constructor
+[1;34m[28/Oct/2026:11:29:21] [DEBUG] [1;0mClient constructor
+[1;34m[28/Oct/2026:11:29:21][1;32m [INFO] [1;0mconnecting to 127.0.0.1:9000 as team "TeamBlue"
+[1;34m[28/Oct/2026:11:29:21] [DEBUG] [1;0mreceived: "BIENVENUE"
+[1;34m[28/Oct/2026:11:29:21] [DEBUG] [1;0mreceived: "0"
+[1;34m[28/Oct/2026:11:29:21][1;32m [INFO] [1;0mremaining team slots: 0
+[1;34m[28/Oct/2026:11:29:21] [DEBUG] [1;0mreceived: "12 12"
+[1;34m[28/Oct/2026:11:29:21][1;32m [INFO] [1;0mworld size: 12x12
+[1;34m[28/Oct/2026:11:29:21] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:21] [DEBUG] [1;0mreceived: "{ player nourriture, , nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere deraumere phiras, nourriture nourriture nourriture nourriture nourriture linemate linemate sibur thystame}"
+[1;34m[28/Oct/2026:11:29:21] [DEBUG] [1;0msending: "inventaire"
+[1;34m[28/Oct/2026:11:29:21] [DEBUG] [1;0mreceived: "message 6,ZAP 25593 517250 ABORT 2"
+[1;34m[28/Oct/2026:11:29:21][1;32m [INFO] [1;0mheard from direction 6: ZAP 25593 517250 ABORT 2
+[1;34m[28/Oct/2026:11:29:21] [DEBUG] [1;0mreceived: "{nourriture 10, linemate 0, deraumere 0, sibur 0, mendiane 0, phiras 0, thystame 0}"
+[1;34m[28/Oct/2026:11:29:21] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:21] [DEBUG] [1;0mreceived: "message 3,ZAP 14595 356810 OFFER 5 0 0 0 1 0 0 0 972957 419489 965677"
+[1;34m[28/Oct/2026:11:29:21][1;32m [INFO] [1;0mheard from direction 3: ZAP 14595 356810 OFFER 5 0 0 0 1 0 0 0 972957 419489 965677
+[1;34m[28/Oct/2026:11:29:21] [DEBUG] [1;0mreceived: "message 3,ZAP 14595 972957 HERE 5 356810"
+[1;34m[28/Oct/2026:11:29:21][1;32m [INFO] [1;0mheard from direction 3: ZAP 14595 972957 HERE 5 356810
+[1;34m[28/Oct/2026:11:29:21] [DEBUG] [1;0mreceived: "message 3,ZAP 14595 419489 HERE 5 356810"
+[1;34m[28/Oct/2026:11:29:21][1;32m [INFO] [1;0mheard from direction 3: ZAP 14595 419489 HERE 5 356810
+[1;34m[28/Oct/2026:11:29:21] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:21] [DEBUG] [1;0msending: "avance"
+[1;34m[28/Oct/2026:11:29:22] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:22] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:22] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 356810 OFFER 5 0 0 0 0 0 0 0 972957 419489 965677"
+[1;34m[28/Oct/2026:11:29:22][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 356810 OFFER 5 0 0 0 0 0 0 0 972957 419489 965677
+[1;34m[28/Oct/2026:11:29:22] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 972957 HERE 5 356810"
+[1;34m[28/Oct/2026:11:29:22][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 972957 HERE 5 356810
+[1;34m[28/Oct/2026:11:29:22] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 419489 HERE 5 356810"
+[1;34m[28/Oct/2026:11:29:22][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 419489 HERE 5 356810
+[1;34m[28/Oct/2026:11:29:22] [DEBUG] [1;0mreceived: "{ player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere deraumere phiras, nourriture mendiane, nourriture nourriture nourriture linemate linemate linemate deraumere mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane phiras}"
+[1;34m[28/Oct/2026:11:29:22] [DEBUG] [1;0msending: "incantation"
+[1;34m[28/Oct/2026:11:29:22] [DEBUG] [1;0mreceived: "elevation en cours"
+[1;34m[28/Oct/2026:11:29:22][1;32m [INFO] [1;0mincantation started
+[1;34m[28/Oct/2026:11:29:22] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 356810 OFFER 5 0 0 0 0 0 0 0 972957 419489 965677"
+[1;34m[28/Oct/2026:11:29:22][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 356810 OFFER 5 0 0 0 0 0 0 0 972957 419489 965677
+[1;34m[28/Oct/2026:11:29:22] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 972957 HERE 5 356810"
+[1;34m[28/Oct/2026:11:29:22][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 972957 HERE 5 356810
+[1;34m[28/Oct/2026:11:29:22] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 419489 HERE 5 356810"
+[1;34m[28/Oct/2026:11:29:22][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 419489 HERE 5 356810
+[1;34m[28/Oct/2026:11:29:22] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 356810 OFFER 5 0 0 0 0 0 0 0 972957 419489 965677"
+[1;34m[28/Oct/2026:11:29:22][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 356810 OFFER 5 0 0 0 0 0 0 0 972957 419489 965677
+[1;34m[28/Oct/2026:11:29:22] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 972957 HERE 5 356810"
+[1;34m[28/Oct/2026:11:29:22][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 972957 HERE 5 356810
+[1;34m[28/Oct/2026:11:29:22] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 419489 HERE 5 356810"
+[1;34m[28/Oct/2026:11:29:22][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 419489 HERE 5 356810
+[1;34m[28/Oct/2026:11:29:22] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 965677 HERE 5 356810"
+[1;34m[28/Oct/2026:11:29:22][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 965677 HERE 5 356810
+[1;34m[28/Oct/2026:11:29:22] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 356810 OFFER 5 0 0 0 0 0 0 0 972957 419489 965677"
+[1;34m[28/Oct/2026:11:29:22][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 356810 OFFER 5 0 0 0 0 0 0 0 972957 419489 965677
+[1;34m[28/Oct/2026:11:29:22] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 972957 HERE 5 356810"
+[1;34m[28/Oct/2026:11:29:22][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 972957 HERE 5 356810
+[1;34m[28/Oct/2026:11:29:22] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 419489 HERE 5 356810"
+[1;34m[28/Oct/2026:11:29:22][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 419489 HERE 5 356810
+[1;34m[28/Oct/2026:11:29:22] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 356810 FULL 5"
+[1;34m[28/Oct/2026:11:29:22][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 356810 FULL 5
+[1;34m[28/Oct/2026:11:29:22] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 517250 EGG 0"
+[1;34m[28/Oct/2026:11:29:22][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 517250 EGG 0
+[1;34m[28/Oct/2026:11:29:23] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 5 3 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:23][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 5 3 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:23] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 JOIN 5 999100"
+[1;34m[28/Oct/2026:11:29:23][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 JOIN 5 999100
+[1;34m[28/Oct/2026:11:29:23] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 JOIN 5 999100"
+[1;34m[28/Oct/2026:11:29:23][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 JOIN 5 999100
+[1;34m[28/Oct/2026:11:29:23] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 JOIN 5 999100"
+[1;34m[28/Oct/2026:11:29:23][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 JOIN 5 999100
+[1;34m[28/Oct/2026:11:29:23] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 5 3 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:23][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 5 3 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:23] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 5 999100"
+[1;34m[28/Oct/2026:11:29:23][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 5 999100
+[1;34m[28/Oct/2026:11:29:23] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 JOIN 5 999100"
+[1;34m[28/Oct/2026:11:29:23][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 JOIN 5 999100
+[1;34m[28/Oct/2026:11:29:23] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 5 0 0 0 0 0 0 0 404110 160413 802973"
+[1;34m[28/Oct/2026:11:29:23][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 5 0 0 0 0 0 0 0 404110 160413 802973
+[1;34m[28/Oct/2026:11:29:24] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 5 999100"
+[1;34m[28/Oct/2026:11:29:24][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 5 999100
+[1;34m[28/Oct/2026:11:29:24] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 JOIN 5 999100"
+[1;34m[28/Oct/2026:11:29:24][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 JOIN 5 999100
+[1;34m[28/Oct/2026:11:29:24] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 JOIN 5 999100"
+[1;34m[28/Oct/2026:11:29:24][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 JOIN 5 999100
+[1;34m[28/Oct/2026:11:29:24] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 5 0 0 0 0 0 0 0 404110 160413 802973"
+[1;34m[28/Oct/2026:11:29:24][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 5 0 0 0 0 0 0 0 404110 160413 802973
+[1;34m[28/Oct/2026:11:29:24] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 5 999100"
+[1;34m[28/Oct/2026:11:29:24][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 5 999100
+[1;34m[28/Oct/2026:11:29:24] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 5 0 0 0 0 0 0 0 404110 160413 802973"
+[1;34m[28/Oct/2026:11:29:24][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 5 0 0 0 0 0 0 0 404110 160413 802973
+[1;34m[28/Oct/2026:11:29:24] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 5 999100"
+[1;34m[28/Oct/2026:11:29:24][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 5 999100
+[1;34m[28/Oct/2026:11:29:24] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 5 999100"
+[1;34m[28/Oct/2026:11:29:24][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 5 999100
+[1;34m[28/Oct/2026:11:29:24] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 5 999100"
+[1;34m[28/Oct/2026:11:29:24][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 5 999100
+[1;34m[28/Oct/2026:11:29:24] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 FULL 5"
+[1;34m[28/Oct/2026:11:29:24][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 FULL 5
+[1;34m[28/Oct/2026:11:29:25] [DEBUG] [1;0mreceived: "niveau actuel : 2"
+[1;34m[28/Oct/2026:11:29:25][1;32m [INFO] [1;0mLEVEL UP! Now level 2
+[1;34m[28/Oct/2026:11:29:25] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:25] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:25] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:25] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:25] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:25] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:25] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:25] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:25][1;32m [INFO] [1;0mProactive early egg laid (fork) to reach target team size of 8 (total eggs=1)
+[1;34m[28/Oct/2026:11:29:25] [DEBUG] [1;0msending: "fork"
+[1;34m[28/Oct/2026:11:29:25] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:25] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 EGG 0"
+[1;34m[28/Oct/2026:11:29:25] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:25] [DEBUG] [1;0msending: "prend linemate"
+[1;34m[28/Oct/2026:11:29:25] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:25] [DEBUG] [1;0msending: "prend linemate"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0msending: "prend linemate"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0msending: "prend linemate"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0mreceived: "ko"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0mreceived: "{ player deraumere deraumere sibur phiras, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, nourriture nourriture nourriture nourriture nourriture nourriture linemate linemate linemate deraumere phiras, player player nourriture linemate linemate linemate linemate deraumere deraumere sibur, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0msending: "prend deraumere"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0msending: "prend deraumere"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0msending: "prend sibur"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0msending: "prend phiras"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:26][1;32m [INFO] [1;0mAssuming Leader role for Level 2 (has stones!)
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0mreceived: "{ player, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, player player nourriture nourriture nourriture nourriture nourriture linemate linemate linemate deraumere phiras, linemate linemate linemate linemate deraumere deraumere sibur, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0msending: "pose linemate"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0msending: "pose deraumere"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0msending: "pose sibur"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, player player linemate linemate linemate deraumere phiras, linemate linemate linemate linemate deraumere deraumere sibur, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:26][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:26] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, player linemate linemate linemate deraumere phiras, linemate linemate linemate linemate deraumere deraumere sibur, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:27][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, linemate linemate linemate linemate deraumere deraumere sibur, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:27][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, player nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, linemate linemate linemate linemate deraumere deraumere sibur, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:27][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player linemate linemate linemate linemate deraumere deraumere sibur, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:27][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player linemate linemate deraumere deraumere sibur, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:27][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player deraumere deraumere sibur, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:27][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player sibur, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:27] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:27][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:28][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 419489 OFFER 6 5 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:28][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 419489 OFFER 6 5 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player linemate deraumere, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:28][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "message 3,ZAP 14595 356810 JOIN 6 419489"
+[1;34m[28/Oct/2026:11:29:28][1;32m [INFO] [1;0mheard from direction 3: ZAP 14595 356810 JOIN 6 419489
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 419489 OFFER 6 5 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:28][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 419489 OFFER 6 5 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "message 3,ZAP 14595 972957 JOIN 6 419489"
+[1;34m[28/Oct/2026:11:29:28][1;32m [INFO] [1;0mheard from direction 3: ZAP 14595 972957 JOIN 6 419489
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:28][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player linemate deraumere deraumere sibur, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "message 3,ZAP 14595 972957 JOIN 6 419489"
+[1;34m[28/Oct/2026:11:29:28][1;32m [INFO] [1;0mheard from direction 3: ZAP 14595 972957 JOIN 6 419489
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 419489 OFFER 6 3 0 0 0 0 0 0 356810 972957"
+[1;34m[28/Oct/2026:11:29:28][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 419489 OFFER 6 3 0 0 0 0 0 0 356810 972957
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "message 3,ZAP 14595 356810 JOIN 6 419489"
+[1;34m[28/Oct/2026:11:29:28][1;32m [INFO] [1;0mheard from direction 3: ZAP 14595 356810 JOIN 6 419489
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:28][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player linemate deraumere deraumere sibur sibur sibur, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 419489 OFFER 6 3 0 0 0 0 0 0 356810 972957"
+[1;34m[28/Oct/2026:11:29:28][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 419489 OFFER 6 3 0 0 0 0 0 0 356810 972957
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:28][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 419489 OFFER 6 3 0 0 0 0 0 0 356810 972957"
+[1;34m[28/Oct/2026:11:29:28][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 419489 OFFER 6 3 0 0 0 0 0 0 356810 972957
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 5 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:28][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 5 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:28][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 419489 JOIN 6 965677"
+[1;34m[28/Oct/2026:11:29:28][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 419489 JOIN 6 965677
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:28] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 5 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 5 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 OFFER 6 5 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 OFFER 6 5 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 3,ZAP 14595 419489 JOIN 6 965677"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 3: ZAP 14595 419489 JOIN 6 965677
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 JOIN 6 802973"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 JOIN 6 802973
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 JOIN 6 802973"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 JOIN 6 802973
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 OFFER 6 5 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 OFFER 6 5 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 OFFER 6 3 0 0 0 0 0 0 404110 160413"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 OFFER 6 3 0 0 0 0 0 0 404110 160413
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, player nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 JOIN 6 802973"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 JOIN 6 802973
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 JOIN 6 802973"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 JOIN 6 802973
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 OFFER 6 3 0 0 0 0 0 0 404110 160413"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 OFFER 6 3 0 0 0 0 0 0 404110 160413
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 OFFER 6 3 0 0 0 0 0 0 404110 160413"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 OFFER 6 3 0 0 0 0 0 0 404110 160413
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 5 0 0 1 0 0 0"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 5 0 0 1 0 0 0
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 JOIN 6 999100"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 JOIN 6 999100
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 5 0 0 1 0 0 0"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 5 0 0 1 0 0 0
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 802973"
+[1;34m[28/Oct/2026:11:29:29][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 802973
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0msending: "inventaire"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0mreceived: "{nourriture 15, linemate 2, deraumere 1, sibur 0, mendiane 0, phiras 1, thystame 0}"
+[1;34m[28/Oct/2026:11:29:29] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 4 0 0 1 0 0 0 802973"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 4 0 0 1 0 0 0 802973
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 802973"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 802973
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 JOIN 6 999100"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 JOIN 6 999100
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 4 0 0 1 0 0 0 802973"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 4 0 0 1 0 0 0 802973
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 802973"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 802973
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 4 0 0 0 0 0 0 802973"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 4 0 0 0 0 0 0 802973
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 802973"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 802973
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 4 0 0 0 0 0 0 802973"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 4 0 0 0 0 0 0 802973
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 802973"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 802973
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 4 0 0 0 0 0 0 802973"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 4 0 0 0 0 0 0 802973
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 802973"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 802973
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 802973"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 802973
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 4 0 0 0 0 0 0 802973"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 4 0 0 0 0 0 0 802973
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 972957 JOIN 6 965677"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 972957 JOIN 6 965677
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 4 0 0 0 0 0 0 802973"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 4 0 0 0 0 0 0 802973
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 802973"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 802973
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:30] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489"
+[1;34m[28/Oct/2026:11:29:30][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 4 0 0 0 0 0 0 419489
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 4 0 0 0 0 0 0 802973"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 4 0 0 0 0 0 0 802973
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 356810 JOIN 6 965677"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 356810 JOIN 6 965677
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 802973"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 802973
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 3 0 0 0 0 0 0 419489 972957"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 3 0 0 0 0 0 0 419489 972957
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 3,ZAP 14595 972957 JOIN 6 965677"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 3: ZAP 14595 972957 JOIN 6 965677
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 4 0 0 0 0 0 0 802973"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 4 0 0 0 0 0 0 802973
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 802973"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 802973
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 4,ZAP 14595 356810 JOIN 6 965677"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 4: ZAP 14595 356810 JOIN 6 965677
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 4 0 0 0 0 0 0 802973"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 4 0 0 0 0 0 0 802973
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 802973"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 802973
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, player nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 4 0 0 0 0 0 0 802973"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 4 0 0 0 0 0 0 802973
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 802973"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 802973
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 4 0 0 0 0 0 0 802973"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 4 0 0 0 0 0 0 802973
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 802973"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 802973
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 JOIN 6 999100"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 JOIN 6 999100
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 JOIN 6 999100"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 JOIN 6 999100
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 4 0 0 0 0 0 0 802973"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 4 0 0 0 0 0 0 802973
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, player linemate linemate linemate deraumere phiras, player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 JOIN 6 999100"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 JOIN 6 999100
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 JOIN 6 999100"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 JOIN 6 999100
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:31][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0mreceived: "{ player player linemate deraumere sibur, nourriture nourriture mendiane thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:31] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture mendiane thystame, player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, player nourriture nourriture mendiane thystame, player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 248199 JOIN 2 517250"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 248199 JOIN 2 517250
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 1 0 0 0 0 0 0
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, player nourriture nourriture linemate mendiane thystame, player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 0 0 0 0 0 0 0 248199"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 0 0 0 0 0 0 0 248199
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, player nourriture nourriture linemate mendiane thystame, player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 6,ZAP 25593 248199 JOIN 2 517250"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 6: ZAP 25593 248199 JOIN 2 517250
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 0 0 0 0 0 0 0 248199"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 0 0 0 0 0 0 0 248199
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture linemate mendiane thystame, player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:32] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:32][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 0 0 0 0 0 0 0 248199"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 0 0 0 0 0 0 0 248199
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture linemate mendiane thystame, player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 0 0 0 0 0 0 0 248199"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 0 0 0 0 0 0 0 248199
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture linemate mendiane thystame, player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 OFFER 2 0 0 0 0 0 0 0 248199"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 OFFER 2 0 0 0 0 0 0 0 248199
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture linemate mendiane thystame, player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 248199 HERE 2 517250"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 248199 HERE 2 517250
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 7,ZAP 25593 517250 FULL 2"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 7: ZAP 25593 517250 FULL 2
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture linemate mendiane thystame, player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture linemate mendiane thystame, player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture linemate mendiane thystame, player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture linemate mendiane thystame, player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:33] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:33][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture linemate mendiane thystame, player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture linemate mendiane thystame, player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture linemate mendiane thystame, player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0msending: "inventaire"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "{nourriture 15, linemate 2, deraumere 1, sibur 0, mendiane 0, phiras 1, thystame 0}"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture linemate mendiane thystame, player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture linemate mendiane thystame, player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture linemate mendiane thystame, player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture linemate mendiane thystame, player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:34] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:34][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture linemate mendiane thystame, player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture linemate mendiane thystame, player nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture linemate mendiane thystame, player nourriture nourriture nourriture linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 1 0 0 0 0 0 0"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 1,ZAP 14595 216373 JOIN 2 797912"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 1: ZAP 14595 216373 JOIN 2 797912
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mEnrolled follower 216373 for Level 2 (1/1)
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "{ player linemate deraumere sibur, nourriture nourriture linemate mendiane thystame, player nourriture nourriture nourriture linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate deraumere mendiane mendiane phiras, linemate linemate linemate deraumere phiras, player player player player linemate deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture linemate deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 0 0 0 0 0 0 0 216373"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "{ player player linemate linemate deraumere sibur, nourriture nourriture nourriture linemate mendiane thystame, nourriture nourriture nourriture linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate linemate deraumere mendiane mendiane phiras, nourriture linemate linemate linemate deraumere phiras, player player player player linemate deraumere deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture nourriture linemate linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture nourriture linemate linemate deraumere deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 0 0 0 0 0 0 0 216373"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 0,ZAP 14595 216373 JOIN 2 797912"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 0: ZAP 14595 216373 JOIN 2 797912
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mEnrolled follower 216373 for Level 2 (1/1)
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "{ player player linemate linemate deraumere sibur, nourriture nourriture nourriture linemate mendiane thystame, nourriture nourriture nourriture linemate linemate linemate deraumere sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture nourriture linemate linemate deraumere mendiane mendiane phiras, nourriture linemate linemate linemate deraumere phiras, player player player player linemate deraumere deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture nourriture linemate linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture nourriture linemate linemate deraumere deraumere deraumere sibur mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 OFFER 2 0 0 0 0 0 0 0 216373"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mGathering timed out (120 ticks). Returning to FORAGE.
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0msending: "broadcast ZAP 14595 797912 ABORT 2"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 0,ZAP 14595 216373 HERE 2 797912"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 0: ZAP 14595 216373 HERE 2 797912
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mFollower 216373 confirmed on tile! Total confirmed: 2
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0msending: "avance"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:35][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0mreceived: "{ player nourriture nourriture nourriture linemate linemate linemate deraumere sibur mendiane phiras thystame, player player player player linemate deraumere deraumere deraumere sibur sibur sibur phiras, nourriture nourriture nourriture nourriture nourriture linemate linemate deraumere sibur mendiane, nourriture nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras phiras thystame, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere sibur mendiane mendiane mendiane, nourriture nourriture nourriture nourriture nourriture linemate linemate deraumere deraumere mendiane phiras, nourriture linemate linemate linemate linemate linemate deraumere phiras phiras, nourriture nourriture nourriture nourriture nourriture linemate linemate deraumere sibur mendiane, nourriture}"
+[1;34m[28/Oct/2026:11:29:35] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0msending: "gauche"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 8,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 8: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 2,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 2: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0msending: "avance"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 6,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 6: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 6,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 6: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 8,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 8: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 5,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 5: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 7,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 7: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 5,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 5: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 7,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 7: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 7,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 7: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 5,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 5: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 5,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 5: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "{ player nourriture nourriture nourriture linemate mendiane thystame, nourriture linemate, nourriture linemate deraumere phiras, nourriture linemate linemate linemate deraumere phiras, deraumere deraumere sibur, nourriture nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere sibur, nourriture, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere thystame, nourriture nourriture nourriture nourriture nourriture linemate linemate deraumere sibur mendiane phiras}"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 7,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 7: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 5,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 5: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 7,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 7: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 5,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 5: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 7,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 7: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 7,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 7: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 5,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 5: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 5,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 5: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 7,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 7: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 5,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 5: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 5,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 5: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 7,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 7: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0msending: "prend linemate"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 7,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 7: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 7,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 7: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 5,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 5: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 5,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 5: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0msending: "prend mendiane"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 7,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 7: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 5,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 5: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 5,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 5: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 7,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 7: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0msending: "prend thystame"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 7,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 7: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 7,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 7: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 5,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 5: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 5,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 5: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0msending: "gauche"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 7,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 7: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 5,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 5: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 7,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 7: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 7,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 7: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 5,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 5: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0msending: "avance"
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 5,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 5: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 3,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 3: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:36] [DEBUG] [1;0mreceived: "message 3,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:36][1;32m [INFO] [1;0mheard from direction 3: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 5,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 5: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 5,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 5: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 5,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 5: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "{ player nourriture, , nourriture linemate deraumere deraumere sibur sibur sibur phiras phiras, , nourriture nourriture linemate deraumere deraumere thystame, nourriture deraumere deraumere, nourriture nourriture linemate linemate deraumere sibur sibur mendiane phiras, nourriture nourriture nourriture linemate linemate sibur, nourriture nourriture nourriture nourriture nourriture linemate linemate linemate linemate sibur}"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 5,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 5: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0msending: "avance"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 5,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 5: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 5,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 5: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 5,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 5: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 5,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 5: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "{ player nourriture linemate deraumere deraumere sibur sibur sibur phiras phiras, nourriture deraumere deraumere, nourriture nourriture linemate linemate deraumere sibur sibur mendiane phiras, nourriture nourriture nourriture linemate linemate sibur, nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere deraumere sibur sibur phiras phiras, nourriture linemate deraumere phiras thystame, nourriture nourriture nourriture nourriture nourriture linemate linemate deraumere deraumere sibur phiras, nourriture nourriture linemate linemate linemate linemate linemate deraumere deraumere phiras thystame, nourriture nourriture nourriture linemate linemate linemate deraumere deraumere deraumere sibur mendiane mendiane phiras thystame}"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 5,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 5: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 5,ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 5: ZAP 14595 965677 OFFER 6 2 0 0 0 0 0 0 419489 972957 356810
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 5,ZAP 14595 419489 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 5: ZAP 14595 419489 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0msending: "avance"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 3,ZAP 14595 216373 EGG 0"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 3: ZAP 14595 216373 EGG 0
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mTeammate 216373 laid an egg. Team size estimate: 8
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 5,ZAP 14595 356810 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 5: ZAP 14595 356810 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 5,ZAP 14595 965677 ABORT 6"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 5: ZAP 14595 965677 ABORT 6
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 5,ZAP 14595 972957 HERE 6 965677"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 5: ZAP 14595 972957 HERE 6 965677
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "{ player nourriture nourriture linemate linemate deraumere sibur sibur mendiane phiras, nourriture linemate deraumere phiras thystame, nourriture nourriture nourriture nourriture nourriture linemate linemate deraumere deraumere sibur phiras, nourriture nourriture linemate linemate linemate linemate linemate deraumere deraumere phiras thystame, nourriture nourriture linemate linemate linemate deraumere deraumere mendiane phiras, nourriture nourriture nourriture linemate linemate linemate mendiane mendiane, nourriture nourriture nourriture nourriture nourriture linemate linemate linemate linemate linemate deraumere sibur sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane phiras, nourriture nourriture linemate linemate linemate sibur mendiane}"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 3,ZAP 25593 248199 EGG 0"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 3: ZAP 25593 248199 EGG 0
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0msending: "avance"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "{ player nourriture nourriture nourriture nourriture nourriture linemate linemate deraumere deraumere sibur phiras, nourriture nourriture nourriture linemate linemate linemate mendiane mendiane, nourriture nourriture nourriture nourriture nourriture linemate linemate linemate linemate linemate deraumere sibur sibur mendiane phiras thystame, nourriture nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane phiras, nourriture nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere deraumere mendiane thystame, nourriture nourriture linemate linemate deraumere deraumere sibur mendiane phiras phiras phiras thystame, nourriture nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture linemate linemate linemate deraumere deraumere sibur mendiane mendiane, nourriture nourriture nourriture nourriture nourriture linemate deraumere deraumere thystame thystame}"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:37][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:37] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:38][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:38][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:38][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:38][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:38][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:38][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:38][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:38][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0msending: "avance"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:38][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:38][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:38][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "message 4,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:38][1;32m [INFO] [1;0mheard from direction 4: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0msending: "voir"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "{ player nourriture nourriture nourriture nourriture nourriture linemate linemate linemate linemate linemate deraumere sibur sibur mendiane phiras thystame, nourriture nourriture linemate linemate deraumere deraumere sibur mendiane phiras phiras phiras thystame, nourriture nourriture nourriture nourriture nourriture linemate deraumere sibur mendiane, nourriture nourriture nourriture linemate linemate linemate deraumere deraumere sibur mendiane mendiane, nourriture nourriture nourriture nourriture linemate linemate linemate deraumere sibur mendiane phiras, nourriture nourriture nourriture nourriture nourriture nourriture linemate linemate linemate linemate deraumere deraumere, nourriture nourriture nourriture nourriture nourriture linemate linemate linemate deraumere deraumere mendiane mendiane phiras phiras phiras thystame, nourriture nourriture nourriture linemate linemate deraumere sibur phiras phiras, nourriture nourriture nourriture nourriture linemate linemate deraumere deraumere deraumere deraumere deraumere sibur mendiane mendiane thystame}"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "message 2,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:38][1;32m [INFO] [1;0mheard from direction 2: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "message 2,ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110"
+[1;34m[28/Oct/2026:11:29:38][1;32m [INFO] [1;0mheard from direction 2: ZAP 25593 999100 OFFER 6 2 0 0 0 0 0 0 802973 160413 404110
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "message 2,ZAP 25593 160413 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:38][1;32m [INFO] [1;0mheard from direction 2: ZAP 25593 160413 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "message 2,ZAP 25593 802973 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:38][1;32m [INFO] [1;0mheard from direction 2: ZAP 25593 802973 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "message 2,ZAP 25593 999100 ABORT 6"
+[1;34m[28/Oct/2026:11:29:38][1;32m [INFO] [1;0mheard from direction 2: ZAP 25593 999100 ABORT 6
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "message 2,ZAP 25593 404110 HERE 6 999100"
+[1;34m[28/Oct/2026:11:29:38][1;32m [INFO] [1;0mheard from direction 2: ZAP 25593 404110 HERE 6 999100
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0msending: "prend nourriture"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mreceived: "ok"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0msending: "gauche"
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mClient destructor
+[1;34m[28/Oct/2026:11:29:38] [DEBUG] [1;0mConnection destructor

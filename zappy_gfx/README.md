@@ -28,6 +28,13 @@ make fclean     # remove object files and the binary
 make re         # fclean + all
 ```
 
+When building from the repository root, set `RAYLIB_DIR` if raylib is not
+installed under `/usr/local`:
+
+```
+make gfx RAYLIB_DIR=/path/to/raylib
+```
+
 If raylib isn't installed system-wide, point the compiler at it, e.g.:
 
 ```
@@ -43,7 +50,6 @@ CPATH=/path/to/raylib/src LIBRARY_PATH=/path/to/raylib/src make
 - `-p port`      port number of the Zappy server (required)
 - `-h machine`   server hostname (default: 127.0.0.1)
 - `-help`        usage
-- `--screenshot FILE`  save a screenshot a few seconds in and quit (debug/CI use)
 
 ## Controls
 

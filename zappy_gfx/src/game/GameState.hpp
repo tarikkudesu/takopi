@@ -14,7 +14,6 @@ namespace zappy {
 
 struct Incantation {
     int x = 0, y = 0, level = 0;
-    float elapsed = 0;
 };
 
 // GameState owns the whole world as reported by the server (map, teams,
@@ -77,8 +76,7 @@ public:
     void reportProtocolError(const std::string& text);
 
     // --- simulation ----------------------------------------------------------
-    // Advances animation/interpolation state, ages eggs and incantations,
-    // and removes entities whose death/end-of-life animation has finished.
+    // Advances player interpolation, ages eggs, and removes ended entities.
     void update(float dt);
 
     // --- events ---------------------------------------------------------------
