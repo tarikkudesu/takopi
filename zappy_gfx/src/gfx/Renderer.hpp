@@ -49,7 +49,6 @@ private:
     bool showLabels_ = true;
 
     float mapRefreshTimer_ = 0;
-    float incantationEffectTime_ = 0;
 
     bool audioReady_ = false;
     Sound sndBroadcast_{};
