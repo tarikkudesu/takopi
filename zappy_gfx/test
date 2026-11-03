@@ -1,0 +1,90 @@
+Color mixColor(Color a, Color b, float t) {
+    return Color{
+        static_cast<unsigned char>(a.r + (b.r - a.r) * t),
+        static_cast<unsigned char>(a.g + (b.g - a.g) * t),
+        static_cast<unsigned char>(a.b + (b.b - a.b) * t),
+        static_cast<unsigned char>(a.a + (b.a - a.a) * t),
+    };
+}
+
+std::string truncated(const std::string& s, size_t maxLen) {
+    return s.size() <= maxLen ? s : s.substr(0, maxLen);
+}
+
+bool Renderer::shouldClose() const { return WindowShouldClose(); }
+
+
+Sound Renderer::makeTone(float freqHz, float durationSec, float volume) {
+    constexpr int sampleRate = 44100;
+    int frames = static_cast<int>(durationSec * sampleRate);
+    std::vector<short> samples(static_cast<size_t>(std::max(frames, 1)));
+    for (int i = 0; i < frames; i++) {
+        float t = static_cast<float>(i) / sampleRate;
+        float envelope = std::sin(kPi * static_cast<float>(i) / frames);
+        samples[static_cast<size_t>(i)] =
+            static_cast<short>(std::sin(2 * kPi * freqHz * t) * envelope * volume * 32000);
+    }
+    Wave wave{};
+    wave.frameCount = static_cast<unsigned int>(samples.size());
+    wave.sampleRate = sampleRate;
+    wave.sampleSize = 16;
+    wave.channels = 1;
+    wave.data = samples.data();
+    return LoadSoundFromWave(wave);
+}
+
+void Renderer::loadSounds() {
+    InitAudioDevice();
+    audioReady_ = IsAudioDeviceReady();
+    if (!audioReady_) return;   // headless/no sound card: everything below is skipped at call sites
+
+    sndBroadcast_ = makeTone(880.0f, 0.18f, 0.5f);
+}
+
+void Renderer::unloadSounds() {
+    if (!audioReady_) return;
+    UnloadSound(sndBroadcast_);
+    UnloadSound(sndBroadcast_);
+    CloseAudioDevice();
+    audioReady_ = false;
+}
+
+float Renderer::broadcastVolumeFor(Vector3 worldPos) const {
+    float d = Vector3Distance(worldPos, cameraTarget_);
+    return Clamp(1.0f - d / 40.0f, 0.05f, 1.0f);
+}
+
+bool Renderer::projectToScreen(Vector3 world, Vector2& out) const {
+    Vector3 fwd = Vector3Normalize(Vector3Subtract(camera_.target, camera_.position));
+    if (Vector3DotProduct(Vector3Subtract(world, camera_.position), fwd) <= 0.1f) return false;
+    out = GetWorldToScreen(world, camera_);
+    return true;
+}
+
+bool Renderer::isOverUi(Vector2 mouse) const {
+    for (const auto& r : uiRects_)
+        if (CheckCollisionPointRec(mouse, r)) return true;
+    return false;
+}
+void Renderer::drawOverlays() {
+    int sw = GetScreenWidth(), sh = GetScreenHeight();
+
+    if (!net_.isConnected() || !state_.hasMap()) {
+        Rectangle r = {sw / 2.0f - 230, sh / 2.0f - 40, 460, 80};
+        DrawRectangleRec(r, Color{12, 16, 28, 205});
+        DrawRectangleLinesEx(r, 1, Color{90, 110, 150, 210});
+        uiRects_.push_back(r);
+        std::string msg = net_.isConnected() ? "Waiting for the server..." : net_.lastError();
+        if (msg.empty()) msg = "Not connected";
+        drawTextCentered(sw / 2, static_cast<int>(r.y) + 14, 18, WHITE, "%s", msg.c_str());
+        drawTextCentered(sw / 2, static_cast<int>(r.y) + 44, 14, GRAY, net_.isConnected() ? "handshake in progress" : "Press C to retry");
+    }
+
+    if (state_.isGameOver()) {
+        Color c = state_.winnerTeamIndex() >= 0 ? teamColor(state_.winnerTeamIndex()) : Color{255, 220, 100, 255};
+        DrawRectangle(0, sh / 2 - 70, sw, 120, Color{0, 0, 0, 150});
+        drawTextCentered(sw / 2, sh / 2 - 55, 22, WHITE, "GAME OVER");
+        drawTextCentered(sw / 2, sh / 2 - 20, 44, c, "Team %s wins!", state_.winnerName().c_str());
+    }
+}
+

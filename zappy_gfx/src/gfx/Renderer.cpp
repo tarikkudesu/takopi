@@ -296,6 +296,7 @@ void Renderer::processEvents(const std::vector<GameEvent>& events) {
 
 void Renderer::update(float dt) {
     // Camera smoothing / following.
+    incantationEffectTime_ += dt;
     cameraDist_ += (cameraDistGoal_ - cameraDist_) * std::min(1.0f, dt * 10.0f);
     float cp = std::cos(cameraPitch_);
     Vector3 off = {std::sin(cameraYaw_) * cp, std::sin(cameraPitch_), std::cos(cameraYaw_) * cp};
@@ -498,12 +499,47 @@ void Renderer::drawEgg(const Egg& e) const {
     DrawSphere({pos.x, 0.42f, pos.z}, 0.32f, body);
 }
 
+void Renderer::drawIncantation(const Incantation& inc) const {
+    Vector3 c = tileCenter(static_cast<float>(inc.x), static_cast<float>(inc.y));
+    float pulse = 0.5f + 0.5f * std::sin(incantationEffectTime_ * 5.0f);
+    float ringRadius = 0.65f + pulse * 0.18f;
+    Color ringColor = {
+        255,
+        static_cast<unsigned char>(190 + pulse * 55),
+        80,
+        220
+    };
+
+    DrawCircle3D({c.x, 0.035f, c.z}, ringRadius, {1, 0, 0}, 90.0f, ringColor);
+    DrawCircle3D({c.x, 0.045f, c.z}, ringRadius * 0.72f, {1, 0, 0}, 90.0f,
+                 Color{255, 235, 130, 170});
+
+    float beamHeight = 2.4f + pulse * 0.7f;
+    DrawCylinder({c.x, beamHeight * 0.5f, c.z}, 0.10f, 0.10f, beamHeight, 12,
+                 Color{255, 220, 100, 105});
+
+    constexpr int kOrbCount = 4;
+    for (int i = 0; i < kOrbCount; i++) {
+        float angle = incantationEffectTime_ * 2.5f +
+                      2.0f * kPi * static_cast<float>(i) / kOrbCount;
+        float orbitRadius = 0.82f;
+        float orbHeight = 1.15f + 0.35f *
+            std::sin(incantationEffectTime_ * 4.0f + i);
+        DrawSphere({
+            c.x + std::cos(angle) * orbitRadius,
+            orbHeight,
+            c.z + std::sin(angle) * orbitRadius
+        }, 0.10f, Color{255, 245, 160, 230});
+    }
+}
+
 void Renderer::drawWorld() {
     rlSetClipPlanes(0.1, 3000.0);
     BeginMode3D(camera_);
     if (state_.hasMap()) {
         drawGround();
         drawResources();
+        for (const auto& inc : state_.incantations()) drawIncantation(inc);
         for (const auto& e : state_.eggs()) drawEgg(e);
         for (const auto& p : state_.players()) drawPlayer(p);
         if (selectedTile_ || hoverTile_) {
