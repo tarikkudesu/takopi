@@ -77,7 +77,7 @@ Press H in the app for the same reference.
 - **Scroll through the map**: yes, free-fly camera (pan/orbit/zoom) plus a
   clickable minimap.
 - **Lock on and follow a player**: yes (`F` key).
-- **Sound for broadcasts ("even more epic client")**: yes — see Audio below.
+- **Sound for broadcasts ("even more epic client")**: no.
 
 ### Bonus part
 - **3D client**: yes — raylib 3D scene, not a 2D icon grid.
@@ -91,15 +91,13 @@ Press H in the app for the same reference.
      composition — written for this project)
 
 ### Audio implementation notes
-All sounds are synthesized at startup (`Renderer::loadSounds`, sine tones
-with a half-sine envelope) rather than loaded from `.wav`/`.ogg` files, so
-there is nothing to copy into the Makefile and nothing that can go missing
-on a different machine — it "works out of the box on the dumps" per the
-subject's requirement. If no audio device is available (e.g. a headless CI
-box), `InitAudioDevice`/`IsAudioDeviceReady` fail gracefully and every sound
-call is skipped; the client keeps running normally with silence instead of
-crashing. Press `N` in the app to mute/unmute the background music; the top
-bar shows the current state when an audio device is active.
+The broadcast effect loads `zappy_gfx/audio/braodcast-audio.mp3`, and the
+incantation effect loads the 4-second MP3 from
+`zappy_gfx/audio/incantation-audio.mp3`. Each plays when its corresponding
+event starts. Run the client from the repository root so these relative asset
+paths resolve correctly. If no audio device is available (e.g. a headless CI box),
+`InitAudioDevice`/`IsAudioDeviceReady` fail gracefully and sound calls are
+skipped; the client keeps running normally with silence.
 
 This package only contains the graphical client; `server` and the AI `client`
 binaries referenced elsewhere in the subject are separate deliverables not

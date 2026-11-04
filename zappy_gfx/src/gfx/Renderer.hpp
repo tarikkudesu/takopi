@@ -52,6 +52,7 @@ private:
 
     bool audioReady_ = false;
     Sound sndBroadcast_{};
+    Sound sndIncantation_{};
 
     struct LogEntry { std::string text; Color color; double time; };
 
@@ -68,10 +69,9 @@ private:
     void clearSelection();
     void changeFrequency(int direction);
 
-    static Sound makeTone(float freqHz, float durationSec, float volume);
     void loadSounds();
     void unloadSounds();
-    float broadcastVolumeFor(Vector3 worldPos) const;
+    float soundVolumeFor(Vector3 worldPos) const;
 
     Vector3 playerWorldPos(const Player& p) const;
     Vector3 tileCenter(float x, float y) const;

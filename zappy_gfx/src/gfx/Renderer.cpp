@@ -152,42 +152,24 @@ void Renderer::changeFrequency(int direction) {
     net_.send("sst " + std::to_string(f) + "\n");
 }
 
-Sound Renderer::makeTone(float freqHz, float durationSec, float volume) {
-    constexpr int sampleRate = 44100;
-    int frames = static_cast<int>(durationSec * sampleRate);
-    std::vector<short> samples(static_cast<size_t>(std::max(frames, 1)));
-    for (int i = 0; i < frames; i++) {
-        float t = static_cast<float>(i) / sampleRate;
-        float envelope = std::sin(kPi * static_cast<float>(i) / frames);
-        samples[static_cast<size_t>(i)] =
-            static_cast<short>(std::sin(2 * kPi * freqHz * t) * envelope * volume * 32000);
-    }
-    Wave wave{};
-    wave.frameCount = static_cast<unsigned int>(samples.size());
-    wave.sampleRate = sampleRate;
-    wave.sampleSize = 16;
-    wave.channels = 1;
-    wave.data = samples.data();
-    return LoadSoundFromWave(wave);
-}
-
 void Renderer::loadSounds() {
     InitAudioDevice();
     audioReady_ = IsAudioDeviceReady();
     if (!audioReady_) return;   // headless/no sound card: everything below is skipped at call sites
 
-    sndBroadcast_ = makeTone(880.0f, 0.18f, 0.5f);
+    sndBroadcast_ = LoadSound("zappy_gfx/audio/braodcast-audio.mp3");
+    sndIncantation_ = LoadSound("zappy_gfx/audio/incantation-audio.mp3");
 }
 
 void Renderer::unloadSounds() {
     if (!audioReady_) return;
     UnloadSound(sndBroadcast_);
-    UnloadSound(sndBroadcast_);
+    UnloadSound(sndIncantation_);
     CloseAudioDevice();
     audioReady_ = false;
 }
 
-float Renderer::broadcastVolumeFor(Vector3 worldPos) const {
+float Renderer::soundVolumeFor(Vector3 worldPos) const {
     float d = Vector3Distance(worldPos, cameraTarget_);
     return Clamp(1.0f - d / 40.0f, 0.05f, 1.0f);
 }
@@ -236,15 +218,17 @@ void Renderer::processEvents(const std::vector<GameEvent>& events) {
         case GameEventKind::PlayerBroadcast:
             log(team, "#" + std::to_string(ev.id1) + " says: " + truncated(ev.text, 90));
             if (audioReady_) {
-                // Quieter the farther the broadcast tile is from where the
-                // camera is currently looking: a simple spatial audio cue.
-                SetSoundVolume(sndBroadcast_, broadcastVolumeFor(c));
+                SetSoundVolume(sndBroadcast_, soundVolumeFor(c));
                 PlaySound(sndBroadcast_);
             }
             break;
         case GameEventKind::IncantationStarted:
             log(Color{255, 225, 120, 255}, "Incantation lvl " + std::to_string(ev.value) + "->" +
                 std::to_string(ev.value + 1) + " at (" + std::to_string(ev.x) + "," + std::to_string(ev.y) + ")");
+            if (audioReady_) {
+                SetSoundVolume(sndIncantation_, soundVolumeFor(c));
+                PlaySound(sndIncantation_);
+            }
             break;
         case GameEventKind::IncantationEnded:
             if (ev.value) {
@@ -700,7 +684,7 @@ void Renderer::drawHud() {
         drawText(sw - 90 - w, 10, 14, net_.isConnected() ? Color{110, 240, 130, 255} : Color{255, 110, 110, 255}, "%s", status.c_str());
     }
     if (audioReady_)
-        drawText(sw - 160, 10, 14, Color{140, 220, 170, 255}, "broadcast audio");
+        drawText(sw - 160, 10, 14, Color{140, 220, 170, 255}, "incantation audio");
 
     drawTeamsPanel();
     drawSelectionPanel();
