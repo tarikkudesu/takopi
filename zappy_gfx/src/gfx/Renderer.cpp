@@ -83,7 +83,8 @@ bool Renderer::init(int width, int height, const char* title) {
     return true;
 }
 
-void Renderer::shutdown() {
+void Renderer::shutdown() 
+{
     unloadSounds();
     CloseWindow();
 }

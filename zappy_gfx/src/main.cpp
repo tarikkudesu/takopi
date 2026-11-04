@@ -12,44 +12,46 @@
 #include "protocol/Parser.hpp"
 
 namespace {
-
-void printUsage(const char* prog) {
-    std::printf(
-        "USAGE: %s -p port [-h machine]\n"
-        "\tport     is the port number of the Zappy server\n"
-        "\tmachine  is the hostname of the server (default: 127.0.0.1)\n",
-        prog);
+    void printUsage(const char* prog) 
+    {
+        std::printf(
+            "USAGE: %s -p port [-h machine]\n"
+            "\tport     is the port number of the Zappy server\n"
+            "\tmachine  is the hostname of the server (default: 127.0.0.1)\n",
+            prog);
+    }
 }
 
-} // namespace
-
-int main(int argc, char** argv) {
+int main(int argc, char** argv) 
+{
     std::string host = "127.0.0.1";
     int port = 0;
+
     for (int i = 1; i < argc; i++) 
     {
         if (!std::strcmp(argv[i], "-help") || !std::strcmp(argv[i], "--help")) 
         {
             printUsage(argv[0]);
             return 0;
-        } 
+        }
          else if (!std::strcmp(argv[i], "-p") && i + 1 < argc) 
         {
             port = std::atoi(argv[++i]);
-        } 
+        }
         else if (!std::strcmp(argv[i], "-h") && i + 1 < argc) 
         {
             host = argv[++i];
-        } 
-        else 
+        }
+        else
         {
             printUsage(argv[0]);
-            return 84;
+            return 1;
         }
     }
-    if (port <= 0 || port > 65535) {
+    if (port <= 0 || port > 65535) 
+    {
         printUsage(argv[0]);
-        return 84;
+        return 1;
     }
 
     zappy::GameState state;
@@ -60,15 +62,16 @@ int main(int argc, char** argv) {
 
     if (!renderer.init(1280, 760, "Zappy - 3D Monitor")) 
     {
-        std::fprintf(stderr, "Cannot open the window (no display / OpenGL 3.3 support?)\n");
-        return 84;
+        std::fprintf(stderr, "Cannot open the window\n");
+        return 1;
     }
 
     double connectTime = 0;
-    auto tryConnect = [&]() {
+    auto tryConnect = [&]()
+    {
         if (net.connect(host, port))
             connectTime = GetTime();
-        else                          
+        else
             state.reportProtocolError(net.lastError());
     };
     tryConnect();

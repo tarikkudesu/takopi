@@ -9,7 +9,8 @@
 
 namespace zappy {
 
-TcpClient::~TcpClient() { disconnect(); }
+TcpClient::~TcpClient() {
+     disconnect(); }
 
 bool TcpClient::connect(const std::string& host, int port) {
     disconnect();
