@@ -74,7 +74,8 @@ void MessageHandler::onMsz(const Message& m)
 {
     if (m.args.size() < 2) 
         return;
-    int w = toInt(m.args[0]), h = toInt(m.args[1]);
+    int w = toInt(m.args[0]);
+    int h = toInt(m.args[1]);
     if (w > 0 && h > 0 && w <= 2000 && h <= 2000) 
         state_.setMapSize(w, h);
 }
@@ -99,10 +100,12 @@ void MessageHandler::onTna(const Message& m)
 void MessageHandler::onPnw(const Message& m) 
 {
     if (m.args.size() < 6) 
-        return;
+        return ;
     int id = parsePlayerId(m.args[0]);
-    int x = toInt(m.args[1]), y = toInt(m.args[2]);
-    int o = toInt(m.args[3]), lvl = toInt(m.args[4]);
+    int x = toInt(m.args[1]); 
+    int y = toInt(m.args[2]);
+    int o = toInt(m.args[3]);
+    int lvl = toInt(m.args[4]);
     int team = state_.teamIndex(m.args[5], true);
     state_.playerJoin(id, x, y, o, lvl, team);
 }
@@ -121,55 +124,77 @@ void MessageHandler::onPlv(const Message& m)
     state_.playerSetLevel(parsePlayerId(m.args[0]), toInt(m.args[1]));
 }
 
-void MessageHandler::onPin(const Message& m) {
-    if (m.args.size() < 10) return;
+void MessageHandler::onPin(const Message& m) 
+{
+    if (m.args.size() < 10) 
+        return;
     int id = parsePlayerId(m.args[0]);
-    int x = toInt(m.args[1]), y = toInt(m.args[2]);
+    int x = toInt(m.args[1]);
+    int y = toInt(m.args[2]);
+    
     std::array<int, kResourceCount> inv{};
-    for (int i = 0; i < kResourceCount; i++) inv[i] = toInt(m.args[3 + i]);
+    for (int i = 0; i < kResourceCount; i++) 
+        inv[i] = toInt(m.args[3 + i]);
     state_.playerSetInventory(id, x, y, inv);
 }
 
-void MessageHandler::onPex(const Message& m) {
-    if (m.args.empty()) return;
+void MessageHandler::onPex(const Message& m) 
+{
+    if (m.args.empty()) 
+        return;
     state_.playerExpel(parsePlayerId(m.args[0]));
 }
 
-void MessageHandler::onPbc(const Message& m) {
-    if (m.args.empty()) return;
+void MessageHandler::onPbc(const Message& m) 
+{
+    if (m.args.empty()) 
+        return;
     state_.playerBroadcast(parsePlayerId(m.args[0]), textAfterTokens(m.raw, 2));
 }
 
-void MessageHandler::onPic(const Message& m) {
-    if (m.args.size() < 3) return;
+void MessageHandler::onPic(const Message& m) 
+{
+    if (m.args.size() < 3) 
+        return;
     int x = toInt(m.args[0]), y = toInt(m.args[1]), lvl = toInt(m.args[2]);
     std::vector<int> ids;
-    for (size_t i = 3; i < m.args.size(); i++) ids.push_back(parsePlayerId(m.args[i]));
+    for (size_t i = 3; i < m.args.size(); i++) 
+        ids.push_back(parsePlayerId(m.args[i]));
     state_.incantationStart(x, y, lvl, ids);
 }
 
-void MessageHandler::onPie(const Message& m) {
-    if (m.args.size() < 3) return;
+void MessageHandler::onPie(const Message& m) 
+{
+    if (m.args.size() < 3)
+        return ;
     state_.incantationEnd(toInt(m.args[0]), toInt(m.args[1]), toInt(m.args[2]) != 0);
 }
 
-void MessageHandler::onPfk(const Message& m) {
-    if (m.args.empty()) return;
+void MessageHandler::onPfk(const Message& m) 
+{
+    if (m.args.empty()) 
+        return;
     state_.playerFork(parsePlayerId(m.args[0]));
 }
 
-void MessageHandler::onPdr(const Message& m, bool take) {
-    if (m.args.size() < 2) return;
+void MessageHandler::onPdr(const Message& m, bool take) 
+{
+    if (m.args.size() < 2) 
+        return;
     state_.playerTakeOrDrop(parsePlayerId(m.args[0]), toInt(m.args[1]), take);
 }
 
-void MessageHandler::onPdi(const Message& m) {
-    if (m.args.empty()) return;
+void MessageHandler::onPdi(const Message& m) 
+{
+    if (m.args.empty()) 
+        return;
     state_.playerDie(parsePlayerId(m.args[0]));
 }
 
-void MessageHandler::onEnw(const Message& m) {
-    if (m.args.size() < 4) return;
+void MessageHandler::onEnw(const Message& m) 
+{
+    if (m.args.size() < 4) 
+        return;
     state_.eggLaid(parsePlayerId(m.args[0]), parsePlayerId(m.args[1]), toInt(m.args[2]), toInt(m.args[3]));
 }
 
@@ -178,19 +203,24 @@ void MessageHandler::onEggEnd(const Message& m, int kind)
     if (m.args.empty()) 
         return;
     int id = parsePlayerId(m.args[0]);
-    if      (kind == 0) state_.eggHatchStart(id);
-    else if (kind == 1) state_.eggConnected(id);
-    else                state_.eggDied(id);
+    if      (kind == 0) 
+        state_.eggHatchStart(id);
+    else if (kind == 1) 
+        state_.eggConnected(id);
+    else                
+        state_.eggDied(id);
 }
 
 void MessageHandler::onSgt(const Message& m) 
 {
-    if (!m.args.empty()) state_.setTimeUnit(toInt(m.args[0]));
+    if (!m.args.empty()) 
+        state_.setTimeUnit(toInt(m.args[0]));
 }
 
 void MessageHandler::onSeg(const Message& m) 
 {
-    if (!m.args.empty()) state_.setGameOver(m.args[0]);
+    if (!m.args.empty())
+        state_.setGameOver(m.args[0]);
 }
 
 void MessageHandler::onSmg(const Message& m) 
