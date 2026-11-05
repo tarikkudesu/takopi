@@ -6,7 +6,8 @@
 
 namespace zappy 
 {
-    struct Tile {
+    struct Tile 
+    {
         std::array<int, kResourceCount> resources{};
     };
 

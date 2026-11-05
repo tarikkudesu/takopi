@@ -6,8 +6,6 @@ namespace zappy {
 // interpolation math and by the gfx layer for placing geometry.
 constexpr float kTileSize = 2.0f;
 
-// Number of resource kinds: food, linemate, deraumere, sibur, mendiane,
-// phiras, thystame 
 constexpr int kResourceCount = 7;
 
 constexpr int kMaxTeams = 32;

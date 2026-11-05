@@ -27,7 +27,10 @@ public:
     // --- world -----------------------------------------------------------
     void setMapSize(int width, int height);
     void setTileContent(int x, int y, const std::array<int, kResourceCount>& res);
-    void setTimeUnit(int freq) { timeUnit_ = freq; }
+    void setTimeUnit(int freq) 
+    { 
+        timeUnit_ = freq; 
+    }
 
     int width() const { return width_; }
     int height() const { return height_; }
