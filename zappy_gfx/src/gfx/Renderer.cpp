@@ -12,27 +12,35 @@ namespace zappy {
 
 namespace {
 
-constexpr float kPi = 3.14159265358979323846f;
+const float kPi = 3.14159265358979323846f;
 
-constexpr int kResColCount = kResourceCount;
-const char* kResName[kResColCount] = {
+const int kResColCount = kResourceCount;
+
+const char* kResName[kResColCount] = 
+{
     "food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"
 };
-const Color kResColor[kResColCount] = {
+
+const Color kResColor[kResColCount] = 
+{
     {225, 70, 60, 255}, {215, 215, 225, 255}, {70, 140, 255, 255}, {60, 220, 120, 255},
     {255, 215, 60, 255}, {175, 95, 245, 255}, {255, 90, 185, 255},
 };
 const char* kOrientName[5] = {"?", "North", "East", "South", "West"};
 
-const Color kTeamPalette[] = {
+const Color kTeamPalette[] = 
+{
     {235, 64, 52, 255}, {52, 152, 235, 255}, {80, 200, 90, 255}, {250, 190, 40, 255},
     {170, 90, 230, 255}, {255, 130, 40, 255}, {40, 210, 200, 255}, {240, 100, 180, 255},
     {160, 200, 50, 255}, {110, 110, 245, 255}, {200, 140, 90, 255}, {235, 235, 235, 255},
 };
-constexpr int kPaletteSize = static_cast<int>(sizeof(kTeamPalette) / sizeof(kTeamPalette[0]));
 
-Color mixColor(Color a, Color b, float t) {
-    return Color{
+const int kPaletteSize = static_cast<int>(sizeof(kTeamPalette) / sizeof(kTeamPalette[0]));
+
+Color mixColor(Color a, Color b, float t) 
+{
+    return Color
+    {
         static_cast<unsigned char>(a.r + (b.r - a.r) * t),
         static_cast<unsigned char>(a.g + (b.g - a.g) * t),
         static_cast<unsigned char>(a.b + (b.b - a.b) * t),
@@ -40,11 +48,13 @@ Color mixColor(Color a, Color b, float t) {
     };
 }
 
-std::string truncated(const std::string& s, size_t maxLen) {
+std::string truncated(const std::string& s, size_t maxLen) 
+{
     return s.size() <= maxLen ? s : s.substr(0, maxLen);
 }
 
-void drawText(int x, int y, int size, Color c, const char* fmt, ...) {
+void drawText(int x, int y, int size, Color c, const char* fmt, ...) 
+{
     char buf[256];
     va_list ap;
     va_start(ap, fmt);
@@ -54,7 +64,8 @@ void drawText(int x, int y, int size, Color c, const char* fmt, ...) {
     DrawText(buf, x, y, size, c);
 }
 
-void drawTextCentered(int cx, int y, int size, Color c, const char* fmt, ...) {
+void drawTextCentered(int cx, int y, int size, Color c, const char* fmt, ...) 
+{
     char buf[256];
     va_list ap;
     va_start(ap, fmt);
@@ -69,10 +80,12 @@ void drawTextCentered(int cx, int y, int size, Color c, const char* fmt, ...) {
 
 // ------------------------------------------------------------------ lifecycle
 
-bool Renderer::init(int width, int height, const char* title) {
+bool Renderer::init(int width, int height, const char* title) 
+{
     SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_WINDOW_RESIZABLE | FLAG_VSYNC_HINT);
     InitWindow(width, height, title);
-    if (!IsWindowReady()) return false;
+    if (!IsWindowReady()) 
+        return false;
 
     SetExitKey(KEY_NULL);
     SetTargetFPS(60);
@@ -89,23 +102,33 @@ void Renderer::shutdown()
     CloseWindow();
 }
 
-bool Renderer::shouldClose() const { return WindowShouldClose(); }
+bool Renderer::shouldClose() const 
+{ 
+    return WindowShouldClose(); 
+}
 
-void Renderer::beginFrame() {
+void Renderer::beginFrame() 
+{
     BeginDrawing();
     ClearBackground(Color{84, 116, 160, 255});
 }
 
-void Renderer::endFrame() { EndDrawing(); }
+void Renderer::endFrame() 
+{ 
+    EndDrawing(); 
+}
 
 // -------------------------------------------------------------------- helpers
 
-Color Renderer::teamColor(int teamIndex) const {
-    if (teamIndex < 0) return Color{170, 170, 170, 255};
+Color Renderer::teamColor(int teamIndex) const 
+{
+    if (teamIndex < 0) 
+        return Color{170, 170, 170, 255};
     return kTeamPalette[teamIndex % kPaletteSize];
 }
 
-void Renderer::resetCamera() {
+void Renderer::resetCamera() 
+{
     float w = state_.width() > 0 ? static_cast<float>(state_.width()) : 10.0f;
     float h = state_.height() > 0 ? static_cast<float>(state_.height()) : 10.0f;
     cameraTarget_ = {(w - 1) * 0.5f * kTileSize, 0, (h - 1) * 0.5f * kTileSize};
@@ -115,12 +138,15 @@ void Renderer::resetCamera() {
     follow_ = false;
 }
 
-void Renderer::log(Color color, const std::string& text) {
-    if (log_.size() >= 32) log_.erase(log_.begin());
+void Renderer::log(Color color, const std::string& text) 
+{
+    if (log_.size() >= 32) 
+        log_.erase(log_.begin());
     log_.push_back({text, color, GetTime()});
 }
 
-void Renderer::selectPlayer(int id) {
+void Renderer::selectPlayer(int id) 
+{
     selectedPlayer_ = id;
     selectedTile_ = false;
     selectionRefreshTimer_ = 0;
@@ -129,7 +155,8 @@ void Renderer::selectPlayer(int id) {
     net_.send("pin #" + std::to_string(id) + "\n");
 }
 
-void Renderer::selectTile(int x, int y) {
+void Renderer::selectTile(int x, int y) 
+{
     selectedPlayer_ = -1;
     selectedTile_ = true;
     selectedTileX_ = x;
@@ -139,76 +166,97 @@ void Renderer::selectTile(int x, int y) {
     net_.send("bct " + std::to_string(x) + " " + std::to_string(y) + "\n");
 }
 
-void Renderer::clearSelection() {
+void Renderer::clearSelection() 
+{
     selectedPlayer_ = -1;
     selectedTile_ = false;
     follow_ = false;
 }
 
-void Renderer::changeFrequency(int direction) {
-    if (!net_.isConnected() || state_.timeUnit() <= 0) return;
+void Renderer::changeFrequency(int direction) 
+{
+    if (!net_.isConnected() || state_.timeUnit() <= 0) 
+        return;
     int f = direction > 0 ? static_cast<int>(state_.timeUnit() * 1.25f) + 1
                           : static_cast<int>(state_.timeUnit() / 1.25f);
     f = static_cast<int>(Clamp(static_cast<float>(f), 1, 10000));
     net_.send("sst " + std::to_string(f) + "\n");
 }
 
-void Renderer::loadSounds() {
+void Renderer::loadSounds() 
+{
     InitAudioDevice();
     audioReady_ = IsAudioDeviceReady();
-    if (!audioReady_) return;   // headless/no sound card: everything below is skipped at call sites
+    if (!audioReady_) 
+        return ;
 
     sndBroadcast_ = LoadSound("zappy_gfx/audio/braodcast-audio.mp3");
     sndIncantation_ = LoadSound("zappy_gfx/audio/incantation-audio.mp3");
 }
 
-void Renderer::unloadSounds() {
-    if (!audioReady_) return;
+void Renderer::unloadSounds() 
+{
+    if (!audioReady_) 
+        return;
     UnloadSound(sndBroadcast_);
     UnloadSound(sndIncantation_);
     CloseAudioDevice();
     audioReady_ = false;
 }
 
-float Renderer::soundVolumeFor(Vector3 worldPos) const {
+float Renderer::soundVolumeFor(Vector3 worldPos) const 
+{
     float d = Vector3Distance(worldPos, cameraTarget_);
     return Clamp(1.0f - d / 40.0f, 0.05f, 1.0f);
 }
 
-Vector3 Renderer::playerWorldPos(const Player& p) const {
+Vector3 Renderer::playerWorldPos(const Player& p) const 
+{
     float w = static_cast<float>(state_.width()), h = static_cast<float>(state_.height());
-    auto wrapf = [](float v, float m) {
-        if (m <= 0) return v;
+    auto wrapf = [](float v, float m) 
+    {
+        if (m <= 0) 
+            return v;
         float r = std::fmod(v, m);
         return r < 0 ? r + m : r;
     };
     return {wrapf(p.fx, w) * kTileSize + p.ox, 0.0f, wrapf(p.fz, h) * kTileSize + p.oz};
 }
 
-Vector3 Renderer::tileCenter(float x, float y) const { return {x * kTileSize, 0.0f, y * kTileSize}; }
+Vector3 Renderer::tileCenter(float x, float y) const 
+{
+     return {x * kTileSize, 0.0f, y * kTileSize}; 
+}
 
-bool Renderer::projectToScreen(Vector3 world, Vector2& out) const {
+bool Renderer::projectToScreen(Vector3 world, Vector2& out) const 
+{
     Vector3 fwd = Vector3Normalize(Vector3Subtract(camera_.target, camera_.position));
     if (Vector3DotProduct(Vector3Subtract(world, camera_.position), fwd) <= 0.1f) return false;
     out = GetWorldToScreen(world, camera_);
     return true;
 }
 
-bool Renderer::isOverUi(Vector2 mouse) const {
+bool Renderer::isOverUi(Vector2 mouse) const 
+{
     for (const auto& r : uiRects_)
-        if (CheckCollisionPointRec(mouse, r)) return true;
+        if (CheckCollisionPointRec(mouse, r)) 
+            return true;
     return false;
 }
 
 // -------------------------------------------------------------- game events
 
-void Renderer::processEvents(const std::vector<GameEvent>& events) {
-    for (const auto& ev : events) {
+void Renderer::processEvents(const std::vector<GameEvent>& events) 
+{
+    for (const auto& ev : events) 
+    {
         Vector3 c = tileCenter(static_cast<float>(ev.x), static_cast<float>(ev.y));
         Color team = teamColor(ev.teamIndex);
 
-        switch (ev.kind) {
-        case GameEventKind::PlayerJoined: {
+        switch (ev.kind) 
+        {
+        case GameEventKind::PlayerJoined: 
+        {
             const Team* t = ev.teamIndex >= 0 && ev.teamIndex < static_cast<int>(state_.teams().size())
                                 ? &state_.teams()[ev.teamIndex] : nullptr;
             log(team, "Player #" + std::to_string(ev.id1) + " joined team " + (t ? t->name : "?"));
@@ -239,14 +287,15 @@ void Renderer::processEvents(const std::vector<GameEvent>& events) {
                 log(Color{255, 110, 110, 255}, "Incantation at (" + std::to_string(ev.x) + "," +
                     std::to_string(ev.y) + ") FAILED");
             }
-            break;
+            break ;
         case GameEventKind::PlayerFork:
-            break;
+            break ;
         case GameEventKind::ResourceTaken:
-            break;
+            break ;
         case GameEventKind::ResourceDropped:
-            break;
-        case GameEventKind::PlayerDied: {
+            break ;
+        case GameEventKind::PlayerDied: 
+        {
             const Team* t = ev.teamIndex >= 0 && ev.teamIndex < static_cast<int>(state_.teams().size())
                                 ? &state_.teams()[ev.teamIndex] : nullptr;
             log(Color{255, 120, 120, 255}, "Player #" + std::to_string(ev.id1) + " (" +
@@ -255,14 +304,13 @@ void Renderer::processEvents(const std::vector<GameEvent>& events) {
             break;
         }
         case GameEventKind::EggLaid:
+            log(Color{255, 255, 120, 255}, "Egg #" + std::to_string(ev.id1) + " laid");
             break;
         case GameEventKind::EggHatched:
+            log(Color{130, 255, 150, 255}, "Egg #" + std::to_string(ev.id1) + " hatched");
             break;
         case GameEventKind::EggEnded:
-            if (ev.value == 1) {
-            } else {
-                log(Color{170, 170, 140, 255}, "Egg #" + std::to_string(ev.id1) + " rotted");
-            }
+            log(Color{170, 170, 140, 255}, "Egg #" + std::to_string(ev.id1) + " rotted");
             break;
         case GameEventKind::GameOver:
             log(Color{255, 230, 120, 255}, "GAME OVER - team " + ev.text + " wins!");
@@ -279,8 +327,9 @@ void Renderer::processEvents(const std::vector<GameEvent>& events) {
 
 // -------------------------------------------------------------------- update
 
-void Renderer::update(float dt) {
-    // Camera smoothing / following.
+void Renderer::update(float dt) 
+{
+
     cameraDist_ += (cameraDistGoal_ - cameraDist_) * std::min(1.0f, dt * 10.0f);
     float cp = std::cos(cameraPitch_);
     Vector3 off = {std::sin(cameraYaw_) * cp, std::sin(cameraPitch_), std::cos(cameraYaw_) * cp};
@@ -326,21 +375,33 @@ void Renderer::update(float dt) {
 
 // ---------------------------------------------------------------------- input
 
-void Renderer::handleInput(float dt) {
+void Renderer::handleInput(float dt) 
+{
     Vector2 mouse = GetMousePosition();
     bool overUi = isOverUi(mouse);
-    if (IsKeyPressed(KEY_L)) showLabels_ = !showLabels_;
-    if (IsKeyPressed(KEY_F11)) ToggleFullscreen();
-    if (IsKeyPressed(KEY_R)) resetCamera();
-    if (IsKeyPressed(KEY_ESCAPE)) clearSelection();
-    if (IsKeyPressed(KEY_F) && selectedPlayer_ >= 0) follow_ = !follow_;
-    if (IsKeyPressed(KEY_EQUAL) || IsKeyPressed(KEY_KP_ADD)) changeFrequency(+1);
-    if (IsKeyPressed(KEY_MINUS) || IsKeyPressed(KEY_KP_SUBTRACT)) changeFrequency(-1);
 
-    if (IsKeyPressed(KEY_TAB) && !state_.players().empty()) {
+    if (IsKeyPressed(KEY_L)) 
+        showLabels_ = !showLabels_;
+    if (IsKeyPressed(KEY_V)) 
+        ToggleFullscreen();
+    if (IsKeyPressed(KEY_R)) 
+        resetCamera();
+    if (IsKeyPressed(KEY_ESCAPE)) 
+        clearSelection();
+    if (IsKeyPressed(KEY_F) && selectedPlayer_ >= 0) 
+        follow_ = !follow_;
+    if (IsKeyPressed(KEY_EQUAL) || IsKeyPressed(KEY_KP_ADD)) 
+        changeFrequency(+1);
+    if (IsKeyPressed(KEY_MINUS) || IsKeyPressed(KEY_KP_SUBTRACT)) 
+        changeFrequency(-1);
+
+    if (IsKeyPressed(KEY_TAB) && !state_.players().empty()) 
+    {
         const auto& players = state_.players();
         int idx = -1;
-        for (size_t i = 0; i < players.size(); i++) if (players[i].id == selectedPlayer_) idx = static_cast<int>(i);
+        for (size_t i = 0; i < players.size(); i++) 
+            if (players[i].id == selectedPlayer_) 
+                idx = static_cast<int>(i);
         bool back = IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT);
         idx = back ? (idx <= 0 ? static_cast<int>(players.size()) - 1 : idx - 1)
                    : (idx + 1) % static_cast<int>(players.size());
@@ -349,7 +410,8 @@ void Renderer::handleInput(float dt) {
 
     float wheel = GetMouseWheelMove();
     if (wheel != 0 && !overUi) cameraDistGoal_ = Clamp(cameraDistGoal_ * (1.0f - wheel * 0.12f), 4.0f, 400.0f);
-    if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && !overUi) {
+    if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && !overUi) 
+    {
         Vector2 d = GetMouseDelta();
         cameraYaw_ -= d.x * 0.006f;
         cameraPitch_ = Clamp(cameraPitch_ + d.y * 0.006f, 0.15f, 1.52f);
@@ -357,7 +419,8 @@ void Renderer::handleInput(float dt) {
 
     Vector3 fwd = {-std::sin(cameraYaw_), 0, -std::cos(cameraYaw_)};
     Vector3 right = {std::cos(cameraYaw_), 0, -std::sin(cameraYaw_)};
-    if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE)) {
+    if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE)) 
+    {
         Vector2 d = GetMouseDelta();
         float k = cameraDist_ * 0.0016f;
         cameraTarget_ = Vector3Add(cameraTarget_, Vector3Scale(right, -d.x * k));
@@ -366,27 +429,40 @@ void Renderer::handleInput(float dt) {
     }
     float sp = cameraDist_ * 0.9f * dt * (IsKeyDown(KEY_LEFT_SHIFT) ? 2.0f : 1.0f);
     Vector3 mv = {0, 0, 0};
-    if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP))    mv = Vector3Add(mv, fwd);
-    if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))  mv = Vector3Subtract(mv, fwd);
-    if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) mv = Vector3Add(mv, right);
-    if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))  mv = Vector3Subtract(mv, right);
-    if (Vector3Length(mv) > 0) { cameraTarget_ = Vector3Add(cameraTarget_, Vector3Scale(mv, sp)); follow_ = false; }
-    if (IsKeyDown(KEY_Q)) cameraYaw_ += 1.6f * dt;
-    if (IsKeyDown(KEY_E)) cameraYaw_ -= 1.6f * dt;
+    if (IsKeyDown(KEY_W) || IsKeyDown(KEY_UP))    
+        mv = Vector3Add(mv, fwd);
+    if (IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN))  
+        mv = Vector3Subtract(mv, fwd);
+    if (IsKeyDown(KEY_D) || IsKeyDown(KEY_RIGHT)) 
+        mv = Vector3Add(mv, right);
+    if (IsKeyDown(KEY_A) || IsKeyDown(KEY_LEFT))  
+        mv = Vector3Subtract(mv, right);
+    if (Vector3Length(mv) > 0) 
+    { 
+        cameraTarget_ = Vector3Add(cameraTarget_, Vector3Scale(mv, sp)); follow_ = false; 
+    }
+    if (IsKeyDown(KEY_Q)) 
+        cameraYaw_ += 1.6f * dt;
+    if (IsKeyDown(KEY_E)) 
+        cameraYaw_ -= 1.6f * dt;
 
-    if (state_.width() > 0) {
+    if (state_.width() > 0) 
+    {
         cameraTarget_.x = Clamp(cameraTarget_.x, -kTileSize, state_.width() * kTileSize);
         cameraTarget_.z = Clamp(cameraTarget_.z, -kTileSize, state_.height() * kTileSize);
     }
 
     hoverTile_ = false;
     hoverPlayer_ = -1;
-    if (!state_.hasMap() || overUi) return;
+    if (!state_.hasMap() || overUi) 
+        return;
 
     Ray ray = GetMouseRay(mouse, camera_);
-    if (std::fabs(ray.direction.y) > 1e-4f) {
+    if (std::fabs(ray.direction.y) > 1e-4f) 
+    {
         float t = -ray.position.y / ray.direction.y;
-        if (t > 0) {
+        if (t > 0) 
+        {
             Vector3 h = Vector3Add(ray.position, Vector3Scale(ray.direction, t));
             int tx = static_cast<int>(std::floor(h.x / kTileSize + 0.5f));
             int ty = static_cast<int>(std::floor(h.z / kTileSize + 0.5f));
@@ -399,25 +475,36 @@ void Renderer::handleInput(float dt) {
     }
 
     float best = 1e9f;
-    for (const auto& p : state_.players()) {
-        if (p.dyingT > 0) continue;
+    for (const auto& p : state_.players()) 
+    {
+        if (p.dyingT > 0) 
+            continue;
         float s = p.scale();
         Vector3 c = playerWorldPos(p);
         c.y = 0.7f * s;
         RayCollision rc = GetRayCollisionSphere(ray, c, 0.72f * s);
-        if (rc.hit && rc.distance < best) { best = rc.distance; hoverPlayer_ = p.id; }
+        if (rc.hit && rc.distance < best) 
+        { 
+            best = rc.distance;
+            hoverPlayer_ = p.id; 
+        }
     }
 
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
-        if (hoverPlayer_ >= 0) selectPlayer(hoverPlayer_);
-        else if (hoverTile_) selectTile(hoverTileX_, hoverTileY_);
-        else clearSelection();
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) 
+    {
+        if (hoverPlayer_ >= 0) 
+            selectPlayer(hoverPlayer_);
+        else if (hoverTile_) 
+            selectTile(hoverTileX_, hoverTileY_);
+        else 
+            clearSelection();
     }
 }
 
 // ------------------------------------------------------------------- 3D draw
 
-void Renderer::drawResource(int type, Vector3 p, float scale) const {
+void Renderer::drawResource(int type, Vector3 p, float scale) const 
+{
     const float size = 0.35f * scale;
     DrawCube({p.x, p.y + size * 0.5f, p.z}, size, size, size, kResColor[type]);
 }
@@ -485,7 +572,7 @@ void Renderer::drawEgg(const Egg& e) const {
 
 void Renderer::drawIncantation(const Incantation& inc) const {
     Vector3 c = tileCenter(static_cast<float>(inc.x), static_cast<float>(inc.y));
-    constexpr float beamHeight = 3.2f;
+    const float beamHeight = 3.2f;
     DrawCylinder({c.x, beamHeight * 0.5f, c.z}, 0.24f, 0.24f, beamHeight, 16,
                  Color{255, 170, 35, 255});
     DrawCylinder({c.x, beamHeight * 0.5f, c.z}, 0.12f, 0.12f, beamHeight + 0.05f, 12,

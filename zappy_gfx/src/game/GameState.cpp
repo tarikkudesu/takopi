@@ -15,7 +15,7 @@ float wrapf(float v, float m)
     return r < 0 ? r + m : r;
 }
 
-constexpr float kPi = 3.14159265358979323846f;
+const float kPi = 3.14159265358979323846f;
 
 } 
 
@@ -75,15 +75,13 @@ int GameState::teamIndex(const std::string& name, bool createIfMissing)
 
 Player* GameState::findPlayer(int id) 
 {
-    for (auto& p : players_) if (p.id == id) return &p;
+    for (auto& p : players_) 
+        if (p.id == id) 
+            return &p;
     return nullptr;
 }
 
-const Player* GameState::findPlayer(int id) const 
-{
-    for (const auto& p : players_) if (p.id == id) return &p;
-    return nullptr;
-}
+
 
 Player& GameState::playerJoin(int id, int x, int y, int orientation, int level, int team) 
 {
