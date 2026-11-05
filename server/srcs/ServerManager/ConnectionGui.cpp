@@ -35,6 +35,8 @@ bool ConnectionGui::readSocket()
 	}
 	else if (errno != EAGAIN && errno != EWOULDBLOCK && errno != EINTR)
 		return false;
+	// EAGAIN in case the socket was not bound to an address
+	// EAGAIN or EWOULDBLOCK if the socket was set as non blocking, and the operation would block
 	return true;
 }
 

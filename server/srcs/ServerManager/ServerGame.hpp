@@ -2,6 +2,7 @@
 # define __SERVERGAME_HPP__
 
 # include "Server.hpp"
+# include "../Game/Game.hpp"
 
 class Game;
 

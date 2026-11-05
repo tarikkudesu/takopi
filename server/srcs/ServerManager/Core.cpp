@@ -184,31 +184,25 @@ int Core::buildSets(fd_set &readSet, fd_set &writeSet)
 		if (it->second->getType() == ADMIN)
 		{
 			ConnectionAdmin *connection = dynamic_cast<ConnectionAdmin *>(it->second);
-			if (connection->tlsNeedsRead())
+			if (connection && connection->tlsNeedsRead())
 				FD_SET(sd, &readSet);
-			if (connection->tlsNeedsWrite())
+			if (connection && connection->tlsNeedsWrite())
 				FD_SET(sd, &writeSet);
 		}
 		else if (it->second->getType() == GAME)
 		{
 			ConnectionGame *connection = static_cast<ConnectionGame *>(it->second);
-			if (connection->getState() != PLAYER_DEAD)
+			if (connection && connection->getState() != PLAYER_DEAD)
 				FD_SET(sd, &readSet);
-			if (connection->hasPendingOutput())
+			if (connection && connection->hasPendingOutput())
 				FD_SET(sd, &writeSet);
 		}
 		else if (it->second->getType() == GUI)
 		{
 			ConnectionGui *connection = static_cast<ConnectionGui *>(it->second);
-			if (!connection->isClosing())
+			if (connection && !connection->isClosing())
 				FD_SET(sd, &readSet);
-			if (connection->hasPendingOutput())
-				FD_SET(sd, &writeSet);
-		}
-		else
-		{
-			FD_SET(sd, &readSet);
-			if (it->second->hasPendingOutput())
+			if (connection && connection->hasPendingOutput())
 				FD_SET(sd, &writeSet);
 		}
 		if (sd > maxFd)

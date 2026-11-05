@@ -1,5 +1,4 @@
 #include "ServerGame.hpp"
-#include "../Game/Game.hpp"
 
 ServerGame::ServerGame(String line) : 	Server(GAME),
 										__game(NULL),

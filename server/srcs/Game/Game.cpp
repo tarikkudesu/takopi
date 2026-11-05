@@ -65,7 +65,7 @@ long Game::getCurrentTick() const
 	struct timeval now;
 	gettimeofday(&now, NULL);
 	long elapsedUs = (now.tv_sec - __startTime.tv_sec) * 1000000L + (now.tv_usec - __startTime.tv_usec);
-	return static_cast<long>(__tickOffset + elapsedUs * static_cast<double>(__timeUnit) / 1000000.0);
+	return static_cast<long>(__tickOffset + (static_cast<double>(__timeUnit) / 1000000.0) * elapsedUs);
 }
 
 /*************************************************************************

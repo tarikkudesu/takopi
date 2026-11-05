@@ -1,5 +1,4 @@
 #include "Connection.hpp"
-#include "Server.hpp"
 
 Connection::Connection(Server *server) :	__sd(-1),
 											__type(server->getType()),
