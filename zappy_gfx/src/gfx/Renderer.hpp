@@ -55,6 +55,8 @@ namespace zappy
             bool audioReady_ = false;
             Sound sndBroadcast_{};
             Sound sndIncantation_{};
+            std::vector<Sound> broadcastAliases_;
+            std::size_t nextBroadcastAlias_ = 0;
 
             struct LogEntry 
             {

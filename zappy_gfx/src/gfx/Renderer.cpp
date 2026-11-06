@@ -191,16 +191,25 @@ void Renderer::loadSounds()
 
     sndBroadcast_ = LoadSound("zappy_gfx/audio/braodcast-audio.mp3");
     sndIncantation_ = LoadSound("zappy_gfx/audio/incantation-audio.mp3");
+    if (IsSoundValid(sndBroadcast_)) {
+        broadcastAliases_.reserve(8);
+        for (int i = 0; i < 8; ++i)
+            broadcastAliases_.push_back(LoadSoundAlias(sndBroadcast_));
+    }
 }
 
 void Renderer::unloadSounds() 
 {
     if (!audioReady_) 
         return;
+    for (const Sound& alias : broadcastAliases_)
+        UnloadSoundAlias(alias);
+    broadcastAliases_.clear();
     UnloadSound(sndBroadcast_);
     UnloadSound(sndIncantation_);
     CloseAudioDevice();
     audioReady_ = false;
+    nextBroadcastAlias_ = 0;
 }
 
 float Renderer::soundVolumeFor(Vector3 worldPos) const 
@@ -265,9 +274,11 @@ void Renderer::processEvents(const std::vector<GameEvent>& events)
             break;
         case GameEventKind::PlayerBroadcast:
             log(team, "#" + std::to_string(ev.id1) + " says: " + truncated(ev.text, 90));
-            if (audioReady_) {
-                SetSoundVolume(sndBroadcast_, soundVolumeFor(c));
-                PlaySound(sndBroadcast_);
+            if (audioReady_ && !broadcastAliases_.empty()) {
+                Sound& broadcast = broadcastAliases_[nextBroadcastAlias_];
+                nextBroadcastAlias_ = (nextBroadcastAlias_ + 1) % broadcastAliases_.size();
+                SetSoundVolume(broadcast, soundVolumeFor(c));
+                PlaySound(broadcast);
             }
             break;
         case GameEventKind::IncantationStarted:
