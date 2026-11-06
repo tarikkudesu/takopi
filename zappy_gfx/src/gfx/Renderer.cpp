@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <cstdarg>
 #include <cstdio>
 
 #include "raymath.h"
@@ -76,7 +75,7 @@ void drawTextCentered(int cx, int y, int size, Color c, const char* fmt, ...)
     DrawText(buf, cx - w / 2, y, size, c);
 }
 
-} // namespace
+}
 
 // ------------------------------------------------------------------ lifecycle
 
@@ -329,18 +328,19 @@ void Renderer::processEvents(const std::vector<GameEvent>& events)
 
 void Renderer::update(float dt) 
 {
-
     cameraDist_ += (cameraDistGoal_ - cameraDist_) * std::min(1.0f, dt * 10.0f);
     float cp = std::cos(cameraPitch_);
     Vector3 off = {std::sin(cameraYaw_) * cp, std::sin(cameraPitch_), std::cos(cameraYaw_) * cp};
-    if (follow_) {
-        if (const Player* p = state_.findPlayer(selectedPlayer_)) {
+    if (follow_) 
+    {
+        if (const Player* p = state_.findPlayer(selectedPlayer_)) 
+        {
             Vector3 pp = playerWorldPos(*p);
             cameraTarget_.x += (pp.x - cameraTarget_.x) * std::min(1.0f, dt * 6.0f);
             cameraTarget_.z += (pp.z - cameraTarget_.z) * std::min(1.0f, dt * 6.0f);
-        } else {
+        } 
+        else 
             follow_ = false;
-        }
     }
     camera_.target = cameraTarget_;
     camera_.position = Vector3Add(cameraTarget_, Vector3Scale(off, cameraDist_));
@@ -348,24 +348,27 @@ void Renderer::update(float dt)
     camera_.fovy = 45.0f;
     camera_.projection = CAMERA_PERSPECTIVE;
 
-    // Selection: drop it if the entity is gone, otherwise refresh periodically.
-    if (selectedPlayer_ >= 0) {
-        if (!state_.findPlayer(selectedPlayer_)) {
+    if (selectedPlayer_ >= 0) 
+    {
+        if (!state_.findPlayer(selectedPlayer_)) 
             clearSelection();
-        } else if ((selectionRefreshTimer_ += dt) > 0.7f) {
+        else if ((selectionRefreshTimer_ += dt) > 0.7f) 
+        {
             selectionRefreshTimer_ = 0;
             net_.send("pin #" + std::to_string(selectedPlayer_) + "\n");
         }
-    } else if (selectedTile_ && (selectionRefreshTimer_ += dt) > 0.7f) {
+    } 
+    else if (selectedTile_ && (selectionRefreshTimer_ += dt) > 0.7f)
+    {
         selectionRefreshTimer_ = 0;
         net_.send("bct " + std::to_string(selectedTileX_) + " " + std::to_string(selectedTileY_) + "\n");
     }
 
-    // Periodic full-map refresh: the server does not proactively announce
-    // resources respawning, so we must re-ask.
-    if (net_.isConnected() && state_.hasMap() && !state_.isGameOver()) {
+    if (net_.isConnected() && state_.hasMap() && !state_.isGameOver()) 
+    {
         mapRefreshTimer_ += dt;
-        if (mapRefreshTimer_ >= kMapRefreshInterval) {
+        if (mapRefreshTimer_ >= kMapRefreshInterval) 
+        {
             mapRefreshTimer_ = 0;
             net_.send("mct\n");
         }
@@ -409,7 +412,8 @@ void Renderer::handleInput(float dt)
     }
 
     float wheel = GetMouseWheelMove();
-    if (wheel != 0 && !overUi) cameraDistGoal_ = Clamp(cameraDistGoal_ * (1.0f - wheel * 0.12f), 4.0f, 400.0f);
+    if (wheel != 0 && !overUi) 
+        cameraDistGoal_ = Clamp(cameraDistGoal_ * (1.0f - wheel * 0.12f), 4.0f, 400.0f);
     if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && !overUi) 
     {
         Vector2 d = GetMouseDelta();
@@ -511,15 +515,19 @@ void Renderer::drawResource(int type, Vector3 p, float scale) const
 
 void Renderer::drawGround() 
 {
-    int W = state_.width(), H = state_.height();
-    float cx = (W - 1) * 0.5f * kTileSize, cz = (H - 1) * 0.5f * kTileSize;
+    int W = state_.width();
+    int H = state_.height();
+    float cx = (W - 1) * 0.5f * kTileSize;
+    float cz = (H - 1) * 0.5f * kTileSize;
     DrawPlane({cx, -0.7f, cz}, {4000, 4000}, Color{34, 52, 72, 255});
     DrawCube({cx, -0.22f, cz}, W * kTileSize + 0.3f, 0.3f, H * kTileSize + 0.3f, Color{78, 58, 44, 255});
 
     rlDisableBackfaceCulling();
     const float h = kTileSize * 0.5f - 0.045f;
-    for (int y = 0; y < H; y++) {
-        for (int x = 0; x < W; x++) {
+    for (int y = 0; y < H; y++) 
+    {
+        for (int x = 0; x < W; x++) 
+        {
             Color c = ((x + y) & 1) ? Color{88, 154, 92, 255} : Color{78, 142, 84, 255};
             float px = x * kTileSize, pz = y * kTileSize;
             rlCheckRenderBatchLimit(4);
@@ -533,14 +541,20 @@ void Renderer::drawGround()
     rlEnableBackfaceCulling();
 }
 
-void Renderer::drawResources() {
-    for (int y = 0; y < state_.height(); y++) {
-        for (int x = 0; x < state_.width(); x++) {
+void Renderer::drawResources() 
+{
+    for (int y = 0; y < state_.height(); y++) 
+    {
+        for (int x = 0; x < state_.width(); x++) 
+        {
             const Tile* tile = state_.tileAt(x, y);
-            if (!tile) continue;
+            if (!tile) 
+                continue;
             Vector3 c = tileCenter(static_cast<float>(x), static_cast<float>(y));
-            for (int r = 0; r < kResourceCount; r++) {
-                if (tile->resources[r] <= 0) continue;
+            for (int r = 0; r < kResourceCount; r++) 
+            {
+                if (tile->resources[r] <= 0) 
+                    continue;
                 float a = r * (2 * kPi / kResourceCount) + 0.4f;
                 drawResource(r, {c.x + std::cos(a) * 0.62f, 0.0f, c.z + std::sin(a) * 0.62f}, 1.0f);
             }
@@ -556,11 +570,14 @@ void Renderer::drawPlayer(const Player& p) const {
     DrawSphere({pos.x, 1.45f * s, pos.z}, 0.35f * s, tc);
 }
 
-void Renderer::drawEgg(const Egg& e) const {
+void Renderer::drawEgg(const Egg& e) const 
+{
     Color tc = teamColor(e.team);
     Color body = mixColor(Color{250, 245, 225, 255}, tc, 0.42f);
-    if (e.hatched) body = mixColor(body, Color{255, 240, 140, 255}, 0.4f);
-    if (e.state == EggState::Rotten) body = mixColor(body, Color{90, 100, 70, 255}, 0.7f);
+    if (e.hatched) 
+        body = mixColor(body, Color{255, 240, 140, 255}, 0.4f);
+    if (e.state == EggState::Rotten) 
+        body = mixColor(body, Color{90, 100, 70, 255}, 0.7f);
 
     Vector3 c = tileCenter(static_cast<float>(e.x), static_cast<float>(e.y));
     float a = static_cast<float>((e.id * 37) % 360) * kPi / 180.0f;
@@ -570,7 +587,8 @@ void Renderer::drawEgg(const Egg& e) const {
     DrawSphere({pos.x, 0.42f, pos.z}, 0.32f, body);
 }
 
-void Renderer::drawIncantation(const Incantation& inc) const {
+void Renderer::drawIncantation(const Incantation& inc) const 
+{
     Vector3 c = tileCenter(static_cast<float>(inc.x), static_cast<float>(inc.y));
     const float beamHeight = 3.2f;
     DrawCylinder({c.x, beamHeight * 0.5f, c.z}, 0.24f, 0.24f, beamHeight, 16,
@@ -579,23 +597,30 @@ void Renderer::drawIncantation(const Incantation& inc) const {
                  Color{255, 245, 150, 255});
 }
 
-void Renderer::drawWorld() {
+void Renderer::drawWorld() 
+{
     rlSetClipPlanes(0.1, 3000.0);
     BeginMode3D(camera_);
-    if (state_.hasMap()) {
+    if (state_.hasMap()) 
+    {
         drawGround();
         drawResources();
-        for (const auto& inc : state_.incantations()) drawIncantation(inc);
-        for (const auto& e : state_.eggs()) drawEgg(e);
-        for (const auto& p : state_.players()) drawPlayer(p);
-        if (selectedTile_ || hoverTile_) {
+        for (const auto& inc : state_.incantations()) 
+            drawIncantation(inc);
+        for (const auto& e : state_.eggs()) 
+            drawEgg(e);
+        for (const auto& p : state_.players()) 
+            drawPlayer(p);
+        if (selectedTile_ || hoverTile_) 
+        {
             int x = selectedTile_ ? selectedTileX_ : hoverTileX_;
             int y = selectedTile_ ? selectedTileY_ : hoverTileY_;
             Color color = selectedTile_ ? YELLOW : SKYBLUE;
             DrawCubeWires(tileCenter(static_cast<float>(x), static_cast<float>(y)),
                           kTileSize, 0.05f, kTileSize, color);
         }
-        if (const Player* p = selectedPlayer_ >= 0 ? state_.findPlayer(selectedPlayer_) : nullptr) {
+        if (const Player* p = selectedPlayer_ >= 0 ? state_.findPlayer(selectedPlayer_) : nullptr) 
+        {
             Vector3 pos = playerWorldPos(*p);
             DrawCylinderWires({pos.x, 0.03f, pos.z}, 0.55f * p->scale(), 0.55f * p->scale(),
                               0.05f, 16, YELLOW);
@@ -606,13 +631,18 @@ void Renderer::drawWorld() {
 
 // ------------------------------------------------------------------- 2D draw
 
-void Renderer::drawLabels() {
-    auto drawTileNumbers = [&](int x, int y) {
+void Renderer::drawLabels() 
+{
+    auto drawTileNumbers = [&](int x, int y) 
+    {
         const Tile* tile = state_.tileAt(x, y);
-        if (!tile) return;
+        if (!tile) 
+            return;
         Vector3 c = tileCenter(static_cast<float>(x), static_cast<float>(y));
-        for (int r = 0; r < kResourceCount; r++) {
-            if (tile->resources[r] <= 0) continue;
+        for (int r = 0; r < kResourceCount; r++) 
+        {
+            if (tile->resources[r] <= 0) 
+                continue;
             float a = r * (2 * kPi / kResourceCount) + 0.4f;
             Vector2 s;
             if (!projectToScreen({c.x + std::cos(a) * 0.62f, 0.75f, c.z + std::sin(a) * 0.62f}, s)) continue;
@@ -623,8 +653,10 @@ void Renderer::drawLabels() {
         }
     };
 
-    if (hoverTile_) drawTileNumbers(hoverTileX_, hoverTileY_);
-    if (selectedTile_) drawTileNumbers(selectedTileX_, selectedTileY_);
+    if (hoverTile_) 
+        drawTileNumbers(hoverTileX_, hoverTileY_);
+    if (selectedTile_) 
+        drawTileNumbers(selectedTileX_, selectedTileY_);
 
     for (const auto& inc : state_.incantations()) {
         Vector2 s;
@@ -654,7 +686,8 @@ void Renderer::drawLabels() {
     }
 }
 
-void Renderer::drawTeamsPanel() {
+void Renderer::drawTeamsPanel() 
+{
     const auto& teams = state_.teams();
     int rows = teams.empty() ? 1 : static_cast<int>(teams.size());
     Rectangle r = {10, 42, 285, 30.0f + rows * 38.0f};
@@ -667,7 +700,8 @@ void Renderer::drawTeamsPanel() {
         drawText(20, 74, 14, GRAY, "waiting for server...");
         return;
     }
-    for (size_t i = 0; i < teams.size(); i++) {
+    for (size_t i = 0; i < teams.size(); i++) 
+    {
         const Team& t = teams[i];
         int y = 72 + static_cast<int>(i) * 38;
         DrawRectangle(20, y + 2, 14, 14, teamColor(t.colorIndex));
@@ -677,9 +711,11 @@ void Renderer::drawTeamsPanel() {
     }
 }
 
-void Renderer::drawSelectionPanel() {
+void Renderer::drawSelectionPanel() 
+{
     int sw = GetScreenWidth();
-    if (const Player* sp = selectedPlayer_ >= 0 ? state_.findPlayer(selectedPlayer_) : nullptr) {
+    if (const Player* sp = selectedPlayer_ >= 0 ? state_.findPlayer(selectedPlayer_) : nullptr) 
+    {
         Rectangle r = {sw - 300.0f, 42, 290, 270};
         DrawRectangleRec(r, Color{12, 16, 28, 205});
         DrawRectangleLinesEx(r, 1, Color{90, 110, 150, 210});
@@ -730,10 +766,13 @@ void Renderer::drawSelectionPanel() {
     }
 }
 
-void Renderer::drawOverlays() {
-    int sw = GetScreenWidth(), sh = GetScreenHeight();
+void Renderer::drawOverlays() 
+{
+    int sw = GetScreenWidth();
+    int sh = GetScreenHeight();
 
-    if (!net_.isConnected() || !state_.hasMap()) {
+    if (!net_.isConnected() || !state_.hasMap()) 
+    {
         Rectangle r = {sw / 2.0f - 230, sh / 2.0f - 40, 460, 80};
         DrawRectangleRec(r, Color{12, 16, 28, 205});
         DrawRectangleLinesEx(r, 1, Color{90, 110, 150, 210});
@@ -793,10 +832,11 @@ void Renderer::drawHud() {
     drawOverlays();
 }
 
-void Renderer::draw() {
+void Renderer::draw() 
+{
     drawWorld();
     drawLabels();
     drawHud();
 }
 
-} // namespace zappy
+}
