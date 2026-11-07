@@ -274,7 +274,7 @@ void Renderer::processEvents(const std::vector<GameEvent>& events)
             break;
         case GameEventKind::PlayerBroadcast:
             log(team, "#" + std::to_string(ev.id1) + " says: " + truncated(ev.text, 90));
-            if (audioReady_ && !broadcastAliases_.empty()) {
+            if (audioReady_ && !broadcastMuted_ && !broadcastAliases_.empty()) {
                 Sound& broadcast = broadcastAliases_[nextBroadcastAlias_];
                 nextBroadcastAlias_ = (nextBroadcastAlias_ + 1) % broadcastAliases_.size();
                 SetSoundVolume(broadcast, soundVolumeFor(c));
@@ -400,6 +400,15 @@ void Renderer::handleInput(float dt)
         ToggleFullscreen();
     if (IsKeyPressed(KEY_R)) 
         resetCamera();
+    if (IsKeyPressed(KEY_N)) {
+        broadcastMuted_ = true;
+        if (audioReady_) {
+            for (const Sound& sound : broadcastAliases_)
+                StopSound(sound);
+        }
+    }
+    if (IsKeyPressed(KEY_M))
+        broadcastMuted_ = false;
     if (IsKeyPressed(KEY_ESCAPE)) 
         clearSelection();
     if (IsKeyPressed(KEY_F) && selectedPlayer_ >= 0) 
@@ -416,7 +425,7 @@ void Renderer::handleInput(float dt)
         for (size_t i = 0; i < players.size(); i++) 
             if (players[i].id == selectedPlayer_) 
                 idx = static_cast<int>(i);
-        bool back = IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT);
+        bool back = IsKeyDown(KEY_LEFT_SHIFT);
         idx = back ? (idx <= 0 ? static_cast<int>(players.size()) - 1 : idx - 1)
                    : (idx + 1) % static_cast<int>(players.size());
         selectPlayer(players[idx].id);
